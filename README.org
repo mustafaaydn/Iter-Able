@@ -1,0 +1,35 @@
+** Name
+Iter::Able -- Adding abilities for iterables
+
+** Synopsis
+#+begin_src raku
+use Iter::Able <take-while group-conseq>;
+
+[2, 3, 19, 7, 44, 13, -1].&take-while(*.is-prime).raku.say;  # (2, 3, 19, 7).Seq
+
+"until the first space".&take-while(/\S/).raku.say;          # "until"
+
+[4, 4, 5, 4].&group-conseq.raku.say;                         # (4 => (4, 4), 5 => (5,), 4 => (4,)).Seq
+
+(1, -1, 1, -1, 1, -1).&group-conseq(as => &abs).raku.say;    # (1 => (1, -1, 1, -1, 1, -1),).Seq
+
+#+end_src
+
+** Description
+Provides iterable manipulation functions. Raku already has superb support for such tasks, e.g., =map=, =grep=, =rotor=, =categorize= etc. One can build more specific functions using them; this module aims to do that for variety of functions for reuse. Inspirations include [[https://github.com/magnars/dash.el][dash.el]] of ELisp, [[https://rubydoc.info/stdlib/core/Enumerable][Enumerable]] of Ruby, [[https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html][std::iter::Iterator]] of Rust, [[https://docs.python.org/3/library/itertools.html][itertools]] and [[https://more-itertools.readthedocs.io/en/stable/][more_itertools]] of Python.
+
+*** =use=\age
++ With a bare =use=, i.e., =use Iter::Able;=, /no/ function parachutes into the namespace.
+  + One needs to refer them with their PQNs, e.g., =Iter::Able::skip-while(@vals, * %% 2)=.
+    + (PQN because that function really lives in =Iter::Able::Skip-While::skip-while=.)
++ =use Iter::Able *;= (or =<*>= instead of =*=) will make /all/ of the functions available with their short names, e.g., =map-when=.
++ Instead of all-or-none, selective importing is also possible, e.g., =use Iter::Able <take-while skip-while>;= will only import 2 symbols into the caller MY::.
+
+Noting that, all functions are our-scoped so all are reachable with their partially qualified names in any case.
+
+*** Functions
+They are documented [[li][here]].
+
+** License
+This library is free software; you can redistribute it and/or modify it under the [[https://directory.fsf.org/wiki/License:Artistic-2.0][Artistic License 2.0]].
+

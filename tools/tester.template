@@ -1,0 +1,32 @@
+use Test;
+use Iter::Able::Module-Name;
+
+say "\n*****Module-Name*****";
+plan 8;
+
+my $s;
+$s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
+is-deeply fun-name($s, ...), EXPECTED, "Random list with ...";
+
+$s := [];
+is-deeply fun-name($s, ...), EXPECTED,  "Empty-list with ...";
+
+$s := [0, 0, 0, 0];
+is-deeply fun-name($s, ...), EXPECTED, "All zeros with ...";
+
+$s := [0, -1, -2, -3];
+is-deeply fun-name($s, ...), EXPECTED, "No leading negatives with ... ";
+
+$s := [6, 7, 8, 93, 51, 0, 4, -3, 64];
+is-deeply fun-name($s, ...), EXPECTED, "Random list with no predicate, i.e., ...";
+
+$s := [1, 0, -1, 2];
+is-deeply fun-name($s, &{ True }), EXPECTED, "Random list with all-pass predicate";
+
+$s := [1, 0, -1, 2];
+is-deeply fun-name($s, &{ False }), EXPECTED, "Random list with no-pass predicate";
+
+$s := "neither AM I!";
+is-deeply fun-name($s, ...), EXPECTED, "String with ...";
+
+done-testing;

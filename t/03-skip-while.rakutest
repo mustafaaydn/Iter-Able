@@ -1,0 +1,32 @@
+use Test;
+use Iter::Able::Skip-While;
+
+say "\n*****Skip-While*****";
+plan 8;
+
+my $r;
+$r := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
+is-deeply skip-while($r, * > 0), [-5, 25, 5, -5, 5, 5, -5, 3].Seq, "Random list with `* > 0`"; 
+
+$r := [];
+is-deeply skip-while($r, * > 0), [].Seq, "Empty list with `* > 0`";
+
+$r := [0, 0, 0, 0];
+is-deeply skip-while($r, * < 0), $r.Seq, "All zeros with `* < 0`";
+
+$r := [-1, -2, 0, -3];
+is-deeply skip-while($r, * < 0), [0, -3].Seq, "Separated negatives with `* < 0`";
+
+$r := [6, 7, 8, 93, 51, 0, 4, -3, 64];
+is-deeply skip-while($r), $r[$r.first(*.not, :k)..*].Seq, "Random list without a predicate, i.e., from first falseful on";
+
+$r := [1, 0, -1, 2];
+is-deeply skip-while($r, &{False}), $r.Seq, "Random list with no-pass predicate, i.e., no skips";
+
+$r := [1, 0, -1, 2];
+is-deeply skip-while($r, &{True}), [].Seq, "Random list with all-pass predicate, i.e., skip all";
+
+$r := "neither AM I!";
+is-deeply skip-while($r, /<.lower>/), " AM I!", "Mixed case string with /<.lower>/ predicate";
+
+done-testing;

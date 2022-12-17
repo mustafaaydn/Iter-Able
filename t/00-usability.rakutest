@@ -1,0 +1,5 @@
+use Test;
+
+plan 1;
+lives-ok { use Iter::Able }, "`use` the module";
+done-testing;
