@@ -17,7 +17,7 @@ use Iter::Able <take-while group-conseq>;
 ** Description
 Provides iterable manipulation functions. Raku already has superb support for such tasks, e.g., =map=, =grep=, =rotor=, =categorize= etc. One can build more specific functions using them; this module aims to do that for variety of functions for reuse. Inspirations include [[https://github.com/magnars/dash.el][dash.el]] of ELisp, [[https://rubydoc.info/stdlib/core/Enumerable][Enumerable]] of Ruby, [[https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html][std::iter::Iterator]] of Rust, [[https://docs.python.org/3/library/itertools.html][itertools]] and [[https://more-itertools.readthedocs.io/en/stable/][more_itertools]] of Python.
 
-*** =use=\age
+*** =use=age
 + With a bare =use=, i.e., =use Iter::Able;=, /no/ function parachutes into the namespace.
   + One needs to refer them with their PQNs, e.g., =Iter::Able::skip-while(@vals, * %% 2)=.
     + (PQN because that function really lives in =Iter::Able::Skip-While::skip-while=.)
