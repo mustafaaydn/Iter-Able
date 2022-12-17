@@ -13,8 +13,8 @@
     "mIxEd fEElIngs"
 
     # Normalize "anomalies"
-    >>> (r1 => 7.13, r2 => 6.89, r3 => 7.90, r4 => 6.61).&map-when((*.value - 7).abs <= 0.2, {7})
-    (r1 => 7, r2 => 7, r3 => 7.90, r4 => 6.61)
+    >>> (r1 => 7.13, r2 => 6.89, r3 => 7.90, r4 => 6.61).&map-when((*.value - 7).abs >= 0.2, {7})
+    (r1 => 7.13, r2 => 6.89, r3 => 7, r4 => 7)
 }
 unit module Map-When;
 

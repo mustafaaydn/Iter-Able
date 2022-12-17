@@ -18,9 +18,9 @@ $s := [0, -1, -2, -3];
 is-deeply map-when($s,  * > 0, -*), $s.Seq, "No matching entries";
 
 $s := [6, 7, 0, -2, "", 5];
-is-deeply map-when($s, *.so, *.so), [True, True, 0, True, "", True].Seq, "Random list with only truthfuls are mapped";
+is-deeply map-when($s, *.so, *.so), $s.map({$_ ?? $_.so !! $_}), "Random list with only truthfuls are mapped";
 
-$s := [1, 0, -1, 2];
+$s := (1, 0, -1, 2);
 is-deeply map-when($s, &{ True }, * * 2), $s.map(* * 2), "Random list with all-pass predicate";
 
 $s := [1, 0, -1, 2];
