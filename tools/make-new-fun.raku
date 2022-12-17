@@ -1,4 +1,4 @@
-#= Generates a lib/Iter/Able/*.rakumod and t/*.rakutest files for a new function
+#= Generates lib/Iter/Able/*.rakumod and t/*.rakutest files for a new function
 
 my Str $fun-name = prompt "name (sep. with `-`): ";
 my (Str $module-name, Str $class-name);
