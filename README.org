@@ -1,4 +1,3 @@
-** Name
 Iter::Able -- Adding abilities for iterables
 
 ** Synopsis
