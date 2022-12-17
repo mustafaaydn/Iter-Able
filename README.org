@@ -25,7 +25,7 @@ Provides iterable manipulation functions. Raku already has superb support for su
 All functions are our-scoped so they are reachable with their partially qualified names in any case, e.g., =Iter::Able::skip-while=.
 
 *** Functions
-They are documented [[Functions][here]].
+They are documented [[*Functions][here]].
 
 
 ** Contribution
