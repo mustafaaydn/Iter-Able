@@ -29,6 +29,16 @@ Noting that, all functions are our-scoped so all are reachable with their partia
 *** Functions
 They are documented [[li][here]].
 
+** Contribution
+For a new function, there are "module.template" and "tester.template" in tools/; "make-new-fun.raku" is also there and generates a rakumod and a rakutest file for the new function in appropriate directories. Rest is filling in the blanks. Let's say for adding "intersperse" functionality, after forking:
+#+begin_source shell
+$ git clone git@github.com:<your-username>/Iter-Able.git
+$ cd Iter-Able
+$ git checkout -b intersperse
+$ raku tools/make-new-fun.raku
+#+end_source
+"lib/Iter/Able/Intersperse.rakumod" and "t/0x-intersperse.rakutest" are generated and filled in with some boilerplate.
+
 ** License
 This library is free software; you can redistribute it and/or modify it under the [[https://directory.fsf.org/wiki/License:Artistic-2.0][Artistic License 2.0]].
 
