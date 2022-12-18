@@ -5,7 +5,7 @@ say "\n*****Module-Name*****";
 plan 8;
 
 my $s;
-$s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
+$s := [2, 2, 3, -4, 5];
 is-deeply fun-name($s, ...), EXPECTED, "Random list with ...";
 
 $s := [];
@@ -26,7 +26,7 @@ is-deeply fun-name($s, &{ True }), EXPECTED, "Random list with all-pass predicat
 $s := [1, 0, -1, 2];
 is-deeply fun-name($s, &{ False }), EXPECTED, "Random list with no-pass predicate";
 
-$s := "neither AM I!";
+$s := "Real String";
 is-deeply fun-name($s, ...), EXPECTED, "String with ...";
 
 done-testing;
