@@ -24,6 +24,8 @@ unit package Iter::Able;
 use Iter::Able::Group-Conseq;
 use Iter::Able::Take-While;
 use Iter::Able::Skip-While;
+use Iter::Able::Map-When;
+use Iter::Able::Enumerate;
 
 # Subscribe all the subs to the package as well in case one wants to refer
 # to them with their semi-FQNs, e.g., `Iter::Able::take-while(...)`, e.g., to
