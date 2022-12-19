@@ -10,7 +10,7 @@
 
     # If noone matches, everyone is yielded as is
     >>> [4, 44, 444, 4444].&map-first(*.is-prime, { 7 });
-    [4, 44, 444, 4444]
+    (4, 44, 444, 4444)
 }
 unit module Map-First;
 
