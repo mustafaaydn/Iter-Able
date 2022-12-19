@@ -1,0 +1,23 @@
+use Test;
+use Iter::Able::Cycle;
+
+say "\n*****Cycle*****";
+plan 5;
+
+my $s;
+$s := [2, 3];
+is-deeply cycle($s).head(5), [2, 3, 2, 3, 2].Seq, "Random list with 2.5 repeats";
+
+$s := [];
+is-deeply cycle($s), [].Seq,  "Empty-list";
+
+$s := [3, 4, 5];
+is-deeply cycle($s).head(2), [3, 4].Seq, "Random list with 0.66 repeats";
+
+$s := [5];
+is-deeply cycle($s).head(7), (|$s xx 7).Seq, "One element list with 7 repeats";
+
+$s := "yes";
+is-deeply cycle($s).head(10), "yesyesyesy".comb, "String ~3.33 repeats";
+
+done-testing;
