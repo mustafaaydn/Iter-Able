@@ -21,11 +21,16 @@ sub EXPORT(*@things) {
 unit package Iter::Able;
 
 # Following might be automatically generated at some point...
-use Iter::Able::Group-Conseq;
-use Iter::Able::Take-While;
-use Iter::Able::Skip-While;
-use Iter::Able::Map-When;
+# `find lib/Iter/Able -type f | perl -ne's{(?:\./)?lib/}{}; s{/}{::}g; /(.*)\.rakumod/; print"use $1;\n"'`
+use Iter::Able::Annotate;
+use Iter::Able::Cycle;
 use Iter::Able::Enumerate;
+use Iter::Able::Group-Conseq;
+use Iter::Able::Map-First;
+use Iter::Able::Map-Indexed;
+use Iter::Able::Map-When;
+use Iter::Able::Skip-While;
+use Iter::Able::Take-While;
 
 # Subscribe all the subs to the package as well in case one wants to refer
 # to them with their semi-FQNs, e.g., `Iter::Able::take-while(...)`, e.g., to
