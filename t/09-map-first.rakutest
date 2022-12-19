@@ -1,0 +1,20 @@
+use Test;
+use Iter::Able::Map-First;
+
+say "\n*****Map-First*****";
+plan 4;
+
+my $s;
+$s := [1, 2, 3];
+is-deeply map-first($s, * > 0, -*), (-1, 2, 3).Seq, "Random list with `* > 0` and `-*`";
+
+$s := [4, 44, 444, 4444];
+is-deeply $s.&map-first(*.is-prime, { 7 }), $s.Seq, "Random list with no match";
+
+$s := [];
+is-deeply map-first($s, {;}, {;}), [].Seq,  "Empty-list";
+
+$s := "here WE are";
+is-deeply $s.&map-first(/ <.upper> /, &lc),  "here wE are", "Mixed case string with \"lower the first upper\"";
+
+done-testing;
