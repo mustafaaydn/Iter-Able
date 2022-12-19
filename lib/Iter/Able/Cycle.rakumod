@@ -18,6 +18,7 @@ my class Cycle does Iterator {
     has int $!length;  #= State: length of the cycle to use in `index % length`
 
     method !SET-SELF($!iter) {
+        $!index  = -1;
         $!values := nqp::list();
         self
     }
@@ -34,7 +35,7 @@ my class Cycle does Iterator {
             # i.e., if the original iterable wasn't empty
             nqp::if(
                 nqp::isgt_i($!length, 0),
-                $!values[nqp::mod_i(nqp::sub_i(($!index = nqp::add_i($!index, 1)), 1), $!length)],
+                $!values[nqp::mod_i(($!index = nqp::add_i($!index, 1)), $!length)],
                 IterationEnd
             ),
 			# No; store and yield it
