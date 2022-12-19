@@ -21,7 +21,6 @@ sub EXPORT(*@things) {
 unit package Iter::Able;
 
 # Following might be automatically generated at some point...
-# `find lib/Iter/Able -type f | perl -ne's{(?:\./)?lib/}{}; s{/}{::}g; /(.*)\.rakumod/; print"use $1;\n"'`
 use Iter::Able::Annotate;
 use Iter::Able::Cycle;
 use Iter::Able::Enumerate;
