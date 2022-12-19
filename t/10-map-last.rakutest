@@ -1,0 +1,26 @@
+use Test;
+use Iter::Able::Map-Last;
+
+say "\n*****Map-Last*****";
+plan 6;
+
+my $s;
+$s := [2, -3, 4, -6, 8];
+is-deeply map-last($s, * < 0, -*), (2, -3, 4, 6, 8).Seq, "Random list with `* < 0` and `-*`";
+
+$s := [];
+is-deeply map-last($s, {;}, {;}), [].Seq,  "Empty-list";
+
+$s := [57, 91, -13];
+is-deeply $s.&map-last(*.is-prime, { 0 }), $s.Seq, "Random list with no match";
+
+$s := [5, 6, 7];
+is-deeply $s.&map-last({ True }, { 0 }), (5, 6, 0).Seq, "Random list with all-pass filter";
+
+$s := [5, 6, 7];
+is-deeply $s.&map-last({ False }, { 0 }), $s.Seq, "Random list with no-pass filter";
+
+$s := "here we are!";
+is-deeply map-last($s, / <.lower> /, &uc), "here we arE!", "String with ...";
+
+done-testing;
