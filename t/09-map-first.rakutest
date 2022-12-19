@@ -2,7 +2,7 @@ use Test;
 use Iter::Able::Map-First;
 
 say "\n*****Map-First*****";
-plan 4;
+plan 6;
 
 my $s;
 $s := [1, 2, 3];
@@ -13,6 +13,12 @@ is-deeply $s.&map-first(*.is-prime, { 7 }), $s.Seq, "Random list with no match";
 
 $s := [];
 is-deeply map-first($s, {;}, {;}), [].Seq,  "Empty-list";
+
+$s := [5, 6, 7];
+is-deeply $s.&map-first({ True }, { 0 }), (0, 6, 7).Seq, "Random list with all-pass filter";
+
+$s := [5, 6, 7];
+is-deeply $s.&map-first({ False }, { 0 }), $s.Seq, "Random list with no-pass filter";
 
 $s := "here WE are";
 is-deeply $s.&map-first(/ <.upper> /, &lc),  "here wE are", "Mixed case string with \"lower the first upper\"";

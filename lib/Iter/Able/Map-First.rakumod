@@ -4,6 +4,10 @@
     >>> map-first [1, 2, 3], * > 0, -*
     (-1, 2, 3)
 
+    # Can use with all-pass filter to assign to head :)
+    >>> map-first ["", 5, 9, 11], { True }, { 0 }
+    (0, 5, 9, 11)
+
     # First uppercase to lowercase
     >>> "here WE are".&map-first(/ <.upper> /, &lc)
     "here wE are"
