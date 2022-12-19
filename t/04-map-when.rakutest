@@ -2,14 +2,17 @@ use Test;
 use Iter::Able::Map-When;
 
 say "\n*****Map-When*****";
-plan 8;
+plan 9;
 
 my $s;
 $s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
 is-deeply map-when($s, * > 0, * div 2), $s.map({$_ > 0 ?? $_ div 2 !! $_}), "Random list with * > 0, * div 2";
 
 $s := [];
-is-deeply map-when($s), [].Seq,  "Empty-list";
+is-deeply map-when($s, {;}, {;}), [].Seq,  "Empty-list (unimportant predicate and transformer)";
+
+$s := [4, 5];
+dies-ok { $s.&map-when }, "Argumentless map-when should die";
 
 $s := [0, 0, 0, 0];
 is-deeply map-when($s, * == 0, * + 1), [1, 1, 1, 1].Seq, "All zeros with * == 0, * + 1";
@@ -30,4 +33,3 @@ $s := "mixed feelings";
 is-deeply map-when($s, /:i <[aeiou]>/, &uc), "mIxEd fEElIngs", "String with mixed case; vowels uppercased";
 
 done-testing;
-    

@@ -49,12 +49,12 @@ my class MapWhen does Iterator {
     method is-lazy() { $!iter.is-lazy }
 }
 
-our proto map-when(\ist, &pred = {$_}, &mapper = {$_}) is export {*}
+our proto map-when(\ist, &pred, &mapper) is export {*}
 
-multi map-when(Iterable \it, &pred = {$_}, &mapper = {$_}) {
+multi map-when(Iterable \it, &pred, &mapper) {
     Seq.new: MapWhen.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }
 
-multi map-when(Str \st, &pred = {$_}, &mapper = {$_}) {
+multi map-when(Str \st, &pred, &mapper) {
     join "", Seq.new: MapWhen.new: st.comb, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }
