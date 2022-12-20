@@ -21,7 +21,7 @@ unit module Module-Name;
 use nqp;
 
 my class ClassName does Iterator {
-	has Mu $!iter;  #= Passed iterable's iterator
+    has Mu $!iter;  #= Passed iterable's iterator
     has &!pred;	    #= Predicate
     has &!mapper;   #= Transformer
 
@@ -30,16 +30,16 @@ my class ClassName does Iterator {
     method !SET-SELF($!iter, &!pred) { self }
 
     method new(\iterable, \pred) {
-		nqp::create(self)!SET-SELF(iterable.iterator, pred)
+        nqp::create(self)!SET-SELF(iterable.iterator, pred)
     }
 
     method pull-one {
         nqp::if(
-			# Is the iterable exhausted?
-    	    nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
-			# Yes; signal
+            # Is the iterable exhausted?
+            nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
+            # Yes; signal
             IterationEnd,
-			# No; ...
+            # No; ...
             nqp::stmts(
                 ...
             )
