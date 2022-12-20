@@ -1,0 +1,31 @@
+use Test;
+use Iter::Able::Chain;
+
+say "\n*****Chain*****";
+plan 9;
+
+my $s;
+$s := [-1, -2, -3];
+is-deeply chain($s, [4, 5], [-6]), (-1, -2, -3, 4, 5, -6).Seq, "Random list with 2 more lists";
+
+$s := [1, 2];
+is-deeply chain($s, 3 xx *).head(5), (1, 2, 3, 3, 3).Seq, "Random list with an infinite iterable";
+
+$s := (4, 7);
+is-deeply chain($s, "spa"), (4, 7, "s", "p", "a").Seq, "Random list with string chained";
+
+$s := [];
+is-deeply chain($s, [4, 5, 6]), [4, 5, 6].Seq, "Empty-list is chained fine";
+
+$s := [[4, 7], [6], [0, 8, 9]];
+is-deeply chain(|$s), (4, 7, 6, 0, 8, 9).Seq, 
+
+$s := "Real";
+is-deeply chain($s, " String"), "Real String".comb, "String chained with a string";
+
+# Invalid calls (since `chain` wasn't a multi, some validations are here)
+throws-like { [12, 3, 4].&chain }, Exception, "No other iterable/string provided", message => / 'No other' .* 'to chain with' $/;
+throws-like { [12, 3, 4].&chain: 3 }, Exception, "Non-iterable/string in chain", message => / 'Non-' .* 'found at' .* '; cannot chain' $/;
+throws-like { 5.&chain }, Exception, "Invocant is non-iterable/string", message => / 'expected, got' /;
+
+done-testing;
