@@ -11,7 +11,7 @@ unit module Cycle;
 use nqp;
 
 my class Cycle does Iterator {
-	has Mu $!iter;  #= Passed iterable's iterator
+    has Mu $!iter;     #= Passed iterable's iterator
 
     has $!values;      #= State: holds 1 full cycle
     has int $!index;   #= State: index into the cycle
@@ -24,21 +24,21 @@ my class Cycle does Iterator {
     }
 
     method new(\iterable) {
-		nqp::create(self)!SET-SELF(iterable.iterator)
+        nqp::create(self)!SET-SELF(iterable.iterator)
     }
 
     method pull-one {
         nqp::if(
-			# Is the iterable exhausted?
-    	    nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
-			# Yes; yield from $!values now on if it's not empty,
+            # Is the iterable exhausted?
+            nqp::isge_i($!index, 0) || nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
+            # Yes; yield from $!values now on if it's not empty,
             # i.e., if the original iterable wasn't empty
             nqp::if(
                 nqp::isgt_i($!length, 0),
                 $!values[nqp::mod_i(($!index = nqp::add_i($!index, 1)), $!length)],
                 IterationEnd
             ),
-			# No; store and yield it
+            # No; store and yield it
             nqp::stmts(
                 nqp::push($!values, $next),
                 ($!length = nqp::add_i($!length, 1)),
