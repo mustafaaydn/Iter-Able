@@ -2,11 +2,14 @@ use Test;
 use Iter::Able::Map-When;
 
 say "\n*****Map-When*****";
-plan 9;
+plan 11;
 
 my $s;
 $s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
 is-deeply map-when($s, * > 0, * div 2), $s.map({$_ > 0 ?? $_ div 2 !! $_}), "Random list with * > 0, * div 2";
+
+$s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
+is-deeply map-when($s, / '5' $ /, * div 2), $s.map({$_ ~~ / '5' $/ ?? $_ div 2 !! $_}), "Random list with a regex, * div 2";
 
 $s := [];
 is-deeply map-when($s, {;}, {;}), [].Seq,  "Empty-list (unimportant predicate and transformer)";
@@ -30,6 +33,9 @@ $s := [1, 0, -1, 2];
 is-deeply map-when($s, &{ False }, *.is-prime), $s.Seq, "Random list with no-pass predicate";
 
 $s := "mixed feelings";
-is-deeply map-when($s, /:i <[aeiou]>/, &uc), "mIxEd fEElIngs", "String with mixed case; vowels uppercased";
+is-deeply map-when($s, {$_ eq "e"}, &uc), "mixEd fEElings", "String with mixed case; normal callable & 'e' uppercased";
+
+$s := "mixed feelings";
+is-deeply map-when($s, /:i <[aeiou]>/, &uc), "mIxEd fEElIngs", "String with mixed case; regex & vowels uppercased";
 
 done-testing;

@@ -18,43 +18,14 @@
 }
 unit module Map-When;
 
-use nqp;
-
-my class MapWhen does Iterator {
-	has Mu $!iter;      #= Passed iterable's iterator
-    has &!pred;	        #= Predicate
-    has &!mapper;       #= Transformer
-
-    method !SET-SELF($!iter, &!pred, &!mapper) { self }
-
-    method new(\iterable, \pred, \mapper) {
-		nqp::create(self)!SET-SELF(iterable.iterator, pred, mapper)
-    }
-
-    method pull-one {
-        nqp::if(
-			# Is the iterable exhausted?
-    	    nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
-			# Yes; signal
-            IterationEnd,
-			# No; go on
-            nqp::if(
-                &!pred($next),
-                &!mapper($next),
-                $next,
-            )
-        )
-    }
-
-    method is-lazy() { $!iter.is-lazy }
-}
-
 our proto map-when(\ist, &pred, &mapper) is export {*}
 
 multi map-when(Iterable \it, &pred, &mapper) {
-    Seq.new: MapWhen.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
+    my &_pred = &pred ~~ Regex ?? (* ~~ &pred).so !! &pred;
+    it.map({ _pred($_) ?? mapper($_) !! $_ })
 }
 
 multi map-when(Str \st, &pred, &mapper) {
-    join "", Seq.new: MapWhen.new: st.comb, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
+    my &_pred = &pred ~~ Regex ?? (* ~~ &pred).so !! &pred;
+    st.comb.map({ _pred($_) ?? mapper($_) !! $_ }).join
 }
