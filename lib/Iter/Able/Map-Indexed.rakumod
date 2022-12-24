@@ -18,17 +18,17 @@ unit module Map-Indexed;
 use nqp;
 
 my class MapIndexed does Iterator {
-	has Mu $!iter;    #= Passed iterable's iterator
+	has Mu $!iter;    #= Passed iterator
     has &!mapper;     #= Transformer
 
     has int $!index;  #= State: current index
 
     method !SET-SELF($!iter, &!mapper, $!index) { self }
 
-    method new(\iterable, \mapper, $start) {
+    method new(\iterator, \mapper, $start) {
         # `$start - 1` instead of `$start` to ease increasing of `$!index`
         # also \start did not work due to clash with the built-in function.
-		nqp::create(self)!SET-SELF(iterable.iterator, mapper, $start - 1)
+		nqp::create(self)!SET-SELF(iterator, mapper, $start - 1)
     }
 
     method pull-one {
@@ -48,9 +48,13 @@ my class MapIndexed does Iterator {
 our proto map-indexed(\ist, &mapper = {@_.List}, :$start = 0) is export {*}
 
 multi map-indexed(Iterable \it, &mapper = {@_.List}, :$start = 0) {
+    Seq.new: MapIndexed.new: it.iterator, &mapper, $start
+}
+
+multi map-indexed(Iterator \it, &mapper = {@_.List}, :$start = 0) {
     Seq.new: MapIndexed.new: it, &mapper, $start
 }
 
 multi map-indexed(Str \st, &mapper = {@_.List}, :$start = 0) {
-    Seq.new: MapIndexed.new: st.comb, &mapper, $start
+    Seq.new: MapIndexed.new: st.comb.iterator, &mapper, $start
 }

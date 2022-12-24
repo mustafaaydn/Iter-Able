@@ -21,7 +21,7 @@ unit module Map-First;
 use nqp;
 
 my class MapFirst does Iterator {
-	has Mu $!iter;         #= Passed iterable's iterator
+	has Mu $!iter;         #= Passed iterator
     has &!pred;	           #= Predicate
     has &!mapper;          #= Transformer
 
@@ -29,8 +29,8 @@ my class MapFirst does Iterator {
 
     method !SET-SELF($!iter, &!pred, &!mapper) { self }
 
-    method new(\iterable, \pred, \mapper) {
-		nqp::create(self)!SET-SELF(iterable.iterator, pred, mapper)
+    method new(\iterator, \pred, \mapper) {
+		nqp::create(self)!SET-SELF(iterator, pred, mapper)
     }
 
     method pull-one {
@@ -62,9 +62,13 @@ my class MapFirst does Iterator {
 our proto map-first(\ist, &pred, &mapper) is export {*}
 
 multi map-first(Iterable \it, &pred, &mapper) {
+    Seq.new: MapFirst.new: it.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
+}
+
+multi map-first(Iterator \it, &pred, &mapper) {
     Seq.new: MapFirst.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }
 
 multi map-first(Str \st, &pred, &mapper) {
-    join "", Seq.new: MapFirst.new: st.comb, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
+    join "", Seq.new: MapFirst.new: st.comb.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }

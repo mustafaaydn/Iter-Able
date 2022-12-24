@@ -18,7 +18,7 @@ unit module Skip-While;
 use nqp;
 
 my class SkipWhile does Iterator {
-	has Mu $!iter;          #= Passed iterable's iterator
+	has Mu $!iter;          #= Passed iterator
     has &!pred;	            #= Predicate
 
     has int $!skipped-all;  #= State: whether invalids are yet got ridden of
@@ -28,8 +28,8 @@ my class SkipWhile does Iterator {
         self
     }
 
-    method new(\iterable, \pred) {
-		nqp::create(self)!SET-SELF(iterable.iterator, pred)
+    method new(\iterator, \pred) {
+		nqp::create(self)!SET-SELF(iterator, pred)
     }
 
     method pull-one {
@@ -63,9 +63,13 @@ my class SkipWhile does Iterator {
 our proto skip-while(\ist, &pred = {$_}) is export {*}
 
 multi skip-while(Iterable \it, &pred = {$_}) {
+    Seq.new: SkipWhile.new: it.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
+}
+
+multi skip-while(Iterator \it, &pred = {$_}) {
     Seq.new: SkipWhile.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
 multi skip-while(Str \st, &pred = {$_}) {
-    join "", Seq.new: SkipWhile.new: st.comb, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
+    join "", Seq.new: SkipWhile.new: st.comb.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }

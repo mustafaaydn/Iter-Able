@@ -11,7 +11,7 @@ unit module Cycle;
 use nqp;
 
 my class Cycle does Iterator {
-    has Mu $!iter;     #= Passed iterable's iterator
+    has Mu $!iter;     #= Passed iterator
 
     has $!values;      #= State: holds 1 full cycle
     has int $!index;   #= State: index into the cycle
@@ -23,8 +23,8 @@ my class Cycle does Iterator {
         self
     }
 
-    method new(\iterable) {
-        nqp::create(self)!SET-SELF(iterable.iterator)
+    method new(\iterator) {
+        nqp::create(self)!SET-SELF(iterator)
     }
 
     method pull-one {
@@ -53,9 +53,13 @@ my class Cycle does Iterator {
 our proto cycle(\ist) is export {*}
 
 multi cycle(Iterable \it) {
+    Seq.new: Cycle.new: it.iterator
+}
+
+multi cycle(Iterator \it) {
     Seq.new: Cycle.new: it
 }
 
 multi cycle(Str \st) {
-    Seq.new: Cycle.new: st.comb
+    Seq.new: Cycle.new: st.comb.iterator
 }

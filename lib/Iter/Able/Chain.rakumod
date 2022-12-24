@@ -33,8 +33,8 @@ my class Chain does Iterator {
         self
     }
 
-    method new(\iterable, @iters) {
-		nqp::create(self)!SET-SELF(iterable.iterator, @iters.map(*.iterator).Array)
+    method new(\iterator, @iterators) {
+		nqp::create(self)!SET-SELF(iterator, @iterators.Array)
     }
 
     method pull-one {
@@ -57,13 +57,16 @@ my class Chain does Iterator {
 
 use Iter::Able::Map-When;
 
-our sub chain(\it, **@iters) is export {
-    die "Iterable or Str expected, got {it.^name}"
-        unless it ~~ Iterable | Str;
-    die "No other Iterable/Str passed to chain with"
+our sub chain(\ist, **@iters) is export {
+    die "Iterable, Iterator or Str expected, got {ist.^name}"
+        unless ist ~~ Iterable | Str | Iterator;
+    die "No other Iterable/Str/Iterator passed to chain with"
         unless @iters;
-    die "Non-Iterable/Str found at $_\'th index; cannot chain"
-        with @iters.first(* !~~ Iterable|Str, :k);
+    die "Non-Iterable/Str/Iterator found at $_\'th index; cannot chain"
+        with @iters.first(* !~~ Iterable | Str | Iterator, :k);
 
-    Seq.new: Chain.new: (it ~~ Str ?? it.comb !! it), @iters.&map-when(* ~~ Str, *.comb)
+    Seq.new:
+        Chain.new:
+            (ist ~~ Str ?? ist.comb.iterator !! (ist ~~ Iterable ?? ist.iterator !! ist)),
+            @iters.&map-when(* ~~ Str, *.comb.iterator).&map-when(* ~~ Iterable, *.iterator)
 }

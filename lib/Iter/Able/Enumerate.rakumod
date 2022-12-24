@@ -12,13 +12,13 @@ unit module Enumerate;
 use nqp;
 
 my class Enumerate does Iterator {
-	has Mu $!iter;  #= Passed iterable's iterator
+	has Mu $!iter;  #= Passed iterator
     has $!start;    #= State: current index
 
     method !SET-SELF($!iter, $!start) { self }
 
-    method new(\iterable, \start) {
-		nqp::create(self)!SET-SELF(iterable.iterator, start)
+    method new(\iterator, \start) {
+		nqp::create(self)!SET-SELF(iterator, start)
     }
 
     method pull-one {
@@ -38,9 +38,13 @@ my class Enumerate does Iterator {
 our proto enumerate(\ist, :$start = 0) is export {*}
 
 multi enumerate(Iterable \it, :$start = 0) {
+    Seq.new: Enumerate.new: it.iterator, $start
+}
+
+multi enumerate(Iterator \it, :$start = 0) {
     Seq.new: Enumerate.new: it, $start
 }
 
 multi enumerate(Str \st, :$start = 0) {
-    Seq.new: Enumerate.new: st.comb, $start
+    Seq.new: Enumerate.new: st.comb.iterator, $start
 }

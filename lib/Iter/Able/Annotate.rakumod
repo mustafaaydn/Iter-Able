@@ -13,7 +13,7 @@
     (("this and that", ｢this｣), ("yes and no", ｢yes｣), ("real", Nil))
 
     # is-upper decoration
-    >>> annotate "reAL", {$_ eq .uc}
+    >>> annotate "reAL", {$_ eq .uc}  # or `so * ~~ / <.upper> /``
     (("r", False), ("e", False), ("A", True), ("L", True))
 }
 unit module Annotate;
@@ -21,13 +21,13 @@ unit module Annotate;
 use nqp;
 
 my class Annotate does Iterator {
-	has Mu $!iter;  #= Passed iterable's iterator
+	has Mu $!iter;  #= Passed iterator
     has &!mapper;   #= Transformer
 
     method !SET-SELF($!iter, &!mapper) { self }
 
-    method new(\iterable, \mapper) {
-		nqp::create(self)!SET-SELF(iterable.iterator, mapper)
+    method new(\iterator, \mapper) {
+		nqp::create(self)!SET-SELF(iterator, mapper)
     }
 
     method pull-one {
@@ -47,9 +47,13 @@ my class Annotate does Iterator {
 our proto annotate(\ist, &mapper = {$_}) is export {*}
 
 multi annotate(Iterable \it, &mapper = {$_}) {
+    Seq.new: Annotate.new: it.iterator, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
+}
+
+multi annotate(Iterator \it, &mapper = {$_}) {
     Seq.new: Annotate.new: it, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
 }
 
 multi annotate(Str \st, &mapper = {$_}) {
-    Seq.new: Annotate.new: st.comb, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
+    Seq.new: Annotate.new: st.comb.iterator, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
 }

@@ -18,11 +18,17 @@
 }
 unit module Map-When;
 
+#= Implemented in terms of `map`
 our proto map-when(\ist, &pred, &mapper) is export {*}
 
 multi map-when(Iterable \it, &pred, &mapper) {
     my &_pred = &pred ~~ Regex ?? (* ~~ &pred).so !! &pred;
     it.map({ _pred($_) ?? mapper($_) !! $_ })
+}
+
+multi map-when(Iterator \it, &pred, &mapper) {
+    my &_pred = &pred ~~ Regex ?? (* ~~ &pred).so !! &pred;
+    Seq.new(it).map({ _pred($_) ?? mapper($_) !! $_ })
 }
 
 multi map-when(Str \st, &pred, &mapper) {

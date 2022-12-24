@@ -29,7 +29,7 @@ unit module Group-Conseq;
 use nqp;
 
 my class GroupConseq does Iterator {
-    has Mu $!iter;  #= Passed iterable's iterator
+    has Mu $!iter;  #= Passed iterator
     has &!as;       #= Transformer function
     has &!with;     #= Comparison operator
 
@@ -42,8 +42,8 @@ my class GroupConseq does Iterator {
         self;
     }
 
-    method new(\iterable, \as, \with) {
-        nqp::create(self)!SET-SELF(iterable.iterator, as, with)
+    method new(\iterator, \as, \with) {
+        nqp::create(self)!SET-SELF(iterator, as, with)
     }
 
     method pull-one {
@@ -88,12 +88,16 @@ my class GroupConseq does Iterator {
     method is-lazy() { $!iter.is-lazy }
 }
 
-our proto group-conseq(\ist, :&as, :&with) is export {*}
+our proto group-conseq(\ist, :&as = {$_}, :&with = &[===]) is export {*}
 
 multi group-conseq(Iterable \it, :&as = {$_}, :&with = &[===]) {
+    Seq.new: GroupConseq.new: it.iterator, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
+}
+
+multi group-conseq(Iterator \it, :&as = {$_}, :&with = &[===]) {
     Seq.new: GroupConseq.new: it, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
 }
 
 multi group-conseq(Str \st, :&as = {$_}, :&with = &[===]) {
-    Seq.new: GroupConseq.new: st.comb, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
+    Seq.new: GroupConseq.new: st.comb.iterator, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
 }
