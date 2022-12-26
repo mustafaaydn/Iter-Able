@@ -2,7 +2,7 @@ use Test;
 use Iter::Able::Flatten;
 
 say "\n*****Flatten*****";
-plan 7;
+plan 9;
 
 my $s;
 $s := [1, 2, 3];
@@ -16,6 +16,15 @@ is-deeply flatten($s), [2, 4, 5, 6, 7, 77, 777].Seq, "Random list with 2 levels"
 
 $s := [["a", ("b", "c")], [("d",), "e", "f", ["g", ("h", "i")]]];
 is-deeply $s.&flatten, "abcdefghi".comb, "Ragged list";
+
+# Note: following 2 are *not* expected to return Seqs.
+# But `is-deeply` unfortunately cannot see the distinction in the first case...
+# This is a known "issue"; see the Testo module.
+$s := ((1, (2, 3)), (4, 5, 6), 7);
+is-deeply $s.&flatten(:1level), (1, (2, 3), 4, 5, 6, 7), "Explicit 1-level flattening";
+
+$s := [["a", ("b", ("c", "d"))], [[[["e"],],],]];
+is-deeply $s.&flatten(:2levels), ["a", "b", ("c", "d"), [["e"],]], "Explicit 2-level flattening and using the alias";
 
 $s := [];
 is-deeply flatten($s), [].Seq,  "Empty-list";
