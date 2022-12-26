@@ -37,8 +37,9 @@ say "\nWrote\n$new-mod-path\n$new-test-path";
 my IO::Path $top-level-mod = "lib/Iter/Able.rakumod".IO;
 my Str @lines   = $top-level-mod.lines(:!chomp);
 my Int $idx     = @lines.first(/^ 'use Iter::Able::' /, :end, :k).succ;
-my Str $new-use = "use Iter::Able::$module-name;\n"; 
+my Str $new-use = "use Iter::Able::$module-name;\n\n"; 
 @lines.splice($idx, 1, $new-use);
 $top-level-mod.spurt: @lines.join;
 
-say "\nAdded `$new-use` to $top-level-mod";
+say "\nAdded `{$new-use.trim-trailing}` to $top-level-mod";
+
