@@ -32,7 +32,7 @@ use Iter::Able::Map-Indexed;
 use Iter::Able::Map-First;
 use Iter::Able::Map-Last;
 use Iter::Able::Chain;
-
+use Iter::Able::Flatten;
 # Subscribe all the subs to the package as well in case one wants to refer
 # to them with their semi-FQNs, e.g., `Iter::Able::take-while(...)`, e.g., to
 # prevent naming collisions or such.

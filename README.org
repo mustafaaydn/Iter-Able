@@ -87,6 +87,22 @@ Generates (index, element) lists, with the starting index specifiable.
     ((1, "y"), (2, "e"), (3, "s"))
 #+end_src
 
+**** flatten =(\it)=
+Makes a "one dimensional" iterable. Unlike the built-in =flat=, does not respect itemized iterables.
+#+begin_src raku
+    # A list of lists and an integer
+    >>> flatten ((1, 2), (3, 4, 5), 6)
+    (1, 2, 3, 4, 5, 6)
+
+    # Unlike `flat`, itemizeds are subject to flattenning
+    >>> [(3, 4), 5, (6,)].&flatten
+    (3, 4, 5, 6)
+
+    # Ragged
+    >>> flatten [["a", ("b", "c")], [("d",), "e", "f", ["g", ("h", "i")]]]
+    ("a", "b", "c", "d", "e", "f", "g", "h", "i")
+#+end_src
+
 **** group-conseq =(\ist, :&as = {$_}, :&with = &[===])=
 Pack consecutive "same" elements together and yield "key => group" pairs where `group`s are Lists (values are not copied). Sameness can be controlled with a transformer (`as`) and/or an equality checker (`with`).
 #+begin_src raku
