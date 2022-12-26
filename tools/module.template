@@ -21,16 +21,16 @@ unit module Module-Name;
 use nqp;
 
 my class ClassName does Iterator {
-    has Mu $!iter;  #= Passed iterable's iterator
-    has &!pred;	    #= Predicate
+    has Mu $!iter;  #= Passed iterator
+    has &!pred;     #= Predicate
     has &!mapper;   #= Transformer
 
     has $!curr;     #= State: current value
 
     method !SET-SELF($!iter, &!pred) { self }
 
-    method new(\iterable, \pred) {
-        nqp::create(self)!SET-SELF(iterable.iterator, pred)
+    method new(\iterator, \pred) {
+        nqp::create(self)!SET-SELF(iterator, pred)
     }
 
     method pull-one {
@@ -52,9 +52,13 @@ my class ClassName does Iterator {
 our proto fun-name(\ist, &pred = {$_}) is export {*}
 
 multi fun-name(Iterable \it, &pred = {$_}) {
+    Seq.new: ClassName.new: it.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
+}
+
+multi fun-name(Iterator \it, &pred = {$_}) {
     Seq.new: ClassName.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
 multi fun-name(Str \st, &pred = {$_}) {
-    join "", Seq.new: ClassName.new: st.comb, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
+    join "", Seq.new: ClassName.new: st.comb.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
