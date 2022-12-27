@@ -1,0 +1,36 @@
+use Test;
+use Iter::Able::Replace;
+
+say "\n*****Replace*****";
+plan 10;
+
+my $s;
+$s := [2, 2, 3, -4, 5];
+is-deeply replace($s, 2 => -2), [-2, -2, 3, -4, 5].Seq, "Random list with 1 pair";
+
+$s := (2, 2, 3, -4, 5);
+is-deeply $s.&replace((3, -4, 5) X=> 2), (2 xx $s), "Random list with 3 pairs";
+
+$s := (2, 2, 3, -4, 5);
+is-deeply replace($s), $s, "Random list no pairs";
+
+$s := [2, 2, 3, -4, 5];
+is-deeply replace($s, 'f' => 'r', 0 => "-3"), $s.Seq, "Random list uneffective pairs";
+
+$s := [];
+is-deeply replace($s), $s, "Empty-list with no pair";
+
+$s := [];
+is-deeply replace($s, 5 => -2), [].Seq,  "Empty-list with a pair";
+
+$s := [0, 0, 0, 0];
+is-deeply replace($s, 0 => "zero"), ("zero" xx $s), "All zeros, all replaced";
+
+# invalid calls
+throws-like { [].&replace(7) }, Exception, "Non-pair translator", message => / 'Expected all Pairs' /;
+
+throws-like { [].&replace($(3, 5) => 7) }, Exception, "Non Numeric/String LHS of a translator", message => / 'Only Numerics or Strings' /;
+
+throws-like { "".&replace }, Exception, "Calling on strings", message => / 'not implemented for strings' /;
+
+done-testing;
