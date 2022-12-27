@@ -25,7 +25,7 @@ $new-mod-path.spurt: "tools/module.template".IO.slurp.&translate;
 
 # Test file
 my Str $test-no = 
-    ((my $d = dir("t").cache).first(/$fun-name/)
+    ((my $d = dir("t").cache).first(/ ^ $fun-name $ /)
         andthen .Str.comb(/\d+/).head                     # already exists
         orelse $d.sort.tail.Str.comb(/\d+/).head.succ);   # anew
 my IO::Path $new-test-path = "t/{$test-no}-{$fun-name}.rakutest".IO;
