@@ -32,6 +32,10 @@ is-deeply fun-name($s, &{ True }), EXPECTED, "Random list with all-pass predicat
 $s := [1, 0, -1, 2];
 is-deeply fun-name($s, &{ False }), EXPECTED, "Random list with no-pass predicate";
 
+my \it = [12, 3, 4].iterator;
+it.pull-one for ^2;
+is-deeply fun-name(it, ...), EXPECTED, "Iterator with ...";
+
 $s := "Real String";
 is-deeply fun-name($s, ...), EXPECTED, "String with ...";
 
