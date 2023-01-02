@@ -46,6 +46,34 @@ Generates (x, f(x)) lists. By default, f(x) = x.
     (("r", False), ("e", False), ("A", True), ("L", True))
 #+end_src
 
+**** assign-at =(\ist, *@pairs)=
+Perform index-based replacement given index => new-value pairs.
+#+begin_src raku
+    # Replace what's at index 1
+    >>> [0, 1, 2, 3].&assign-at(1 => -9)
+    (0, -9, 2, 3)
+
+    # Multiple index-value pairs are possible
+    >>> [4, 3, 2, 1].&assign-at(0 => -4, 2 => -1)
+    (-4, 3, -1, 1)
+
+    # Out of bounds indexes are ignored
+    >>> [5, 55, 555].&assign-at(3 => 5555)
+    (5, 55, 555)
+
+    # Strings are possible too
+    >>> "past".&assign-at(0 => "q")
+    "qast"
+
+    # Empty string as the replacer removes
+    >>> "until".&assign-at(1 => "")
+    "util"
+
+    # Can expand a string
+    >>> "play".&assign-at(0 => "de")
+    "delay"
+#+end_src
+
 **** chain =(\ist, **@iters)=
 Yield from this iterable first; when exhausted, from next, and so on.
 #+begin_src raku
@@ -159,7 +187,7 @@ Map only the first item matching the predicate, if any.
 #+end_src
 
 **** map-indexed =(\ist, &mapper = {@_.List}, :$start = 0)=
-(index, element) pair is passed to the transformer; by default `index` starts from 0. The transformer is expected to have arity of 2 (or count of Inf).
+Maps the iterable given the index and the element, i.e., `-> $idx, $val { ... }` is the mapper. By default `index` starts from 0 but can be changed with `:$start`.
 #+begin_src raku
     # Produce new items as `index * element`
     >>> [3, 2, 1].&map-indexed(* * *)
@@ -168,6 +196,10 @@ Map only the first item matching the predicate, if any.
     # `index + element` as kind of an added ramp and also start from 1
     >>> (4, 7, 12, -3).&map-indexed(* + *, start => 1)
     (5, 9, 16, 1)
+
+    # Even indexed values are zeroed out
+    >>> (4, 7, -1).&cycle.&map-indexed({ $^idx %% 2 ?? 0 !! $^val }).head(5)
+    (0, 7, 0, 4, 0)
 
     # Repeat a character as many as its position suggests
     >>> "train".&map-indexed(* Rx *, start => 1)
