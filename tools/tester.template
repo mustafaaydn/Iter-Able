@@ -14,8 +14,8 @@ is-deeply fun-name($s, ...), EXPECTED, "Random list with ...";
 $s := [];
 is-deeply fun-name($s, ...), EXPECTED,  "Empty list";
 
-$s = ();
-is-deeply fun-name($s, ...), EXPECTED,  "Empty itemized list";
+my $t = ();
+is-deeply fun-name($t, ...), EXPECTED,  "Empty itemized list";
 
 $s := [0, 0, 0, 0];
 is-deeply fun-name($s, ...), EXPECTED, "All zeros with ...";
