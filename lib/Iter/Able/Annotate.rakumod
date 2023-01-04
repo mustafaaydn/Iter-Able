@@ -19,24 +19,23 @@
 unit module Annotate;
 
 use nqp;
-
 my class Annotate does Iterator {
-	has Mu $!iter;  #= Passed iterator
+    has Mu $!iter;  #= Passed iterator
     has &!mapper;   #= Transformer
 
     method !SET-SELF($!iter, &!mapper) { self }
 
     method new(\iterator, \mapper) {
-		nqp::create(self)!SET-SELF(iterator, mapper)
+        nqp::create(self)!SET-SELF(iterator, mapper)
     }
 
     method pull-one {
         nqp::if(
-			# Is the iterable exhausted?
-    	    nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
-			# Yes; signal
+            # Is the iterable exhausted?
+            nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
+            # Yes; signal
             IterationEnd,
-			# No; ...
+            # No; ...
             ($next, &!mapper($next))
         )
     }
