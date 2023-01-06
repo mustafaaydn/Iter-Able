@@ -18,7 +18,7 @@ $s := [0, -1, -2, -3];
 is-deeply take-while($s, * < 0), [].Seq, "No leading negatives with `* < 0`";
 
 $s := [6, 7, 8, 93, 51, 0, 4, -3, 64];
-is-deeply take-while($s), $s[^$s.first(*.not, :k)].Seq, "Random list with no predicate, i.e., until first falseful";
+is-deeply take-while($s, {$_}), $s[^$s.first(*.not, :k)].Seq, "Random list with identity predicate, i.e., until first falseful";
 
 $s := [1, 0, -1, 2];
 is-deeply take-while($s, &{True}), $s.Seq, "Random list with all-pass predicate";

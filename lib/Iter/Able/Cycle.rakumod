@@ -1,10 +1,10 @@
-#| Repeat indefinitely.
+#| Repeats the stream indefinitely. Returns a Seq for strings.
 #`{
     >>> [1, 2, 3].&cycle.head(5)
     (1, 2, 3, 1, 2)
 
-    >>> "real".&cycle.head(8)
-    ("r", "e", "a", "l", "r", "e", "a", "l")
+    >>> "real".&cycle.head(9)
+    ("r", "e", "a", "l", "r", "e", "a", "l", "r")
 }
 unit module Cycle;
 
@@ -52,14 +52,6 @@ my class Cycle does Iterator {
 
 our proto cycle(\ist) is export {*}
 
-multi cycle(Iterable \it) {
-    Seq.new: Cycle.new: it.iterator
-}
-
-multi cycle(Iterator \it) {
-    Seq.new: Cycle.new: it
-}
-
-multi cycle(Str \st) {
-    Seq.new: Cycle.new: st.comb.iterator
-}
+multi cycle(Iterable \it) { Seq.new: Cycle.new: it.iterator }
+multi cycle(Iterator \it) { Seq.new: Cycle.new: it }
+multi cycle(Str \st)      { Seq.new: Cycle.new: st.comb.iterator }

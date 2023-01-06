@@ -1,5 +1,5 @@
-#| Insert value(s) at the given position(s). Cannot insert past the
-#| end even if finite; see =chain= for that.
+#| Inserts values at the given positions. Cannot insert past the end
+#| even if finite; see =chain= for that.
 #`{
     # At the beginning
     >>> [2, 3].&insert-at(0 => 1)

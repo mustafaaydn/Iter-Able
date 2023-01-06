@@ -1,6 +1,6 @@
-#| Perform index-based replacement given index => new-value pairs.
+#| Performs index-based replacement given index => new-value pairs.
 #`{
-    # Replace what's at index 1
+    # Replaces what's at index 1
     >>> [0, 1, 2, 3].&assign-at(1 => -9)
     (0, -9, 2, 3)
 
@@ -8,7 +8,7 @@
     >>> [4, 3, 2, 1].&assign-at(0 => -4, 2 => -1)
     (-4, 3, -1, 1)
 
-    # Out of bounds indexes are ignored
+    # Out-of-bounds indexes are silently ignored
     >>> [5, 55, 555].&assign-at(3 => 5555)
     (5, 55, 555)
 
@@ -17,11 +17,11 @@
     "qast"
 
     # Empty string as the replacer removes
-    >>> "until".&assign-at(1 => "")
+    >>> "until".&assign-at(1 => "").raku
     "util"
 
     # Can expand a string
-    >>> "play".&assign-at(0 => "de")
+    >>> "play".&assign-at(0 => "de").raku
     "delay"
 }
 unit module Assign-At;
@@ -35,11 +35,11 @@ my class AssignAt does Iterator {
     has str $!index;  #= State: current index
     
     method !SET-SELF($iter, @pairs) {
-	$!iter := $iter;
-	$!pairs := nqp::hash;
-	$!index = '0';
-	nqp::bindkey($!pairs, .key.Str, .value) for @pairs;
-	self
+        $!iter := $iter;
+        $!pairs := nqp::hash;
+        $!index = '0';
+        nqp::bindkey($!pairs, .key.Str, .value) for @pairs;
+        self
     } 
 
     method new(\iterator, @pairs) {
@@ -54,13 +54,13 @@ my class AssignAt does Iterator {
             IterationEnd,
             # No; return what pairs has or the $next
             nqp::stmts(
-		nqp::if(
+                nqp::if(
                     nqp::existskey($!pairs, $!index),
-	            nqp::atkey($!pairs, $!index++),
-		    nqp::stmts(++$!index, $next)
-		)
+                    nqp::atkey($!pairs, $!index++),
+                    nqp::stmts(++$!index, $next)
+                )
             )
-	)
+        )
     }
 
     method is-lazy() { $!iter.is-lazy }
@@ -74,11 +74,11 @@ my class AssignAt-String does Iterator {
     has str $!index;  #= State: current index
     
     method !SET-SELF($iter, @pairs) {
-	$!iter := $iter;
-	$!pairs := nqp::hash;
-	$!index = '0';
-	nqp::bindkey($!pairs, .key.Str, .value) for @pairs;
-	self
+        $!iter := $iter;
+        $!pairs := nqp::hash;
+        $!index = '0';
+        nqp::bindkey($!pairs, .key.Str, .value) for @pairs;
+        self
     } 
 
     method new(\iterator, @pairs) {
@@ -93,17 +93,17 @@ my class AssignAt-String does Iterator {
             IterationEnd,
             # No; return what pairs has or remove, or the $next
             nqp::stmts(
-		nqp::if(
+                nqp::if(
                     nqp::existskey($!pairs, $!index),
-		    nqp::if(
-			nqp::iseq_s((my $new = nqp::atkey($!pairs, $!index++)), ""),
-			self.pull-one,
-			$new
-		    ),
-		    nqp::stmts(++$!index, $next)
-		)
+                    nqp::if(
+                        nqp::iseq_s((my $new = nqp::atkey($!pairs, $!index++)), ""),
+                        self.pull-one,
+                        $new
+                    ),
+                    nqp::stmts(++$!index, $next)
+                )
             )
-	)
+        )
     }
 
     method is-lazy() { $!iter.is-lazy }

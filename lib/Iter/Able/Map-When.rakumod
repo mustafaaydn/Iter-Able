@@ -1,6 +1,6 @@
-#| If an element satisfies the predicate, transform it; else, keep as is.
+#| Maps only the elements that satisfy the predicate, if any.
 #`{
-    # If nonpositive, make it cubed
+    # If nonpositive, make it cubed; else, keep as is
     >>> [1, -2, 3, 0, 4, -5].&map-when(* <= 0, * ** 3)
     (1, -8, 3, 0, 4, -125)
 

@@ -1,4 +1,6 @@
-#| Maps the iterable given the index and the element, i.e., `-> $idx, $val { ... }` is the mapper. By default `index` starts from 0 but can be changed with `:$start`.
+#| Maps the iterable given the index and the element, i.e., `-> $idx,
+#| $val { ... }` is the mapper. By default `index` starts from 0 but
+#| can be changed with `:$start`. Returns a Seq for strings.
 #`{
     # Produce new items as `index * element`
     >>> [3, 2, 1].&map-indexed(* * *)
@@ -48,7 +50,7 @@ my class MapIndexed does Iterator {
     method is-lazy() { $!iter.is-lazy }
 }
 
-our proto map-indexed(\ist, &mapper = {@_.List}, :$start = 0) is export {*}
+our proto map-indexed(\ist, &mapper = {@_.List}, Numeric :$start = 0) is export {*}
 
 multi map-indexed(Iterable \it, &mapper = {@_.List}, :$start = 0) {
     Seq.new: MapIndexed.new: it.iterator, &mapper, $start

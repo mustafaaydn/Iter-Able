@@ -1,4 +1,4 @@
-#| Map only the last item matching the predicate, if any.
+#| Maps only the last item that satisfies the predicate, if any.
 #`{
     # Last negative to positive
     >>> map-last [2, -3, 4, -6, 8], * < 0, -*
@@ -9,10 +9,10 @@
     (3, 4, 7, -1)
 
     # Last lowercase to uppercase
-    >>> "here we are!".&map-last(/ <.lower> /, &uc)
+    >>> "here we are!".&map-last(/ <.lower> /, &uc).raku
     "here we arE!"
 
-    # If noone matches, everyone is yielded as is
+    # If no one matches, everyone is yielded as is
     >>> [57, 91, -13].&map-last(*.is-prime, { 0 });
     (57, 91, -13)
 }

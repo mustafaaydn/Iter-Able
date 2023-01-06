@@ -1,6 +1,6 @@
-#| Generates (x, f(x)) lists. By default, f(x) = x.
-#`{
-    # Mirrors the items by default
+#| Generates =(x, f(x))= lists. By default, =f(x) = x=. Returns a Seq
+#| for strings.
+#`{ # Mirrors the items by default
     >>> [-4, 3, 0].&annotate
     ((-4, -4), (3, 3), (0, 0))
 
@@ -13,7 +13,7 @@
     (("this and that", ｢this｣), ("yes and no", ｢yes｣), ("real", Nil))
 
     # is-upper decoration
-    >>> annotate "reAL", {$_ eq .uc}  # or `so * ~~ / <.upper> /``
+    >>> annotate "reAL", {$_ eq .uc}  # or `so * ~~ / <.upper> /`
     (("r", False), ("e", False), ("A", True), ("L", True))
 }
 unit module Annotate;

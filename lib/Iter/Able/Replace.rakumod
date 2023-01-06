@@ -1,6 +1,6 @@
-#| Translates values by looking up in the given pairs. All occurences
-#| are replaced.  Only Numerics and Strings are replaced; for others,
-#| see =map-when=. For replacing strings, see the built-in =trans=.
+#| Translates values through the given pairs. All occurences are
+#| replaced. Only Numerics and Strings are replaced; for others, see
+#| =map-when=. For replacing strings, see the built-in =trans=.
 #`{
     # Replace a single value
     >>> [1, 2, 3].&replace(2 => 99)

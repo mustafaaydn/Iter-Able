@@ -1,9 +1,9 @@
 #| Makes a "one dimensional" iterable. Unlike the built-in =flat=,
-#| does not respect itemized iterables. The number of levels to flatten
-#| can be controlled with the =:$level= parameter; currently leveled flattening
-#| reifies the iterable.
+#| this does not respect itemized iterables. The number of levels to
+#| flatten can be controlled with the =:$level= parameter; currently
+#| leveled flattening reifies the iterable.
 #`{
-    # Flatten all the way by default
+    # Flattens all-the-way by default
     >>> flatten ((1, (2, 3)), (4, 5, 6), 7)
     (1, 2, 3, 4, 5, 6, 7)
 
@@ -15,18 +15,17 @@
     >>> [(3, 4), 5, (6,)].&flatten
     (3, 4, 5, 6)
 
-    # Ragged all the way
+    # Flatten a ragged one all the way
     >>> flatten [["a", ("b", "c")], [("d",), "e", "f", ["g", ("h", "i")]]]
     ("a", "b", "c", "d", "e", "f", "g", "h", "i")
 
-    # Ragged up to 2 levels
+    # Up to 2 levels of unraggification
     >>> flatten [["a", ("b", ("c", "d"))], [[[["e"],],],]], :2levels
     ["a", "b", ("c", "d"), [["e"],]]
-
 }
 unit module Flatten;
 
-our proto flatten(\it, :levels(:$level)) is export {*}
+our proto flatten(\it, UInt :levels(:$level)) is export {*}
 
 multi flatten(Iterable \it, :levels(:$level)) {
     return (gather it.deepmap(&take)) without $level;

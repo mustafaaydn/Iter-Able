@@ -18,7 +18,7 @@ $r := [-1, -2, 0, -3];
 is-deeply skip-while($r, * < 0), [0, -3].Seq, "Separated negatives with `* < 0`";
 
 $r := [6, 7, 8, 93, 51, 0, 4, -3, 64];
-is-deeply skip-while($r), $r[$r.first(*.not, :k)..*].Seq, "Random list without a predicate, i.e., from first falseful on";
+is-deeply skip-while($r, {$_}), $r[$r.first(*.not, :k)..*].Seq, "Random list with identity predicate, i.e., from first falseful on";
 
 $r := [1, 0, -1, 2];
 is-deeply skip-while($r, &{False}), $r.Seq, "Random list with no-pass predicate, i.e., no skips";

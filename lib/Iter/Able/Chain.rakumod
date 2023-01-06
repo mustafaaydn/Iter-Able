@@ -1,4 +1,5 @@
-#| Yield from this iterable first; when exhausted, from next, and so on.
+#| Yields from this iterable first; when exhausted, from the next one
+#| in the chain, and so on. Returns a Seq for strings.
 #`{
     # Accepts any number of iterables
     >>> [-1, -2, -3].&chain([4, 5], [-6])
@@ -8,7 +9,11 @@
     >>> [1, 2].&chain(3 xx *).head(5)
     (1, 2, 3, 3, 3)
 
-    # Strings are accepted too
+    # Can chain to strings
+    >>> "get".&chain("attr")
+    ("g", "e", "t", "a", "t", "t", "r")
+
+    # Can chain with strings
     >>> (4, 7).&chain("spa")
     (4, 7, "s", "p", "a")
 
@@ -34,7 +39,7 @@ my class Chain does Iterator {
     }
 
     method new(\iterator, @iterators) {
-		nqp::create(self)!SET-SELF(iterator, @iterators.Array)
+                nqp::create(self)!SET-SELF(iterator, @iterators.Array)
     }
 
     method pull-one {

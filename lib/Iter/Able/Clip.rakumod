@@ -1,4 +1,4 @@
-#| Limit the values from below and/or above.
+#| Limits the values from below and/or above.
 #`{
     # No negatives
     >>> [-1, 2, -3].&clip(from-below => 0)
@@ -11,11 +11,9 @@
     # At most 100 is allowed
     >>> 3 <<**<< (4, 5, 6) ==> clip(:100from-above)
     (81, 100, 100)
-
 }
 unit module Clip;
 
-# Implemented in terms of `map`
 our proto clip(\it, Numeric :$from-below, Numeric :$from-above) is export {
     die "Must supply at least lower or upper limit"
         if ($from-below, $from-above).none.defined;

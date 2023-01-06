@@ -1,6 +1,7 @@
-#| Pack consecutive "same" elements together and yield "key => group"
-#| pairs where `group`s are Lists (values are not copied). Sameness can be
-#| controlled with a transformer (`as`) and/or an equality checker (`with`).
+#| Packs consecutive "same" elements together and yields "key =>
+#| group" pairs where `group`s are Lists (values are not
+#| copied). Sameness can be controlled with a transformer (=as=)
+#| and/or an equality checker (=with=). Returns a Seq for strings.
 #`{
     # Elements themselves are the groupers by default
     >>> [3, 4, 4, 5, 4].&group-conseq;
@@ -12,17 +13,17 @@
 
     # They are all the same, really
     >>> [1, -1, 1, -1, 1, -1].&group-conseq(as => &abs);
-    (1 => (1 -1 1 -1 1 -1))
+    (1 => (1, -1, 1, -1, 1, -1))
 
     # Respect the container for sameness
     >>> my $a = 7;
     >>> ($a, $a, 7).&group-conseq(with => &[=:=]);
-    (7 => (7 7) 7 => (7))
+    (7 => (7, 7), 7 => (7,))
 
     # Case insensitive detection of consecutive duplicates in a string; typos?
     >>> my $s = "how aree youU?";
     >>> $s.&group-conseq(as => &lc).grep(*.value > 1)
-    (e => (e e) u => (u U))
+    (e => (e, e), u => (u, U))
 }
 unit module Group-Conseq;
 
