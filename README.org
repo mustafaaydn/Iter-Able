@@ -94,6 +94,23 @@ Yield from this iterable first; when exhausted, from next, and so on.
     (4, 7, 6, 0, 8, 9)
 #+end_src
 
+**** clip =(\it, Numeric :$from-below, Numeric :$from-above)=
+Limit the values from below and/or above.
+#+begin_src raku
+    # No negatives
+    >>> [-1, 2, -3].&clip(from-below => 0)
+    (0, 2, 0)
+
+    # Accumulate everything to be in the first quadrant
+    >>> (2 × rand - 1) xx 5 ==> map(*.acos.round(0.001)) ==> clip(from-below => 0, from-above => π / 2)
+    (0.829 0.463 0.998 1.254 1.5707963267948966)
+
+    # At most 100 is allowed
+    >>> 3 <<**<< (4, 5, 6) ==> clip(:100from-above)
+    (81, 100, 100)
+
+#+end_src
+
 **** cycle =(\ist)=
 Repeat indefinitely.
 #+begin_src raku

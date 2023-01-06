@@ -35,6 +35,7 @@ use Iter::Able::Chain;
 use Iter::Able::Flatten;
 use Iter::Able::Replace;
 use Iter::Able::Assign-At;
+use Iter::Able::Clip;
 
 # Subscribe all the subs to the package as well in case one wants to refer
 # to them with their semi-FQNs, e.g., `Iter::Able::take-while(...)`, e.g., to
