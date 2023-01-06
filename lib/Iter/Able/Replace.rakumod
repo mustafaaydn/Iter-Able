@@ -22,7 +22,6 @@
 unit module Replace;
 
 our proto replace(\it, *@pairs) is export {
-    note "pairs are: ", @pairs;
     die "Expected all Pairs as translators, got {@pairs[$_]} at {$_} position"
         with @pairs.first(* !~~ Pair, :k);
     die "Only Numerics or Strings are accepted in keys of translation pairs"
@@ -44,4 +43,3 @@ multi replace(Iterator \it, *@pairs) {
 multi replace(Str \st, |) {
     die "`replace` not implemented for strings; see the built-in `.trans`"
 }
-
