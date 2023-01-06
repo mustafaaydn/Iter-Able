@@ -9,13 +9,13 @@ $s := [2, 2, 3, -4, 5];
 is-deeply fun-name($s, ...), EXPECTED, "Random list with ...";
 
 $s := (2, 2, 3, -4, 5);
-is-deeply fun-name($s, ...), EXPECTED, "Random list with ...";
+is-deeply $s.&fun-name(...), EXPECTED, "Random list with ...";
 
 $s := [];
 is-deeply fun-name($s, ...), EXPECTED,  "Empty list";
 
 my $t = ();
-is-deeply fun-name($t, ...), EXPECTED,  "Empty itemized list";
+is-deeply $t.&fun-name(...), EXPECTED,  "Empty itemized list";
 
 $s := [0, 0, 0, 0];
 is-deeply fun-name($s, ...), EXPECTED, "All zeros with ...";
