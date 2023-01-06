@@ -1,0 +1,37 @@
+use Test;
+use Iter::Able::Clip;
+
+say "\n*****Clip*****";
+plan 10;
+
+my $s;
+$s := [2, 2, 3, -4/9, 5];
+is-deeply clip($s, from-below => 2), [2, 2, 3, 2, 5].Seq, "Random list with :2from-below";
+
+$s := (2, 2, 3, -4, 5e3);
+is-deeply clip($s, :2from-above), [2, 2, 2, -4, 2].Seq, "Random list with :2from-above";
+
+$s := (2, 2, 3, -4, 5);
+is-deeply clip($s, :2from-below, :4from-above), [2, 2, 3, 2, 4].Seq, "Random list with :2from-below and :4from-above";
+
+$s := [];
+is-deeply clip($s, :0from-below), [].Seq,  "Empty list";
+
+my $t = ();
+is-deeply clip($t, :3from-above), ().Seq,  "Empty itemized list";
+
+$s := [0, 0, 0, 0];
+is-deeply clip($s, :3from-above), $s.Seq, "All zeros with :3from-above";
+
+$s := (0, -1, -2, -3);
+is-deeply clip($s, from-below => pi), pi xx $s, "No nonpositives with from-below => pi";
+
+my \it = [12, 3, 4e4, -4, 0].iterator;
+it.pull-one for ^2;
+is-deeply it.&clip(from-below => 100), [4e4, 100, 100].Seq, "Iterator";
+
+throws-like { [12, 3, 4].&clip }, Exception, "No bound provided", message => / 'Must supply at least lower or upper' /;
+
+throws-like { [12, 3, 4].&clip(from-below => 5, from-above => 3) }, Exception, "Lower limit greater than upper limit", message => / 'Lower bound shouldn\'t be greater than the upper bound' /;
+
+done-testing;
