@@ -1,6 +1,7 @@
 #| Generates =(x, f(x))= lists. By default, =f(x) = x=. Returns a Seq
 #| for strings.
-#`{ # Mirrors the items by default
+#`{
+    # Mirrors the items by default
     >>> [-4, 3, 0].&annotate
     ((-4, -4), (3, 3), (0, 0))
 
