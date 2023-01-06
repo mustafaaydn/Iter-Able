@@ -2,7 +2,7 @@ use Test;
 use Iter::Able::Module-Name;
 
 say "\n*****Module-Name*****";
-plan 10;
+plan 12;
 
 my $s;
 $s := [2, 2, 3, -4, 5];
@@ -32,11 +32,13 @@ is-deeply fun-name($s, &{ True }), EXPECTED, "Random list with all-pass predicat
 $s := [1, 0, -1, 2];
 is-deeply fun-name($s, &{ False }), EXPECTED, "Random list with no-pass predicate";
 
-my \it = [12, 3, 4].iterator;
+my \it = [12, 3, 4, -5, 0, 7].iterator;
 it.pull-one for ^2;
-is-deeply fun-name(it, ...), EXPECTED, "Iterator with ...";
+is-deeply fun-name(it, ...), EXPECTED, "Iterator";
 
 $s := "Real String";
 is-deeply fun-name($s, ...), EXPECTED, "String with ...";
+
+throws-like { [12, 3, 4].&fun-name }, Exception, "No argument provided", message => / 'Must supply at least this' /;
 
 done-testing;
