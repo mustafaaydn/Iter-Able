@@ -1,25 +1,26 @@
-#| Skip (drop) values from the iterable as long as `&pred` holds; once not,
-#| start taking values indefinitely.
+#| Skips values from the iterable as long as =&pred= holds; once not,
+#| starts taking values indefinitely.
 #`{
-    # Truthfulness of elements decide to skip or start taking by default
-    >>> [4, 8, -1, "", 7, Any, 5, 0].&skip-while.raku
-    ("", 7, Any, 5, 0).Seq
-
-    # Skip the falseful ones instead
+    # Skip the falsefuls in front
     >>> [0, "", 7, Any, 4, -5].&skip-while(&not).raku
     (7, Any, 4, -5).Seq
 
     # Generalized trim-leading
     >>> (NaN, NaN, NaN, 4.6, -7.1, 8.0).&skip-while(* === NaN)
-    (4.6 -7.1 8)
+    (4.6, -7.1, 8)
+
+    # Skip unwanted characters
+    >>> my Set() $unwanteds = <. , ;>;
+    >>> ",,.;Trial and error. Important.".&skip-while(* ∈ $unwanteds).raku
+    "Trial and error. Important."
 }
 unit module Skip-While;
 
 use nqp;
 
 my class SkipWhile does Iterator {
-	has Mu $!iter;          #= Passed iterator
-    has &!pred;	            #= Predicate
+    has Mu $!iter;          #= Passed iterator
+    has &!pred;             #= Predicate
 
     has int $!skipped-all;  #= State: whether invalids are yet got ridden of
 
@@ -29,12 +30,12 @@ my class SkipWhile does Iterator {
     }
 
     method new(\iterator, \pred) {
-		nqp::create(self)!SET-SELF(iterator, pred)
+        nqp::create(self)!SET-SELF(iterator, pred)
     }
 
     method pull-one {
         nqp::if(
-    	    nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
+            nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
             IterationEnd,
             nqp::stmts(
                 nqp::unless(
@@ -60,16 +61,16 @@ my class SkipWhile does Iterator {
     method is-lazy() { $!iter.is-lazy }
 }
 
-our proto skip-while(\ist, &pred = {$_}) is export {*}
+our proto skip-while(\ist, &pred) is export {*}
 
-multi skip-while(Iterable \it, &pred = {$_}) {
+multi skip-while(Iterable \it, &pred) {
     Seq.new: SkipWhile.new: it.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
-multi skip-while(Iterator \it, &pred = {$_}) {
+multi skip-while(Iterator \it, &pred) {
     Seq.new: SkipWhile.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
-multi skip-while(Str \st, &pred = {$_}) {
+multi skip-while(Str \st, &pred) {
     join "", Seq.new: SkipWhile.new: st.comb.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
