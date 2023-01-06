@@ -1,0 +1,49 @@
+use Test;
+use Iter::Able::Insert-At;
+
+say "\n*****Insert-At*****";
+plan 15;
+
+my $s;
+$s := [2, 3];
+is-deeply insert-at($s, 0 => 1), [1, 2, 3].Seq, "Random list with 1 pair";
+
+$s := (1, 2, 0, 16);
+is-deeply insert-at($s, 2 => 4, 3 => 9), [1, 2, 4, 0, 9, 16].Seq, "Random list with 2 pairs";
+
+$s := [5, 7];
+is-deeply $s.&insert-at(2 => 9), $s.Seq, "Random list with out-of-bounds index";
+
+$s := [0 => 0, 2 => 2];
+is-deeply $s.&insert-at(1 => 1 => 1), [0 => 0, 1 => 1, 2 => 2].Seq, "Random list with pairs in it";
+
+$s := "xyw".comb;
+is-deeply $s.&insert-at(2 => "z"), "xyzw".comb, "String insertion to a Seq";
+
+$s := [];
+is-deeply insert-at($s, 0 => 0), [].Seq,  "Empty list";
+
+my $t = ();
+is-deeply insert-at($t, 3 => 2), [].Seq,  "Empty itemized list";
+
+my \it = [12, 3, 444].iterator;
+it.pull-one for ^2;
+is-deeply insert-at(it, 0 => [4, 44]), [[4, 44], 444].Seq, "Iterator";
+
+$s := "aise";
+is-deeply insert-at($s, 1 => "r"), "arise", "String with 1 pair";
+
+$s := "sing";
+is-deeply insert-at($s, 1 => "tr"), "string", "String with an expanding pair";
+
+throws-like { [].&insert-at }, Exception, "No pair", message => /:i 'Must pass at least one pair' /;
+
+throws-like { [].&insert-at(^Inf X=> 1) }, Exception, "Possibly nonfinite number of pairs", message => /:i 'lazy' /;
+
+throws-like { "".&insert-at(*) }, Exception, "Nonpair translator", message => /:i 'should all be pairs' /;
+
+throws-like { "".&insert-at("yes" => 4) }, Exception, "Noninteger key-having translator", message => /:i 'keys should be all nonnegative integers' /;
+
+throws-like { "".&insert-at(-1 => 4) }, Exception, "Noninteger key-having translator", message => /:i 'keys should be all nonnegative integers' /;
+
+done-testing;
