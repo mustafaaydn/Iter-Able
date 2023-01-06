@@ -339,7 +339,7 @@ Skips values from the iterable as long as =&pred= holds; once not, starts taking
 #+end_src
 
 **** take-while =(\ist, &pred)=
-Takes values from the iterable as long as =&pred= holds; once not, stop.
+Takes values from the iterable as long as =&pred= holds; once not, stop. As it needs to look at the next value to decide when to stop, it consumes one extra value as a side effect. That will be only visible in /iterator/ inputs, though.
 #+begin_src raku
     # Negative value is a sentinel, so take up until that
     >>> (4, 7, 12, -3, 58, -1).&take-while(* >= 0)
