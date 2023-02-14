@@ -5,6 +5,9 @@ use Iter::Able;  # for signatures
 use Iter::Able::Map-Last;
 use Iter::Able::Take-While;
 
+my Bool $verbose = so @*ARGS[0] eq "-v" | "--verbose";
+sub report(Str $msg) { put $msg if $verbose }
+
 my Str $template = q:to/END/;
 **** %s =%s=
 %s
@@ -15,9 +18,12 @@ END
 
 my Str @docs;
 for dir("lib/Iter/Able", test => /:i '.rakumod' $/) -> $module {
-    my Str $fun-name    = $module.basename.split(".")[0].lc;
+    report "Processing $module...";
+
+    my Str $fun-name  = $module.basename.split(".")[0].lc;
     my Str $signature = $module.lines[Iter::Able::{"\&$fun-name"}.line.pred].comb(/ '(' .* ')' <?before ' '* 'is export'> /).head;
-    
+    report "\tFunction \"$fun-name\"\n\tSignature $signature";
+
     my \it = $module.lines.iterator;
     my Str $explanation = it.&take-while(*.starts-with("#|")).map(*.subst(/^'#|' ' '*/)).join(" ").subst("  ", " ", :g);
     my Str $examples    = it.&take-while(not *.starts-with("unit module")).head(*-1).join("\n");
