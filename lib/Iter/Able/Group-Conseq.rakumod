@@ -1,27 +1,27 @@
-#| Packs consecutive "same" elements together and yields "key =>
-#| group" pairs where `group`s are Lists (values are not
-#| copied). Sameness can be controlled with a transformer (=as=)
-#| and/or an equality checker (=with=). Returns a Seq for strings.
+#| Packs consecutive "same" elements together and yields "key ⇒ group"
+#| pairs where groups are Lists (values are not copied). Sameness can
+#| be controlled with a transformer (=as=) and/or an equality checker
+#| (=with=). Returns a Seq for strings.
 #`{
     # Elements themselves are the groupers by default
-    >>> [3, 4, 4, 5, 4].&group-conseq;
+    >>> [3, 4, 4, 5, 4].&group-conseq
     (3 => (3,), 4 => (4, 4), 5 => (5,), 4 => (4,))
 
     # Group consecutive records together; any duplicate key might be anomaly
-    >>> [("A", 1), ("B", 1), ("D", 2), ("E", 1)].&group-conseq(:as(*[1]));
+    >>> [("A", 1), ("B", 1), ("D", 2), ("E", 1)].&group-conseq(:as(*[1]))
     (1 => (("A", 1), ("B", 1)), 2 => (("D", 2),), 1 => (("E", 1),)
 
     # They are all the same, really
-    >>> [1, -1, 1, -1, 1, -1].&group-conseq(as => &abs);
+    >>> [1, -1, 1, -1, 1, -1].&group-conseq(as => &abs)
     (1 => (1, -1, 1, -1, 1, -1))
 
     # Respect the container for sameness
-    >>> my $a = 7;
-    >>> ($a, $a, 7).&group-conseq(with => &[=:=]);
+    >>> my $a = 7
+    >>> ($a, $a, 7).&group-conseq(with => &[=:=])
     (7 => (7, 7), 7 => (7,))
 
     # Case insensitive detection of consecutive duplicates in a string; typos?
-    >>> my $s = "how aree youU?";
+    >>> my $s = "how aree youU?"
     >>> $s.&group-conseq(as => &lc).grep(*.value > 1)
     (e => (e, e), u => (u, U))
 }

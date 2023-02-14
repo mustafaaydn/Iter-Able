@@ -1,4 +1,4 @@
-#| Generates =(x, f(x))= lists. By default, =f(x) = x=. Returns a Seq
+#| Generates =(x, f(x))= lists; by default, =f(x) = x=. Returns a Seq
 #| for strings.
 #`{
     # Mirrors the items by default
