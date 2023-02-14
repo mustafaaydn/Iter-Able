@@ -1,0 +1,50 @@
+use Test;
+use Iter::Able::Nth;
+
+say "\n*****Nth*****";
+plan 12;
+
+my $s;
+$s := [2, 2, 3, -4, 5];
+is-deeply n'th($s, 1), 2, "Random list with positive n = 1";
+
+$s := 2 xx 100_000;
+is-deeply n'th($s, 50_000), 2, "Random list with positive n = 50_000";
+
+$s := (2, 2, 3, -4, 5);
+is-deeply $s.&n'th(-2), -4, "Random list with negative n = -2";
+
+$s := ^∞;
+is-deeply $s.&n'th(5), 5, "Infinite input with positive n = 5";
+
+$s := 5..2;
+is-deeply $s.&n'th(3), Nil, "Out of bounds for a non-list input gives Nil";
+
+$s := [];
+dies-ok { n'th($s, 0) }, "Empty list dies";
+
+my $t = ();
+dies-ok { $t.&n'th(1) }, "Empty itemized list dies";
+
+my \it = [12, 3, 4, -5, 0, 7].iterator;
+it.pull-one for ^2;
+is-deeply n'th(it,  0),  4, "Iterator n = 0 (after 2 skips)";
+is-deeply n'th(it,  0), -5, "Iterator n = 0 (after above)";
+is-deeply n'th(it, -1),  7, "Iterator n = -1";
+ok it.pull-one =:= IterationEnd, "Iterator exhausted";
+
+$s := "Real String";
+is-deeply n'th($s,  4), " ", "String with positive n = 4";
+is-deeply n'th($s, -1), "g", "String with negative n = -1";
+
+throws-like { [5, 12, 13].&n'th(29) }, Exception, "Out of bounds (positive n, list)", message => / 'out of bounds for size 3' /;
+throws-like { [5, 12, 13].&n'th(-29) }, Exception, "Out of bounds (negative n, list)", message => / 'out of bounds for size 3' /;
+
+throws-like { n'th("no", 5) }, Exception, "Out of bounds (positive n, strings)", message => / 'out of bounds for size 2' /;
+throws-like { n'th("no", -5) }, Exception, "Out of bounds (negative n, strings)", message => / 'out of bounds for size 2' /;
+
+throws-like { n'th(^∞, -3) }, Exception, "Negative index, lazy (infinite) input", message => / 'negative indexing on lazy input' /;
+
+throws-like { n'th(^12 .lazy, -5) }, Exception, "Negative index, lazy input", message => / 'negative indexing on lazy input' /;
+
+done-testing;
