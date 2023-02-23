@@ -1,0 +1,61 @@
+use Test;
+use Iter::Able::Is-All-Same;
+
+say "\n-----Is-All-Same-----";
+plan 18;
+
+my $s;
+$s := [1, 2, 1];
+is-deeply is-all-same($s), False, "Differing list";
+
+$s := (1,);
+is-deeply $s.&is-all-same, True, "All-the-same list, length 1";
+
+$s := (1, 1);
+is-deeply $s.&is-all-same, True, "All-the-same list, length 2";
+
+$s := 1 xx 777;
+is-deeply $s.&is-all-same, True, "All-the-same list, length > 2";
+
+$s := ["yes", "and", "for"];
+is-deeply is-all-same($s, :as(&chars)), True, "Using :\&as";
+
+$s := [$(3), $(3)];
+is-deeply is-all-same($s, :with(&[=:=])), False, "Using :\&with";
+
+$s := [7, -7.000000000000000000001];
+is-deeply is-all-same($s, as => &abs, with => &[=~=]), True, "Using :\&as and :\&with";
+
+$s := [];
+is-deeply is-all-same($s), True,  "Empty list";
+
+my $t = ();
+is-deeply $t.&is-all-same, True,  "Empty itemized list";
+
+$s := [1, |(0 xx 100_000)];
+is-deeply is-all-same($s), False, "Long list to see shortcircuiting";
+
+my \it = [12, 3, 4, 4, 4].iterator;
+it.pull-one for ^2;
+is-deeply is-all-same(it), True, "Iterator";
+
+$s := "";
+is-deeply is-all-same($s), True, "Empty string";
+
+$s := "z";
+is-deeply is-all-same($s), True, "Length-1 string";
+
+$s := "Real String";
+is-deeply is-all-same($s), False, "Differing string ";
+
+$s := "aa";
+is-deeply is-all-same($s), True, "All-the-same string, length 2";
+
+$s := "a" x 84;
+is-deeply is-all-same($s), True, "All-the-same string, length > 2";
+
+$s := "aaAaA";
+is-deeply $s.&is-all-same, False, "Same character different cases";
+is-deeply $s.&is-all-same(:as(&fc)), True, "Same character different cases but :as(\&fc)";
+
+done-testing;

@@ -1,7 +1,7 @@
 use Test;
 use Iter::Able::Module-Name;
 
-say "\n*****Module-Name*****";
+say "\n-----Module-Name-----";
 plan 12;
 
 my $s;

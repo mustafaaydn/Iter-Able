@@ -1,0 +1,78 @@
+use Test;
+use Iter::Able::Is-All-Different;
+
+say "\n-----Is-All-Different-----";
+plan 23;
+
+my $s;
+$s := [1, 1, 2, 3, 4];
+is-deeply is-all-different($s), False, "First two elements same, list";
+
+$s := (2, 3, -4, 5, 2);
+is-deeply $s.&is-all-different, False, "First and last elements same, list";
+
+$s := [];
+is-deeply is-all-different($s,), True,  "Empty list";
+
+my $t = ();
+is-deeply $t.&is-all-different(), True,  "Empty itemized list";
+
+$s := [0, 0, 0, 0];
+is-deeply is-all-different($s), False, "All zeros";
+
+$s := 0,;
+is-deeply is-all-different($s), True, "One element list";
+
+$s := [6, 7];
+is-deeply is-all-different($s), True, "Two element list";
+
+$s := [6, 7, 8, 9, 6, 10];
+is-deeply is-all-different($s), False, "Short list with duplicates";
+
+$s := ^72;
+is-deeply is-all-different($s), True, "More than 2 element iterable (a Range)";
+
+$s := [1, 1, |(2..100_000)];
+is-deeply is-all-different($s), False, "Long list to see shortcircuiting";
+
+$s := ["yes", "and", "for"];
+is-deeply is-all-different($s, :as(&chars)), False, "Using :\&as to turn the table";
+
+$s := [$(3), $(3), $(3)];
+is-deeply is-all-different($s, :with(&[=:=])), True, "Using :\&with with =:=";
+
+$s := [7, -7.000000000000000000001, 6.999999999999999999999];
+is-deeply is-all-different($s, as => &abs, with => &[=~=]), False, "Using :\&as and :\&with";
+
+$s := [12, 12, 12, -5, 0, 7];
+my \it = $s.iterator;
+it.pull-one for ^2;
+is-deeply is-all-different(it), True, "Iterator with all different";
+
+my \it2 = $s.iterator;
+it2.pull-one for ^1;
+is-deeply is-all-different(it2), False, "Iterator with not all different";
+
+$s := "";
+is-deeply is-all-different($s), True, "Empty string";
+
+$s := "z";
+is-deeply is-all-different($s), True, "Length-1 string";
+
+$s := "Real String";
+is-deeply is-all-different($s), True, "String with all different characters";
+
+$s := "aa";
+is-deeply is-all-different($s), False, "All-the-same string, length 2";
+
+$s := "az";
+is-deeply is-all-different($s), True, "All-different string, length 2";
+
+$s := "a" x 84;
+is-deeply is-all-different($s), False, "All-the-same string, length > 2";
+
+$s := "aaAaA";
+is-deeply $s.&is-all-different, False, "Same character different cases multiple times";
+is-deeply $s.&is-all-different(:as(&fc)), False, "Same character different cases but :as(\&fc); still not all different";
+
+done-testing;

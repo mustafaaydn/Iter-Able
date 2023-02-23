@@ -37,7 +37,9 @@ use Iter::Able::Replace;
 use Iter::Able::Assign-At;
 use Iter::Able::Clip;
 use Iter::Able::Insert-At;
-use Iter::Able::Nth;
+use Iter::Able::N'th;
+use Iter::Able::Is-All-Same;
+use Iter::Able::Is-All-Different;
 
 # Subscribe all the subs to the package as well in case one wants to refer
 # to them with their semi-FQNs, e.g., `Iter::Able::take-while(...)`, e.g., to

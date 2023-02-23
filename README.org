@@ -221,6 +221,64 @@ Inserts values at the given positions. Cannot insert past the end even if finite
     "string"
 #+end_src
 
+**** is-all-different =(\ist, :&as = {$_}, :&with = &[===])=
+Checks if the values are all different. Semantically equivalent to `.unique == .elems` but implemented differently. Also works for strings. Sameness can be controlled with a transformer (=as=) and/or an equality checker (=with=). By default, no transformation occurs and ~===~ is used for equivalance.
+#+begin_src raku
+    # Shortcircuitingly gives False once two same values are seen
+    >>> [1, 1, 2, 3, 4].&is-all-different
+    False
+
+    # True when all values are !=== to each other
+    >>> is-all-different (1, 2, 3)
+    True
+
+    # Vacuously true
+    >>> is-all-different []
+    True
+
+    # Works for strings the same way
+    >>> "yes".&is-all-different
+    True
+
+    # Equivalance relation can be altered
+    >>> my ($a, $b) = 3, 3
+    >>> [$a, $b].&is-all-different(:with(&[=:=]))
+    True
+
+    # Values can be transformed before comparison
+    >>> [0.2, -0.54, 1, 0.32].&is-all-different(:as(&round))
+    False
+#+end_src
+
+**** is-all-same =(\ist, :&as = {$_}, :&with = &[===])=
+Checks if the values are all the same. Semantically equivalent to `.unique <= 1` but implemented differently. Also works for strings. Sameness can be controlled with a transformer (=as=) and/or an equality checker (=with=). By default, no transformation occurs and ~===~ is used for equivalance.
+#+begin_src raku
+    # Shortcircuitingly gives False once two different values are seen
+    >>> [1, 2, 1, 1, 1].&is-all-same
+    False
+
+    # True when all values are === to each other
+    >>> is-all-same (1, 1)
+    True
+
+    # Vacuously true
+    >>> is-all-same []
+    True
+
+    # Works for strings the same way
+    >>> "no".&is-all-same
+    False
+
+    # Equivalance relation can be altered
+    >>> my ($a, $b) = 3, 3
+    >>> [$a, $b].&is-all-same(:with(&[=:=]))
+    False
+
+    # Values can be transformed before comparison
+    >>> "aaAaA".&is-all-same(:as(&fc))
+    True
+#+end_src
+
 **** map-first =(\ist, &pred, &mapper)=
 Maps only the first item that satisfies the predicate, if any.
 #+begin_src raku
