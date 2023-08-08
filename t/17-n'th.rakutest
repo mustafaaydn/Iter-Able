@@ -1,8 +1,8 @@
 use Test;
-use Iter::Able::Nth;
+use Iter::Able::N'th;
 
 say "\n*****Nth*****";
-plan 12;
+plan 19;
 
 my $s;
 $s := [2, 2, 3, -4, 5];

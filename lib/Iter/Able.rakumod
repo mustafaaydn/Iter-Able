@@ -40,6 +40,7 @@ use Iter::Able::Insert-At;
 use Iter::Able::N'th;
 use Iter::Able::Is-All-Same;
 use Iter::Able::Is-All-Different;
+use Iter::Able::Remove-First;
 
 # Subscribe all the subs to the package as well in case one wants to refer
 # to them with their semi-FQNs, e.g., `Iter::Able::take-while(...)`, e.g., to

@@ -389,6 +389,26 @@ Yields the n'th value of the input. Almost the same as =.[n]= but also works for
     4 5 6
 #+end_src
 
+**** remove-first =(\ist, &pred?)=
+Remove the first element satisfying the predicate, if any. Without any predicate, the very first element is skipped.
+#+begin_src raku
+    # Without an argument, equivalent to `.skip`
+    >>> [1, 2, 3, 0, 4, 5].&remove-first
+    (2, 3, 0, 4, 5)
+
+    # Remove the first nonnegative element (and only that)
+    >>> (-2, -8, 5, 12, 0).&remove-first(* >= 0)
+    (-2, -8, 12, 0)
+
+    # If there is no "bad" element, yield back as is
+    >>> remove-first [10, 20, 30], &is-prime
+    (10, 20, 30)
+
+    # String invocants as well as regex predicates are accepted as well
+    >>> "fi rst whitespace is gone".&remove-first(/ \s /).raku
+    "first whitespace is gone"
+#+end_src
+
 **** replace =(\it, *@pairs)=
 Translates values through the given pairs. All occurences are replaced. Only Numerics and Strings are replaced; for others, see =map-when=. For replacing strings, see the built-in =trans=.
 #+begin_src raku

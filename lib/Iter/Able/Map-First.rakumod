@@ -21,8 +21,8 @@ unit module Map-First;
 use nqp;
 
 my class MapFirst does Iterator {
-        has Mu $!iter;         #= Passed iterator
-    has &!pred;                   #= Predicate
+    has Mu $!iter;         #= Passed iterator
+    has &!pred;            #= Predicate
     has &!mapper;          #= Transformer
 
     has int $!done-first;  #= State: has the first one seen yet?
