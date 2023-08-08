@@ -1,0 +1,39 @@
+use Test;
+use Iter::Able::Remove-First;
+
+say "\n-----Remove-First-----";
+plan 10;
+
+my $s;
+$s := [2, 2, 3, -4, 5];
+is-deeply remove-first($s, * !%% 2), [2, 2, -4, 5].Seq, "Random list with a normal predicate";
+
+$s := (2, 2, 3, -4, 5);
+is-deeply $s.&remove-first(* == 5), (2, 2, 3, -4).Seq, "Random list with a normal predicate (2)";
+
+$s := [];
+is-deeply remove-first($s, {$_}), ().Seq,  "Empty list";
+
+my $t = ();
+is-deeply $t.&remove-first({$_}), ().Seq,  "Empty itemized list";
+
+$s := [0, 0, 0, 0];
+is-deeply remove-first($s, * == 0), [0, 0, 0].Seq, "All zeros with * == 0 predicate";
+
+$s := [6, 7, 8, 93, 51, 0, 4, -3, 64];
+is-deeply remove-first($s), $s.skip, "Random list with no predicate";
+
+$s := (1, 0, -1, 2);
+is-deeply remove-first($s, &{ True }), $s.skip, "Random list with all-pass predicate; same as if no predicate";
+
+$s := [1, 0, -1, 2];
+is-deeply remove-first($s, &{ False }), $s.Seq, "Random list with no-pass predicate";
+
+my \it = [12, 3, 4, 15, 0, 7].iterator;
+it.pull-one for ^2;
+is-deeply remove-first(it, &is-prime), (4, 15, 0).Seq, "Iterator";
+
+$s := "Real String";
+is-deeply "fi rst whitespace is gone".&remove-first(/ \s /), "first whitespace is gone", "String, and a regex as the predicate";
+
+done-testing;
