@@ -39,7 +39,7 @@ my class Chain does Iterator {
     }
 
     method new(\iterator, @iterators) {
-                nqp::create(self)!SET-SELF(iterator, @iterators.Array)
+        nqp::create(self)!SET-SELF(iterator, @iterators.Array)
     }
 
     method pull-one {
@@ -62,7 +62,8 @@ my class Chain does Iterator {
 
 use Iter::Able::Map-When;
 
-our sub chain(\ist, **@iters) is export {
+our sub chain(\ist, **@iters --> Seq:D) is export {
+    # Returns Seq even for Iterator inputs because they can be mixed with non-Iterators
     die "Iterable, Iterator or Str expected, got {ist.^name}"
         unless ist ~~ Iterable | Str | Iterator;
     die "No other Iterable/Str/Iterator passed to chain with"

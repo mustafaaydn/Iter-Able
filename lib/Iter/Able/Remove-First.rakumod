@@ -77,7 +77,7 @@ multi remove-first(Iterable \it, &pred) {
 }
 
 multi remove-first(Iterator \it, &pred) {
-    Seq.new: RemoveFirst.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
+    RemoveFirst.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
 multi remove-first(Str \st, &pred) {

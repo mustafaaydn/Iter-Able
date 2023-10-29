@@ -41,7 +41,7 @@ multi insert-at(Iterable \it, *@pairs) {
 }
 
 multi insert-at(Iterator \it, *@pairs) {
-    samewith Seq.new(it), @pairs
+    samewith Seq.new(it), @pairs andthen .iterator
 }
 
 multi insert-at(Str \st, *@pairs) {

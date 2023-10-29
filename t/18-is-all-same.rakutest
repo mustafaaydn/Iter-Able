@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Is-All-Same;
 
-say "\n-----Is-All-Same-----";
-plan 18;
+plan 27;
 
 my $s;
 $s := [1, 2, 1];
@@ -35,10 +34,6 @@ is-deeply $t.&is-all-same, True,  "Empty itemized list";
 $s := [1, |(0 xx 100_000)];
 is-deeply is-all-same($s), False, "Long list to see shortcircuiting";
 
-my \it = [12, 3, 4, 4, 4].iterator;
-it.pull-one for ^2;
-is-deeply is-all-same(it), True, "Iterator";
-
 $s := "";
 is-deeply is-all-same($s), True, "Empty string";
 
@@ -57,5 +52,30 @@ is-deeply is-all-same($s), True, "All-the-same string, length > 2";
 $s := "aaAaA";
 is-deeply $s.&is-all-same, False, "Same character different cases";
 is-deeply $s.&is-all-same(:as(&fc)), True, "Same character different cases but :as(\&fc)";
+
+my \it = [12, 3, 4, 4, 4].iterator;
+it.pull-one for ^2;
+is-deeply is-all-same(it), True, "Iterator (all the same)";
+ok it.pull-one =:= IterationEnd, "Iterator (exhausted)";
+
+my \it2 = [12, 3, 4, pi, 4].iterator;
+it2.pull-one for ^2;
+is-deeply is-all-same(it2), False, "Iterator (not all the same)";
+nok it2.pull-one =:= IterationEnd, "Iterator (not exhausted because of short-circuiting)";
+
+my \it-as = [12, 3, 4, 5, 7].iterator;
+it-as.pull-one for ^3;
+is-deeply is-all-same(it-as, :as{.is-prime}), True, "Iterator (as)";
+ok it-as.pull-one =:= IterationEnd, "Iterator (exhausted)";
+
+my \it-with = [12, 3, 4, (my $a = 5), (my $b = 5)].iterator;
+it-with.pull-one for ^3;
+is-deeply is-all-same(it-with, :with(&[=:=])), False, "Iterator (with)";
+ok it-with.pull-one =:= IterationEnd, "Iterator (exhausted; would not be, but the differer is the last element)";
+
+my \it-withas = [12, 3, 4, -5, 5.00000000000001].iterator;
+it-withas.pull-one for ^3;
+is-deeply do { my $*TOLERANCE = 1e-5; is-all-same(it-withas, :as{.abs}, :with(&[=~=])) }, True, "Iterator (with and as)";
+ok it-withas.pull-one =:= IterationEnd, "Iterator (exhausted)";
 
 done-testing;

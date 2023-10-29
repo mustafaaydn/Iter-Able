@@ -33,7 +33,7 @@ unit module Is-All-Same;
 
 use nqp;
 
-our proto is-all-same(\ist, :&as = {$_}, :&with = &[===]) is export {*}
+our proto is-all-same(\ist, :&as = {$_}, :&with = &[===] --> Bool:D) is export {*}
 
 multi is-all-same(Iterable \it, :&as = {$_}, :&with = &[===]) {
     samewith it.iterator, :&as, :&with

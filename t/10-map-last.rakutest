@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Map-Last;
 
-say "\n*****Map-Last*****";
-plan 6;
+plan 10;
 
 my $s;
 $s := [2, -3, 4, -6, 8];
@@ -22,5 +21,14 @@ is-deeply $s.&map-last({ False }, { 0 }), $s.Seq, "Random list with no-pass filt
 
 $s := "here we are!";
 is-deeply map-last($s, / <.lower> /, &uc), "here we arE!", "String with ...";
+
+$s := (0, -2, -7, 5, 13, 22);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = map-last(it, *.is-prime, *.sqrt);
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), [-7, 5, 13.sqrt, 22].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 done-testing;

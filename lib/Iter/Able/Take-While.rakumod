@@ -20,9 +20,10 @@ unit module Take-While;
 use nqp;
 
 my class TakeWhile does Iterator {
-    has Mu $!iter;  #= Passed iterator
-    has &!pred;     #= Predicate
-
+    has Mu $!iter;   #= Passed iterator
+    has &!pred;      #= Predicate
+    has int $!done = 0;  #= Encountered a stopper value
+    
     method !SET-SELF($!iter, &!pred) { self }
 
     method new(\iterator, \pred) {
@@ -32,7 +33,7 @@ my class TakeWhile does Iterator {
     method pull-one {
         nqp::if(
             # Is the iterable exhausted?
-            nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
+            $!done || nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
             # Yes; signal
             IterationEnd,
             # No, still has values; does it satisfy predicate?
@@ -41,7 +42,10 @@ my class TakeWhile does Iterator {
                 # yes; yield
                 $next,
                 # no; stop
-                IterationEnd
+                nqp::stmts(
+                    ($!done = 1),
+                    IterationEnd
+                )
             )
         )
     }
@@ -55,7 +59,7 @@ multi take-while(Iterable \it, &pred) {
 }
 
 multi take-while(Iterator \it, &pred) {
-    Seq.new: TakeWhile.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
+    TakeWhile.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
 multi take-while(Str \st, &pred) {

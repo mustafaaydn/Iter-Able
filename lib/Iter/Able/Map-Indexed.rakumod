@@ -32,7 +32,7 @@ my class MapIndexed does Iterator {
 
     method new(\iterator, \mapper, $start) {
         # `$start - 1` instead of `$start` to ease increasing of `$!index`
-        # also \start did not work due to clash with the built-in function.
+        # Also \start did not work due to clash with the built-in `start`
         nqp::create(self)!SET-SELF(iterator, mapper, $start - 1)
     }
 
@@ -57,7 +57,7 @@ multi map-indexed(Iterable \it, &mapper = {@_.List}, :$start = 0) {
 }
 
 multi map-indexed(Iterator \it, &mapper = {@_.List}, :$start = 0) {
-    Seq.new: MapIndexed.new: it, &mapper, $start
+    MapIndexed.new: it, &mapper, $start
 }
 
 multi map-indexed(Str \st, &mapper = {@_.List}, :$start = 0) {

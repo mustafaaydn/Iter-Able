@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Remove-First;
 
-say "\n-----Remove-First-----";
-plan 10;
+plan 13;
 
 my $s;
 $s := [2, 2, 3, -4, 5];
@@ -29,11 +28,20 @@ is-deeply remove-first($s, &{ True }), $s.skip, "Random list with all-pass predi
 $s := [1, 0, -1, 2];
 is-deeply remove-first($s, &{ False }), $s.Seq, "Random list with no-pass predicate";
 
-my \it = [12, 3, 4, 15, 0, 7].iterator;
-it.pull-one for ^2;
-is-deeply remove-first(it, &is-prime), (4, 15, 0).Seq, "Iterator";
-
 $s := "Real String";
 is-deeply "fi rst whitespace is gone".&remove-first(/ \s /), "first whitespace is gone", "String, and a regex as the predicate";
+
+# my \it = [12, 3, 4, 15, 0, 7].iterator;
+# it.pull-one for ^2;
+# is-deeply remove-first(it, &is-prime), (4, 15, 0).Seq, "Iterator";
+
+$s := (2, 3, 100, 200, 89, 525, 71, 3, 2);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = remove-first(it, *.is-prime);
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), [100, 200, 525, 71, 3, 2].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 done-testing;

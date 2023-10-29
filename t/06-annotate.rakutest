@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Annotate;
 
-say "\n*****Annotate*****";
-plan 6;
+plan 10;
 
 my $s;
 $s := [-4, 3, 0];
@@ -26,5 +25,15 @@ is-deeply $s.&annotate(/ .? <before ' and'>/),
 
 $s := "reAL";
 is-deeply annotate($s, {$_ eq .uc}), (("r", False), ("e", False), ("A", True), ("L", True)).Seq, "String with an is-upper decorator";
+
+$s := ("/", "/", "/", "hi", "yes", "more things", "end of an era");
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = annotate(it, &chars);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), [($_, .chars) for $s.skip(3)].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 done-testing;

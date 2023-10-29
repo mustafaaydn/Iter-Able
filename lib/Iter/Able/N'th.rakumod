@@ -37,9 +37,11 @@ our proto n'th(\ist, Int $n) is export {
     die "Cannot perform negative indexing on lazy input but received n = $n"
         if $n < 0 && ist.is-lazy;
 
-    die "n = $n is out of bounds for size $_"
-        if ist ~~ List && not -$_ <= $n < $_
-            given ist.elems;
+    unless ist.is-lazy {
+        die "n = $n is out of bounds for size $_"
+            if ist ~~ List && not -$_ <= $n < $_
+                given ist.elems
+    }
     {*}
 }
 

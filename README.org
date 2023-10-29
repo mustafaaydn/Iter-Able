@@ -81,7 +81,7 @@ Performs index-based replacement given index => new-value pairs.
     "delay"
 #+end_src
 
-**** chain =(\ist, **@iters)=
+**** chain =(\ist, **@iters --> Seq:D)=
 Yields from this iterable first; when exhausted, from the next one in the chain, and so on. Returns a Seq for strings.
 #+begin_src raku
     # Accepts any number of iterables
@@ -221,7 +221,7 @@ Inserts values at the given positions. Cannot insert past the end even if finite
     "string"
 #+end_src
 
-**** is-all-different =(\ist, :&as = {$_}, :&with = &[===])=
+**** is-all-different =(\ist, :&as = {$_}, :&with = &[===] --> Bool:D)=
 Checks if the values are all different. Semantically equivalent to `.unique == .elems` but implemented differently. Also works for strings. Sameness can be controlled with a transformer (=as=) and/or an equality checker (=with=). By default, no transformation occurs and ~===~ is used for equivalance.
 #+begin_src raku
     # Shortcircuitingly gives False once two same values are seen
@@ -250,7 +250,7 @@ Checks if the values are all different. Semantically equivalent to `.unique == .
     False
 #+end_src
 
-**** is-all-same =(\ist, :&as = {$_}, :&with = &[===])=
+**** is-all-same =(\ist, :&as = {$_}, :&with = &[===] --> Bool:D)=
 Checks if the values are all the same. Semantically equivalent to `.unique <= 1` but implemented differently. Also works for strings. Sameness can be controlled with a transformer (=as=) and/or an equality checker (=with=). By default, no transformation occurs and ~===~ is used for equivalance.
 #+begin_src raku
     # Shortcircuitingly gives False once two different values are seen
@@ -410,7 +410,7 @@ Remove the first element satisfying the predicate, if any. Without any predicate
 #+end_src
 
 **** replace =(\it, *@pairs)=
-Translates values through the given pairs. All occurences are replaced. Only Numerics and Strings are replaced; for others, see =map-when=. For replacing strings, see the built-in =trans=.
+Translates values through the given pairs. All occurences are replaced. Only Numerics and Strings within an iterable/iterator are replaced; for others, see =map-when=. For replacing strings, see the built-in =trans=.
 #+begin_src raku
     # Replace a single value
     >>> [1, 2, 3].&replace(2 => 99)

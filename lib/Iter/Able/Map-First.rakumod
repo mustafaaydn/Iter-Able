@@ -66,7 +66,7 @@ multi map-first(Iterable \it, &pred, &mapper) {
 }
 
 multi map-first(Iterator \it, &pred, &mapper) {
-    Seq.new: MapFirst.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
+    MapFirst.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }
 
 multi map-first(Str \st, &pred, &mapper) {

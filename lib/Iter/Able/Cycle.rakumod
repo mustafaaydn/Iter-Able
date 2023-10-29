@@ -53,5 +53,5 @@ my class Cycle does Iterator {
 our proto cycle(\ist) is export {*}
 
 multi cycle(Iterable \it) { Seq.new: Cycle.new: it.iterator }
-multi cycle(Iterator \it) { Seq.new: Cycle.new: it }
+multi cycle(Iterator \it) { Cycle.new: it }
 multi cycle(Str \st)      { Seq.new: Cycle.new: st.comb.iterator }

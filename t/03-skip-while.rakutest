@@ -1,12 +1,11 @@
 use Test;
 use Iter::Able::Skip-While;
 
-say "\n*****Skip-While*****";
-plan 8;
+plan 12;
 
 my $r;
 $r := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
-is-deeply skip-while($r, * > 0), [-5, 25, 5, -5, 5, 5, -5, 3].Seq, "Random list with `* > 0`"; 
+is-deeply skip-while($r, * > 0), [-5, 25, 5, -5, 5, 5, -5, 3].Seq, "Random list with `* > 0`";
 
 $r := [];
 is-deeply skip-while($r, * > 0), [].Seq, "Empty list with `* > 0`";
@@ -28,5 +27,15 @@ is-deeply skip-while($r, &{True}), [].Seq, "Random list with all-pass predicate,
 
 $r := "neither AM I!";
 is-deeply skip-while($r, /<.lower>/), " AM I!", "Mixed case string with /<.lower>/ predicate";
+
+$r := (3, 3, 3, 4, 4, 4, 4, 5, 3);
+my \it = $r.iterator;
+it.pull-one;
+my \newit = skip-while(it, * %% 2);
+it.pull-one for ^2;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), $r.tail(2), "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 done-testing;

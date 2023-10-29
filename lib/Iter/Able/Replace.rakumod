@@ -1,6 +1,6 @@
 #| Translates values through the given pairs. All occurences are
-#| replaced. Only Numerics and Strings are replaced; for others, see
-#| =map-when=. For replacing strings, see the built-in =trans=.
+#| replaced. Only Numerics and Strings within an iterable/iterator are replaced;
+#| for others, see =map-when=. For replacing strings, see the built-in =trans=.
 #`{
     # Replace a single value
     >>> [1, 2, 3].&replace(2 => 99)
@@ -37,7 +37,7 @@ multi replace(Iterable \it, *@pairs) {
 
 multi replace(Iterator \it, *@pairs) {
     my %map is Map = @pairs;
-    Seq.new(it).map: { %map{$_}:exists ?? %map{$_} !! $_ }
+    Seq.new(it).map({ %map{$_}:exists ?? %map{$_} !! $_ }).iterator
 }
 
 multi replace(Str \st, |) {

@@ -25,9 +25,9 @@ our proto clip(\it, Numeric :$from-below, Numeric :$from-above) is export {
 }
 
 multi clip(Iterable \it, :$from-below, :$from-above) {
-    it.map({max(min($_, $from-above), $from-below)})
+    it.map({ max(min($_, $from-above), $from-below) })
 }
 
 multi clip(Iterator \it, :$from-below, :$from-above) {
-    Seq.new(it).map({max(min($_, $from-above), $from-below)})
+    Seq.new(it).map({ max(min($_, $from-above), $from-below) }).iterator
 }

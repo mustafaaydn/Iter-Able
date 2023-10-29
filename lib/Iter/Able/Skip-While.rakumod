@@ -68,7 +68,7 @@ multi skip-while(Iterable \it, &pred) {
 }
 
 multi skip-while(Iterator \it, &pred) {
-    Seq.new: SkipWhile.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
+    SkipWhile.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
 multi skip-while(Str \st, &pred) {

@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Map-When;
 
-say "\n*****Map-When*****";
-plan 11;
+plan 15;
 
 my $s;
 $s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
@@ -37,5 +36,15 @@ is-deeply map-when($s, {$_ eq "e"}, &uc), "mixEd fEElings", "String with mixed c
 
 $s := "mixed feelings";
 is-deeply map-when($s, /:i <[aeiou]>/, &uc), "mIxEd fEElIngs", "String with mixed case; regex & vowels uppercased";
+
+$s := (3, 3, 3, 4, 4, 4, 4, 5, 3);
+my \it = $s.iterator;
+it.pull-one for ^3;
+my \newit = map-when(it, * %% 2, * ** 3);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), [64, 64, 64, 5, 3].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 done-testing;

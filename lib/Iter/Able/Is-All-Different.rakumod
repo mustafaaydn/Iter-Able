@@ -33,7 +33,7 @@ unit module Is-All-Different;
 
 use nqp;
 
-our proto is-all-different(\ist, :&as = {$_}, :&with = &[===]) is export {*}
+our proto is-all-different(\ist, :&as = {$_}, :&with = &[===] --> Bool:D) is export {*}
 
 multi is-all-different(Iterable \it, :&as = {$_}, :&with = &[===]) {
     samewith it.iterator, :&as, :&with
@@ -42,29 +42,29 @@ multi is-all-different(Iterable \it, :&as = {$_}, :&with = &[===]) {
 multi is-all-different(Iterator \it, :&as = {$_}, :&with = &[===]) {
     nqp::if(
         nqp::eqaddr(&with, &[===]),
-        # default &with
+        # Default &with
         nqp::stmts(
-            # allows for a hash
+            # ...allows for a hash
             (my $seen := nqp::hash),
             nqp::until(
                 nqp::eqaddr((my \nekst = it.pull-one), IterationEnd),
                 nqp::if(
                     nqp::existskey($seen, my \t-nekst = &as(nekst).WHICH),
-                    # if already seen, immediately return False
+                    # If already seen, immediately return False
                     (return False),
-                    # otherwise store this as a seen value
+                    # Otherwise store this as a seen value
                     nqp::bindkey($seen, t-nekst, 1),
                 ),
             ),
         ),
-        # custom &with
+        # Custom &with
         nqp::stmts(
-            # can't quite use a hash
+            # ...can't quite use a hash
             (my $wseen := nqp::list),
             nqp::until(
                 nqp::eqaddr((my \wnekst = it.pull-one), IterationEnd),
                 nqp::stmts(
-                    # traverse the list to see if seen
+                    # Traverse the list to see if seen
                     (my int $i = -1),
                     (my int $e = nqp::elems($wseen)),
                     (my \t-wnekst = &as(wnekst)),
@@ -76,9 +76,9 @@ multi is-all-different(Iterator \it, :&as = {$_}, :&with = &[===]) {
 
                     nqp::if(
                         nqp::isne_i($i, $e),
-                        # if $i didn't reach $e, it means we had a hit; immediately return
+                        # If $i didn't reach $e, it means we had a hit; immediately return
                         (return False),
-                        # otherwise add this one to the seen list
+                        # Otherwise add this one to the seen list
                         nqp::push($wseen, t-wnekst)
                     ),
                 ),

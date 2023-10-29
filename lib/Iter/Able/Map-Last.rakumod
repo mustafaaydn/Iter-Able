@@ -24,12 +24,12 @@ use Iter::Able::Map-First;
 our proto map-last(\ist, &pred, &mapper) is export {*}
 
 multi map-last(Iterable \it, &pred, &mapper) {
-    reverse map-first it.reverse.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
+    reverse map-first it.reverse, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }
 
 multi map-last(Iterator \it, &pred, &mapper) {
     it.push-all(my @tmp);
-    reverse map-first @tmp.reverse.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
+    (reverse Seq.new: map-first @tmp.reverse.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper).iterator
 }
 
 multi map-last(Str \st, &pred, &mapper) {

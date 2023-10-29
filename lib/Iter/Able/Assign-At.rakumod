@@ -40,7 +40,7 @@ my class AssignAt does Iterator {
         $!index = '0';
         nqp::bindkey($!pairs, .key.Str, .value) for @pairs;
         self
-    } 
+    }
 
     method new(\iterator, @pairs) {
         nqp::create(self)!SET-SELF(iterator, @pairs)
@@ -79,7 +79,7 @@ my class AssignAt-String does Iterator {
         $!index = '0';
         nqp::bindkey($!pairs, .key.Str, .value) for @pairs;
         self
-    } 
+    }
 
     method new(\iterator, @pairs) {
         nqp::create(self)!SET-SELF(iterator, @pairs)
@@ -127,7 +127,7 @@ multi assign-at(Iterable \it, *@pairs) {
 }
 
 multi assign-at(Iterator \it, *@pairs) {
-    Seq.new: AssignAt.new: it, @pairs
+    AssignAt.new: it, @pairs
 }
 
 multi assign-at(Str \st, *@pairs) {

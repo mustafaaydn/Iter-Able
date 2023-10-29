@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Map-Indexed;
 
-say "\n*****Map-Indexed*****";
-plan 6;
+plan 10;
 
 my $s;
 $s := [3, 2, 1];
@@ -22,5 +21,15 @@ is-deeply map-indexed($s, * R/ *, start => 1), $s>>.Rat.Seq, "All zeros with ind
 
 $s := "train";
 is-deeply $s.&map-indexed(* Rx *, start => 1), ("t", "rr", "aaa", "iiii", "nnnnn").Seq, "String with repetition";
+
+$s := (-2, -1, 0, 7, 77, 777);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = map-indexed(it, * R** *, start => 1);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), $s.skip(3) >>**<< [1, 2, 3], "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 done-testing;

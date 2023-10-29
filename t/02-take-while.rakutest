@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Take-While;
 
-say "\n*****Take-While*****";
-plan 8;
+plan 17;
 
 my $s;
 $s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
@@ -28,5 +27,20 @@ is-deeply take-while($s, &{False}), [].Seq, "Random list with no-pass predicate"
 
 $s := "neither AM I!";
 is-deeply take-while($s, /<.lower>/), "neither", "Mixed case string with /<lower>/ predicate";
+
+$s := (-4, 22, 3, 5, 19, 23, NaN, 91, 7, 5, 51);  # NaN (first nonprime) will be pulled as a side effect of &take-while
+my \it = $s.iterator;
+it.pull-one;
+my \newit = take-while(it, &is-prime);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), $s.skip(2).head(*-5),  "Iterator (values)";
+nok it.pull-one =:= IterationEnd, "Iterator (original, not exhausted yet)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
+is it.pull-one, 7, "Iterator (original still yielding, 1)";
+is it.pull-one, 5, "Iterator (original still yielding, 2)";
+is it.pull-one, 51, "Iterator (original still yielding, 3)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, still exhausted)";
 
 done-testing;

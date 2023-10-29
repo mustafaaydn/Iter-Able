@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Group-Conseq;
 
-say "\n*****Group-Conseq*****";
-plan 7;
+plan 11;
 
 my $s;
 $s := [2, 2, 3, 4, 5, -5, 25, 3, 3];
@@ -17,7 +16,7 @@ is-deeply group-conseq($s, as => * == 0), [Bool::True => (0, 0, 0, 0)].Seq, "wit
 $s := [-1, -2, 0, 8, -3];
 is-deeply group-conseq($s, as => * < 0), [Bool::True => (-1, -2), Bool::False => (0, 8), Bool::True => (-3,)].Seq, "with `* < 0`";
 
-$s := [1, 1, 2, 2, 1, 1, 2, 2];
+$s := (1, 1, 2, 2, 1, 1, 2, 2);
 is-deeply group-conseq($s),  [1 => (1, 1), 2 => (2, 2), 1 => (1, 1), 2 => (2, 2)].Seq, "with `*`";
 
 $s := [1, 0, -1, 2];
@@ -25,6 +24,16 @@ is-deeply group-conseq($s, as => &{False}), [Bool::False => $s.List].Seq, "with 
 
 $s := "neither AM I!";
 is-deeply group-conseq($s, as => /<.lower>/), [Bool::True => ('n', 'e', 'i', 't', 'h', 'e', 'r'),
-                                               Bool::False => (' ', 'A', 'M', ' ', 'I', '!')].Seq, "with `/<lower>/`";
+                                               Bool::False => (' ', 'A', 'M', ' ', 'I', '!')].Seq, "String with `/<lower>/`";
+
+$s := (3, 3, 3, 4, 4, 4, 4, 5, 3);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = group-conseq(it);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), [4 => (4, 4, 4, 4), 5 => (5,), 3 => (3,)].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 done-testing;

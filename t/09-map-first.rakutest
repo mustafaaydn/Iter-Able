@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Map-First;
 
-say "\n*****Map-First*****";
-plan 6;
+plan 10;
 
 my $s;
 $s := [1, 2, 3];
@@ -22,5 +21,15 @@ is-deeply $s.&map-first({ False }, { 0 }), $s.Seq, "Random list with no-pass fil
 
 $s := "here WE are";
 is-deeply $s.&map-first(/ <.upper> /, &lc),  "here wE are", "Mixed case string with \"lower the first upper\"";
+
+$s := (0, -2, -7, 5, 12, 13);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = map-first(it, * %% 3, * ** 2);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), [5, 144, 13].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 done-testing;

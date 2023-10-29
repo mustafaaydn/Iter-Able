@@ -51,7 +51,7 @@ multi annotate(Iterable \it, &mapper = {$_}) {
 }
 
 multi annotate(Iterator \it, &mapper = {$_}) {
-    Seq.new: Annotate.new: it, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
+    Annotate.new: it, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
 }
 
 multi annotate(Str \st, &mapper = {$_}) {

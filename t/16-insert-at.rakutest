@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Insert-At;
 
-say "\n*****Insert-At*****";
-plan 15;
+plan 18;
 
 my $s;
 $s := [2, 3];
@@ -25,25 +24,27 @@ is-deeply insert-at($s, 0 => 0), [].Seq,  "Empty list";
 
 my $t = ();
 is-deeply insert-at($t, 3 => 2), [].Seq,  "Empty itemized list";
-
-my \it = [12, 3, 444].iterator;
-it.pull-one for ^2;
-is-deeply insert-at(it, 0 => [4, 44]), [[4, 44], 444].Seq, "Iterator";
-
+ 
 $s := "aise";
 is-deeply insert-at($s, 1 => "r"), "arise", "String with 1 pair";
 
 $s := "sing";
 is-deeply insert-at($s, 1 => "tr"), "string", "String with an expanding pair";
 
+$s := (0, -2, -7, 5, 13, 22);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = insert-at(it, 0 => 48, 500 => 1);
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), [48, -7, 5, 13, 22].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
+
+# Invalid calls
 throws-like { [].&insert-at }, Exception, "No pair", message => /:i 'Must pass at least one pair' /;
-
 throws-like { [].&insert-at(^Inf X=> 1) }, Exception, "Possibly nonfinite number of pairs", message => /:i 'lazy' /;
-
 throws-like { "".&insert-at(*) }, Exception, "Nonpair translator", message => /:i 'should all be pairs' /;
-
 throws-like { "".&insert-at("yes" => 4) }, Exception, "Noninteger key-having translator", message => /:i 'keys should be all nonnegative integers' /;
-
 throws-like { "".&insert-at(-1 => 4) }, Exception, "Noninteger key-having translator", message => /:i 'keys should be all nonnegative integers' /;
 
 done-testing;

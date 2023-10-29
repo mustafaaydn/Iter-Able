@@ -96,7 +96,7 @@ multi group-conseq(Iterable \it, :&as = {$_}, :&with = &[===]) {
 }
 
 multi group-conseq(Iterator \it, :&as = {$_}, :&with = &[===]) {
-    Seq.new: GroupConseq.new: it, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
+    GroupConseq.new: it, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
 }
 
 multi group-conseq(Str \st, :&as = {$_}, :&with = &[===]) {

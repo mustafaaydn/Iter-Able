@@ -1,8 +1,7 @@
 use Test;
 use Iter::Able::Assign-At;
 
-say "\n*****Assign-At*****";
-plan 20;
+plan 23;
 
 my $s;
 $s := [0, 1, 2, 3];
@@ -25,10 +24,6 @@ is-deeply assign-at($s, $s.Int => 0), $s.Seq, "Random list with out-of-bounds in
 
 $s := [4, 5, 6];
 is-deeply $s.&assign-at([1 => 3, 0 => 1]), [1, 3, 6].Seq, "Two pairs passed as a single Array";
-
-my \it = [12, 3, 4].iterator;
-it.pull-one for ^2;
-is-deeply assign-at(it, 0 => 444), [444].Seq, "Iterator";
 
 $s := "Real";
 is-deeply assign-at($s, 0 => "r"), "real", "String with 1 pair";
@@ -54,9 +49,19 @@ is-deeply assign-at($s, 2 => "", 4 => "ddy"), "freddy", "String with a remover p
 $s := "fried";
 is-deeply assign-at($s, 0 => "", 1 => "fr", 3 => "e", 491 => "eh"), "fried", "String with remover, expander, replacer, out-of-bounds pairs";
 
-# Exceptions' tests
+$s := (0, -2, -7, 5, 13, 22);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = assign-at(it, 1 => 300, 8 => 900);
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+is-deeply Seq.new(newit), [-7, 300, 13, 22].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
+
+# Invalid calls
 throws-like { [].&assign-at }, Exception, "No pair", message => /:i 'Must pass at least one pair' /;
 throws-like { [].&assign-at(^Inf X=> 1) }, Exception, "Possibly nonfinite number of pairs", message => /:i 'lazy' /;
 throws-like { "".&assign-at(*) }, Exception, "Nonpair translator", message => /:i 'should all be pairs' /;
 throws-like { "".&assign-at("yes" => 4) }, Exception, "Noninteger key-having translator", message => /:i 'keys should be all nonnegative integers' /;
+
 done-testing;

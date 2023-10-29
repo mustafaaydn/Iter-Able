@@ -32,7 +32,7 @@ my class Enumerate does Iterator {
             nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
             # Yes; signal
             IterationEnd,
-            # No; ...
+            # No; count on and yield
             ($!start++, $next)
         )
     }
@@ -43,5 +43,5 @@ my class Enumerate does Iterator {
 our proto enumerate(\ist, Numeric :$start = 0) is export {*}
 
 multi enumerate(Iterable \it, :$start = 0) { Seq.new: Enumerate.new: it.iterator, $start}
-multi enumerate(Iterator \it, :$start = 0) { Seq.new: Enumerate.new: it, $start}
+multi enumerate(Iterator \it, :$start = 0) { Enumerate.new: it, $start}
 multi enumerate(Str \st,      :$start = 0) { Seq.new: Enumerate.new: st.comb.iterator, $start}
