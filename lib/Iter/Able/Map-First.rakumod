@@ -30,16 +30,16 @@ my class MapFirst does Iterator {
     method !SET-SELF($!iter, &!pred, &!mapper) { self }
 
     method new(\iterator, \pred, \mapper) {
-                nqp::create(self)!SET-SELF(iterator, pred, mapper)
+        nqp::create(self)!SET-SELF(iterator, pred, mapper)
     }
 
     method pull-one {
         nqp::if(
-                        # Is the iterable exhausted?
-                nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
-                        # Yes; signal
+            # Is the iterable exhausted?
+            nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
+            # Yes; signal
             IterationEnd,
-                        # No; have we already seen the first one?
+            # No; have we already seen the first one?
             nqp::if(
                 $!done-first,
                 $next,
@@ -56,8 +56,8 @@ my class MapFirst does Iterator {
         )
     }
 
-    method is-lazy   { $!iter.is-lazy }
-    method Seq       { Seq.new(self)  }
+    method is-lazy { $!iter.is-lazy }
+    method Seq     { Seq.new(self)  }
 }
 
 our proto map-first(\ist, &pred, &mapper) is export {*}

@@ -57,7 +57,8 @@ my class Chain does Iterator {
         )
     }
 
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy { $!iter.is-lazy }
+    method Seq     { Seq.new(self)  }  # isn't really needed but here for consistency
 }
 
 use Iter::Able::Map-When;

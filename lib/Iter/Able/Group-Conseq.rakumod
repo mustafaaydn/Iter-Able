@@ -48,7 +48,7 @@ my class GroupConseq does Iterator {
     }
 
     method pull-one {
-        # nqp::ifnull instead warns
+        # `nqp::ifnull` instead of this warns
         nqp::if(
             nqp::isnull($!curr),
             ($!curr := $!iter.pull-one)
@@ -86,8 +86,8 @@ my class GroupConseq does Iterator {
             ),
         );
     }
-    method is-lazy   { $!iter.is-lazy }
-    method Seq       { Seq.new(self)  }
+    method is-lazy { $!iter.is-lazy }
+    method Seq     { Seq.new(self)  }
 }
 
 our proto group-conseq(\ist, :&as = {$_}, :&with = &[===]) is export {*}

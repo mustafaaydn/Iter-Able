@@ -36,13 +36,13 @@ my class Annotate does Iterator {
             nqp::eqaddr((my $next := $!iter.pull-one), IterationEnd),
             # Yes; signal
             IterationEnd,
-            # No; ...
+            # No; yield the annotated value
             ($next, &!mapper($next))
         )
     }
 
-    method is-lazy   { $!iter.is-lazy }
-    method Seq       { Seq.new(self)  }
+    method is-lazy { $!iter.is-lazy }
+    method Seq     { Seq.new(self)  }
 }
 
 our proto annotate(\ist, &mapper = {$_}) is export {*}

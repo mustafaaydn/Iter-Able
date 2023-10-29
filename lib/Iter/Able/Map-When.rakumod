@@ -18,7 +18,7 @@
 }
 unit module Map-When;
 
-#= Implemented in terms of `map`
+# Implemented in terms of `map`
 our proto map-when(\ist, &pred, &mapper) is export {*}
 
 multi map-when(Iterable:D \it, &pred, &mapper --> Seq:D) {

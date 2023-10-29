@@ -37,8 +37,8 @@ my class Enumerate does Iterator {
         )
     }
 
-    method is-lazy   { $!iter.is-lazy }
-    method Seq       { Seq.new(self)  }
+    method is-lazy { $!iter.is-lazy }
+    method Seq     { Seq.new(self)  }
 }
 
 our proto enumerate(\ist, Numeric:D :$start = 0) is export {*}
