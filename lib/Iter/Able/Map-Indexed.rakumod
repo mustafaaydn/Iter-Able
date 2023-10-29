@@ -4,19 +4,19 @@
 #`{
     # Produce new items as `index * element`
     >>> [3, 2, 1].&map-indexed(* * *)
-    (0, 2, 2)
+    (0, 2, 2).Seq
 
     # `index + element` as kind of an added ramp and also start from 1
     >>> (4, 7, 12, -3).&map-indexed(* + *, start => 1)
-    (5, 9, 16, 1)
+    (5, 9, 16, 1).Seq
 
     # Even indexed values are zeroed out
     >>> (4, 7, -1).&cycle.&map-indexed({ $^idx %% 2 ?? 0 !! $^val }).head(5)
-    (0, 7, 0, 4, 0)
+    (0, 7, 0, 4, 0).Seq
 
     # Repeat a character as many as its position suggests
     >>> "train".&map-indexed(* Rx *, start => 1)
-    ("t", "rr", "aaa", "iiii", "nnnnn")
+    ("t", "rr", "aaa", "iiii", "nnnnn").Seq
 }
 unit module Map-Indexed;
 

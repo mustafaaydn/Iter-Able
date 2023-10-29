@@ -88,6 +88,6 @@ multi is-all-different(Iterator:D \it, :&as = {$_}, :&with = &[===] --> Bool:D) 
     True
 }
 
-multi is-all-different(Str:D \st, :&as = {$_}, :&with = &[===] --> Bool:D) {
+multi is-all-different(Str \st, :&as = {$_}, :&with = &[===] --> Bool:D) {
     samewith st.comb.iterator, :&as, :&with
 }

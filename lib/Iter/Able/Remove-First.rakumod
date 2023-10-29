@@ -3,15 +3,15 @@
 #`{
     # Without an argument, equivalent to `.skip`
     >>> [1, 2, 3, 0, 4, 5].&remove-first
-    (2, 3, 0, 4, 5)
+    (2, 3, 0, 4, 5).Seq
 
     # Remove the first nonnegative element (and only that)
     >>> (-2, -8, 5, 12, 0).&remove-first(* >= 0)
-    (-2, -8, 12, 0)
+    (-2, -8, 12, 0).Seq
 
     # If there is no "bad" element, yield back as is
     >>> remove-first [10, 20, 30], &is-prime
-    (10, 20, 30)
+    (10, 20, 30).Seq
 
     # String invocants as well as regex predicates are accepted as well
     >>> "fi rst whitespace is gone".&remove-first(/ \s /).raku

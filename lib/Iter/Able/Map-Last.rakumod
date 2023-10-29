@@ -2,11 +2,11 @@
 #`{
     # Last negative to positive
     >>> map-last [2, -3, 4, -6, 8], * < 0, -*
-    (2, -3, 4, 6, 8)
+    (2, -3, 4, 6, 8).Seq
 
     # Can use with all-pass filter to change the last element :)
     >>> map-last [3, 4, 7, NaN], { True }, { -1 }
-    (3, 4, 7, -1)
+    (3, 4, 7, -1).Seq
 
     # Last lowercase to uppercase
     >>> "here we are!".&map-last(/ <.lower> /, &uc).raku
@@ -14,7 +14,7 @@
 
     # If no one matches, everyone is yielded as is
     >>> [57, 91, -13].&map-last(*.is-prime, { 0 });
-    (57, 91, -13)
+    (57, 91, -13).Seq
 }
 unit module Map-Last;
 

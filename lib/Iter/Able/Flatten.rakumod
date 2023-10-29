@@ -5,7 +5,7 @@
 #`{
     # Flattens all-the-way by default
     >>> flatten ((1, (2, 3)), (4, 5, 6), 7)
-    (1, 2, 3, 4, 5, 6, 7)
+    (1, 2, 3, 4, 5, 6, 7).Seq
 
     # Flatten only 1 level
     >>> ((1, (2, 3)), (4, 5, 6), 7).&flatten(:1level)
@@ -13,11 +13,11 @@
 
     # Unlike `flat`, itemizeds are subject to flattenning
     >>> [(3, 4), 5, (6,)].&flatten
-    (3, 4, 5, 6)
+    (3, 4, 5, 6).Seq
 
     # Flatten a ragged one all the way
     >>> flatten [["a", ("b", "c")], [("d",), "e", "f", ["g", ("h", "i")]]]
-    ("a", "b", "c", "d", "e", "f", "g", "h", "i")
+    ("a", "b", "c", "d", "e", "f", "g", "h", "i").Seq
 
     # Up to 2 levels of unraggification
     >>> flatten [["a", ("b", ("c", "d"))], [[[["e"],],],]], :2levels

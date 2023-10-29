@@ -3,19 +3,19 @@
 #`{
     # Mirrors the items by default
     >>> [-4, 3, 0].&annotate
-    ((-4, -4), (3, 3), (0, 0))
+    ((-4, -4), (3, 3), (0, 0)).Seq
 
     # Let items carry their length with them
     >>> ("piano", "drum", "violin").&annotate(&chars)
-    (("piano", 5), ("drum", 4), ("violin", 6))
+    (("piano", 5), ("drum", 4), ("violin", 6)).Seq
 
     # Originals and matches
     >>> ["this and that", "yes and no", "real"].&annotate(/ .? <before ' and'>/)
-    (("this and that", ｢this｣), ("yes and no", ｢yes｣), ("real", Nil))
+    (("this and that", ｢this｣), ("yes and no", ｢yes｣), ("real", Nil)).Seq
 
     # is-upper decoration
     >>> annotate "reAL", {$_ eq .uc}  # or `so * ~~ / <.upper> /`
-    (("r", False), ("e", False), ("A", True), ("L", True))
+    (("r", False), ("e", False), ("A", True), ("L", True)).Seq
 }
 unit module Annotate;
 

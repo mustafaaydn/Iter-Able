@@ -2,15 +2,15 @@
 #`{
     # No negatives
     >>> [-1, 2, -3].&clip(from-below => 0)
-    (0, 2, 0)
+    (0, 2, 0).Seq
 
     # Accumulate everything to be in the first quadrant
     >>> (2 × rand - 1) xx 5 ==> map(*.acos.round(0.001)) ==> clip(from-below => 0, from-above => π / 2)
-    (0.829 0.463 0.998 1.254 1.5707963267948966)
+    (0.829 0.463 0.998 1.254 1.5707963267948966).Seq
 
     # At most 100 is allowed
     >>> 3 <<**<< (4, 5, 6) ==> clip(:100from-above)
-    (81, 100, 100)
+    (81, 100, 100).Seq
 }
 unit module Clip;
 

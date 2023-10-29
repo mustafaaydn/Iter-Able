@@ -2,11 +2,11 @@
 #`{
     # First positive to negative
     >>> map-first [1, 2, 3], * > 0, -*
-    (-1, 2, 3)
+    (-1, 2, 3).Seq
 
     # Can use with all-pass filter to assign to head :)
     >>> map-first ["", 5, 9, 11], { True }, { 0 }
-    (0, 5, 9, 11)
+    (0, 5, 9, 11).Seq
 
     # First uppercase to lowercase
     >>> "here WE are".&map-first(/ <.upper> /, &lc).raku
@@ -14,7 +14,7 @@
 
     # If no one matches, everyone is yielded as is
     >>> [4, 44, 444, 4444].&map-first(*.is-prime, { 7 });
-    (4, 44, 444, 4444)
+    (4, 44, 444, 4444).Seq
 }
 unit module Map-First;
 

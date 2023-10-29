@@ -3,23 +3,23 @@
 #`{
     # Accepts any number of iterables
     >>> [-1, -2, -3].&chain([4, 5], [-6])
-    (-1, -2, -3, 4, 5, -6)
+    (-1, -2, -3, 4, 5, -6).Seq
 
     # Infinity chaining
     >>> [1, 2].&chain(3 xx *).head(5)
-    (1, 2, 3, 3, 3)
+    (1, 2, 3, 3, 3).Seq
 
     # Can chain to strings
     >>> "get".&chain("attr")
-    ("g", "e", "t", "a", "t", "t", "r")
+    ("g", "e", "t", "a", "t", "t", "r").Seq
 
     # Can chain with strings
     >>> (4, 7).&chain("spa")
-    (4, 7, "s", "p", "a")
+    (4, 7, "s", "p", "a").Seq
 
     # Another way of (one-level) flattening a list of lists
     >>> chain |[[4, 7], [6], [0, 8, 9]]
-    (4, 7, 6, 0, 8, 9)
+    (4, 7, 6, 0, 8, 9).Seq
 }
 unit module Chain;
 

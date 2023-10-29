@@ -4,20 +4,20 @@
 #`{
     # Replace a single value
     >>> [1, 2, 3].&replace(2 => 99)
-    (1, 99, 3)
+    (1, 99, 3).Seq
 
     # More than one
     >>> (4, 5, 6, 5, 4).&replace((4, 5) X=> 0)
-    (0, 0, 6, 0, 0)
+    (0, 0, 6, 0, 0).Seq
 
     # Need to quote the LHS of pairs if they are valid identifiers,
     # as they would pass as named arguments otherwise
     >>> ["yes", "no", "both"].&replace("both" => "neither")
-    ["yes", "no", "neither"]
+    ["yes", "no", "neither"].Seq
 
     # Unfound LHS values of pairs are silently ignored
     >>> [2, 4, 6, 7].&replace(8 => -8)
-    (2, 4, 6, 7)
+    (2, 4, 6, 7).Seq
 }
 unit module Replace;
 

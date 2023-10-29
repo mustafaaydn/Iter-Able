@@ -2,15 +2,15 @@
 #`{
     # Default starts from 0
     >>> [1, 2, 3, 0].&enumerate
-    ((0, 1), (1, 2), (2, 3), (3, 0))
+    ((0, 1), (1, 2), (2, 3), (3, 0)).Seq
 
     # Sometimes 1-based indexing is useful
     >>> "yes".&enumerate(start => 1)
-    ((1, "y"), (2, "e"), (3, "s"))
+    ((1, "y"), (2, "e"), (3, "s")).Seq
 
     # Can start with any numeric value
     >>> enumerate "cgpa", start => 3.83
-    ((3.83, "c"), (4.83, "g"), (5.83, "p"), (6.83, "a"))
+    ((3.83, "c"), (4.83, "g"), (5.83, "p"), (6.83, "a")).Seq
 }
 unit module Enumerate;
 

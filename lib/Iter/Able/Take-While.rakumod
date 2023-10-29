@@ -5,7 +5,7 @@
 #`{
     # Negative value is a sentinel, so take up until that
     >>> (4, 7, 12, -3, 58, -1).&take-while(* >= 0)
-    (4, 7, 12)
+    (4, 7, 12).Seq
 
     # Until first whitespace
     >>> "until first whitespace".&take-while(/ \S /).raku
@@ -13,7 +13,7 @@
 
     # Go till an "anomaly" occurs
     >>> (r1 => 7.13, r2 => 6.89, r3 => 7.90, r4 => 6.81).&take-while((*.value - 7).abs <= 0.2)
-    (r1 => 7.13, r2 => 6.89)
+    (r1 => 7.13, r2 => 6.89).Seq
 }
 unit module Take-While;
 

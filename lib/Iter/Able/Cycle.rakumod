@@ -1,10 +1,10 @@
 #| Repeats the stream indefinitely. Returns a Seq for strings.
 #`{
     >>> [1, 2, 3].&cycle.head(5)
-    (1, 2, 3, 1, 2)
+    (1, 2, 3, 1, 2).Seq
 
     >>> "real".&cycle.head(9)
-    ("r", "e", "a", "l", "r", "e", "a", "l", "r")
+    ("r", "e", "a", "l", "r", "e", "a", "l", "r").Seq
 }
 unit module Cycle;
 

@@ -3,15 +3,15 @@
 #`{
     # At the beginning
     >>> [2, 3].&insert-at(0 => 1)
-    (1, 2, 3)
+    (1, 2, 3).Seq
 
     # Multiple insertions
     >>> (1, 2, 0, 16).&insert-at(2 => 4, 3 => 9)
-    (1, 2, 4, 0, 9, 16)
+    (1, 2, 4, 0, 9, 16).Seq
 
     # Positions past the end are silently ignored
     >>> [5, 7].insert-at(2 => 9)
-    (5, 7)
+    (5, 7).Seq
 
     # Strings are possible too
     >>> "aise".&insert-at(1 => "r").raku
@@ -44,6 +44,6 @@ multi insert-at(Iterator:D \it, *@pairs --> Iterator:D) {
     samewith Seq.new(it), @pairs andthen .iterator but role { method Seq { Seq.new(self) } }
 }
 
-multi insert-at(Str:D \st, *@pairs --> Seq:D) {
+multi insert-at(Str:D \st, *@pairs --> Str:D) {
     join "", samewith st.comb, @pairs
 }

@@ -7,7 +7,7 @@
 
     # Generalized trim-leading
     >>> (NaN, NaN, NaN, 4.6, -7.1, 8.0).&skip-while(* === NaN)
-    (4.6, -7.1, 8)
+    (4.6, -7.1, 8).Seq
 
     # Skip unwanted characters
     >>> my Set() $unwanteds = <. , ;>;
