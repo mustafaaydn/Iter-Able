@@ -1,23 +1,25 @@
 use Test;
 use Iter::Able::Cycle;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 10;
 
 my $s;
 $s := [2, 3];
-is-deeply cycle($s).head(5), [2, 3, 2, 3, 2].Seq, "Random list with 2.5 repeats";
+id cycle($s).head(5), [2, 3, 2, 3, 2].Seq, "Random list with 2.5 repeats";
 
 $s := [];
-is-deeply cycle($s), [].Seq,  "Empty-list";
+id cycle($s), [].Seq,  "Empty-list";
 
 $s := [3, 4, 5];
-is-deeply cycle($s).head(2), [3, 4].Seq, "Random list with 0.66 repeats";
+id cycle($s).head(2), [3, 4].Seq, "Random list with 0.66 repeats";
 
 $s := [5];
-is-deeply cycle($s).head(7), (|$s xx 7).Seq, "One element list with 7 repeats";
+id cycle($s).head(7), (|$s xx 7).Seq, "One element list with 7 repeats";
 
 $s := "yes";
-is-deeply cycle($s).head(10), "yesyesyesy".comb, "String ~3.33 repeats";
+id cycle($s).head(10), "yesyesyesy".comb, "String ~3.33 repeats";
 
 $s := (-2, -1, 0, 1, 2, 3);
 my \it = $s.iterator;
@@ -25,7 +27,7 @@ it.pull-one for ^2;
 my \newit = cycle(it);
 it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit).head(4), [1, 2, 3, 1].Seq, "Iterator (values)";
+id Seq.new(newit).head(4), [1, 2, 3, 1].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 nok newit.pull-one =:= IterationEnd, "Iterator (new, *not* exhausted)";
 is newit.pull-one, 3, "(... and yields the right value)";

@@ -1,26 +1,28 @@
 use Test;
 use Iter::Able::Map-Last;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 10;
 
 my $s;
 $s := [2, -3, 4, -6, 8];
-is-deeply map-last($s, * < 0, -*), (2, -3, 4, 6, 8).Seq, "Random list with `* < 0` and `-*`";
+id map-last($s, * < 0, -*), (2, -3, 4, 6, 8).Seq, "Random list with `* < 0` and `-*`";
 
 $s := [];
-is-deeply map-last($s, {;}, {;}), [].Seq,  "Empty-list";
+id map-last($s, {;}, {;}), [].Seq,  "Empty-list";
 
 $s := [57, 91, -13];
-is-deeply $s.&map-last(*.is-prime, { 0 }), $s.Seq, "Random list with no match";
+id $s.&map-last(*.is-prime, { 0 }), $s.Seq, "Random list with no match";
 
 $s := [5, 6, 7];
-is-deeply $s.&map-last({ True }, { 0 }), (5, 6, 0).Seq, "Random list with all-pass filter";
+id $s.&map-last({ True }, { 0 }), (5, 6, 0).Seq, "Random list with all-pass filter";
 
 $s := [5, 6, 7];
-is-deeply $s.&map-last({ False }, { 0 }), $s.Seq, "Random list with no-pass filter";
+id $s.&map-last({ False }, { 0 }), $s.Seq, "Random list with no-pass filter";
 
 $s := "here we are!";
-is-deeply map-last($s, / <.lower> /, &uc), "here we arE!", "String with ...";
+id map-last($s, / <.lower> /, &uc), "here we arE!", "String with ...";
 
 $s := (0, -2, -7, 5, 13, 22);
 my \it = $s.iterator;
@@ -28,7 +30,7 @@ it.pull-one for ^2;
 my \newit = map-last(it, *.is-prime, *.sqrt);
 it.pull-one;  # should *not* affect `newit`s behaviour because `&map-last` caches
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [-7, 5, 13.sqrt, 22].Seq, "Iterator (values)";
+id Seq.new(newit), [-7, 5, 13.sqrt, 22].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

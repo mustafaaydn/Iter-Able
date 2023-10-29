@@ -1,42 +1,44 @@
 use Test;
 use Iter::Able::Chain;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 21;
 
 my $s;
 $s := [-1, -2, -3];
-is-deeply chain($s, [4, 5], [-6]), (-1, -2, -3, 4, 5, -6).Seq, "Random list with 2 more lists";
+id chain($s, [4, 5], [-6]), (-1, -2, -3, 4, 5, -6).Seq, "Random list with 2 more lists";
 
 $s := [1, 2];
-is-deeply chain($s, 3 xx *).head(5), (1, 2, 3, 3, 3).Seq, "Random list with an infinite iterable";
+id chain($s, 3 xx *).head(5), (1, 2, 3, 3, 3).Seq, "Random list with an infinite iterable";
 
 $s := (4, 7);
-is-deeply chain($s, "spa"), (4, 7, "s", "p", "a").Seq, "Random list with string chained";
+id chain($s, "spa"), (4, 7, "s", "p", "a").Seq, "Random list with string chained";
 
 $s := [];
-is-deeply chain($s, [4, 5, 6]), [4, 5, 6].Seq, "Empty-list is chained fine, 1";
-is-deeply chain([4, 5, 6], $s), [4, 5, 6].Seq, "Empty-list is chained fine, 2";
-is-deeply chain([1, 2, 3], $s, [4, 5, 6]), [1, 2, 3, 4, 5, 6].Seq, "Empty-list is chained fine, 3";
+id chain($s, [4, 5, 6]), [4, 5, 6].Seq, "Empty-list is chained fine, 1";
+id chain([4, 5, 6], $s), [4, 5, 6].Seq, "Empty-list is chained fine, 2";
+id chain([1, 2, 3], $s, [4, 5, 6]), [1, 2, 3, 4, 5, 6].Seq, "Empty-list is chained fine, 3";
 
 $s := "";
-is-deeply chain($s, [4, 5, 6]), [4, 5, 6].Seq, "Empty-string is chained fine, 1";
-is-deeply chain([4, 5, 6], $s), [4, 5, 6].Seq, "Empty-string is chained fine, 2";
-is-deeply chain([1, 2, 3], $s, [4, 5, 6]), [1, 2, 3, 4, 5, 6].Seq, "Empty-string is chained fine, 3";
+id chain($s, [4, 5, 6]), [4, 5, 6].Seq, "Empty-string is chained fine, 1";
+id chain([4, 5, 6], $s), [4, 5, 6].Seq, "Empty-string is chained fine, 2";
+id chain([1, 2, 3], $s, [4, 5, 6]), [1, 2, 3, 4, 5, 6].Seq, "Empty-string is chained fine, 3";
 
 $s := ([4, 7], [6], [0, 8, 9]);
-is-deeply chain(|$s), (4, 7, 6, 0, 8, 9).Seq, "One-level flattening byproduct, 1";
+id chain(|$s), (4, 7, 6, 0, 8, 9).Seq, "One-level flattening byproduct, 1";
 
 $s := [[4, 7], [6], [0, 8, 9]];
-is-deeply chain(|$s), (4, 7, 6, 0, 8, 9).Seq, "One-level flattening byproduct, 2";
+id chain(|$s), (4, 7, 6, 0, 8, 9).Seq, "One-level flattening byproduct, 2";
 
 $s := [[4, 7], [6], [[0, 8, 9],]];
-is-deeply chain(|$s), (4, 7, 6, [0, 8, 9]).Seq, "One-level flattening byproduct, 3";
+id chain(|$s), (4, 7, 6, [0, 8, 9]).Seq, "One-level flattening byproduct, 3";
 
 $s := ([4, 7], [6], [[0, 8, 9],]);
-is-deeply chain(|$s), (4, 7, 6, [0, 8, 9]).Seq, "One-level flattening byproduct, 4";
+id chain(|$s), (4, 7, 6, [0, 8, 9]).Seq, "One-level flattening byproduct, 4";
 
 $s := "Real";
-is-deeply chain($s, " String"), "Real String".comb, "String chained with a string";
+id chain($s, " String"), "Real String".comb, "String chained with a string";
 
 throws-like { [12, 3, 4].&chain }, Exception, "No other iterable/string provided", message => / 'No other' .* 'to chain with' $/;
 throws-like { [12, 3, 4].&chain: 3 }, Exception, "Non-iterable/string in chain", message => / 'Non-' .* 'found at' .* '; cannot chain' $/;
@@ -48,13 +50,13 @@ my \it_2 = $s.iterator;
 it_1.pull-one for ^2;
 it_2.pull-one for ^3;
 my \together = chain(it_1, it_2);
-is-deeply together, [|$s.skip(2), |$s.skip(3)].Seq, "Iterator (values)";
+id together, [|$s.skip(2), |$s.skip(3)].Seq, "Iterator (values)";
 ok it_1.pull-one =:= IterationEnd, "Iterator (original_1, exhausted)";
 ok it_2.pull-one =:= IterationEnd, "Iterator (original_2, exhausted)";
 
 my \it_3 = $s.iterator;
 it_3.pull-one for ^4;
 my \together_2 = chain(it_3, [-1, 2], "yes");
-is-deeply together_2, [12, 13, -1, 2, "y", "e", "s"].Seq, "Iterator, Iterable, String chained all together";
+id together_2, [12, 13, -1, 2, "y", "e", "s"].Seq, "Iterator, Iterable, String chained all together";
 
 done-testing;

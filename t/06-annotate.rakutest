@@ -1,30 +1,32 @@
 use Test;
 use Iter::Able::Annotate;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 10;
 
 my $s;
 $s := [-4, 3, 0];
-is-deeply $s.&annotate, ((-4, -4), (3, 3), (0, 0)).Seq, "Random list without a transformer";
+id $s.&annotate, ((-4, -4), (3, 3), (0, 0)).Seq, "Random list without a transformer";
 
 $s := [];
-is-deeply annotate($s), [].Seq,  "Empty-list";
+id annotate($s), [].Seq,  "Empty-list";
 
 $s := [4, 5, 9, 0];
-is-deeply annotate($s, &sqrt), [(4, 4.sqrt), (5, 5.sqrt), (9, 9.sqrt), (0, 0.sqrt)].Seq, "Random list with \&sqrt";
+id annotate($s, &sqrt), [(4, 4.sqrt), (5, 5.sqrt), (9, 9.sqrt), (0, 0.sqrt)].Seq, "Random list with \&sqrt";
 
 $s := ("piano", "drum", "violin");
-is-deeply $s.&annotate(&chars), (("piano", 5), ("drum", 4), ("violin", 6)).Seq, "Strings with \&chars";
+id $s.&annotate(&chars), (("piano", 5), ("drum", 4), ("violin", 6)).Seq, "Strings with \&chars";
 
 $s := ["this and that", "yes and no", "real"];
-is-deeply $s.&annotate(/ .? <before ' and'>/),
+id $s.&annotate(/ .? <before ' and'>/),
           (("this and that", Match.new(:orig("this and that"), :from(3), :pos(4), :hash(Map.new((:before(Match.new(:orig("this and that"), :from(4), :pos(4)))))))),
            ("yes and no", Match.new(:orig("yes and no"), :from(2), :pos(3), :hash(Map.new((:before(Match.new(:orig("yes and no"), :from(3), :pos(3)))))))),
            ("real", Nil)).Seq,
            "Strings with a Regex";
 
 $s := "reAL";
-is-deeply annotate($s, {$_ eq .uc}), (("r", False), ("e", False), ("A", True), ("L", True)).Seq, "String with an is-upper decorator";
+id annotate($s, {$_ eq .uc}), (("r", False), ("e", False), ("A", True), ("L", True)).Seq, "String with an is-upper decorator";
 
 $s := ("/", "/", "/", "hi", "yes", "more things", "end of an era");
 my \it = $s.iterator;
@@ -32,7 +34,7 @@ it.pull-one for ^2;
 my \newit = annotate(it, &chars);
 it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [($_, .chars) for $s.skip(3)].Seq, "Iterator (values)";
+id Seq.new(newit), [($_, .chars) for $s.skip(3)].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

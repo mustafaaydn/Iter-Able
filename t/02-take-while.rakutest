@@ -1,32 +1,34 @@
 use Test;
 use Iter::Able::Take-While;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 17;
 
 my $s;
 $s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
-is-deeply take-while($s, * > 0), [2, 2, 3, 4, 5].Seq, "Random list with `* > 0`";
+id take-while($s, * > 0), [2, 2, 3, 4, 5].Seq, "Random list with `* > 0`";
 
 $s := [];
-is-deeply take-while($s, * > 0), [].Seq,  "Empty-list with `* > 0`";
+id take-while($s, * > 0), [].Seq,  "Empty-list with `* > 0`";
 
 $s := [0, 0, 0, 0];
-is-deeply take-while($s, * < 0), [].Seq, "All zeros with `* < 0` ";
+id take-while($s, * < 0), [].Seq, "All zeros with `* < 0` ";
 
 $s := [0, -1, -2, -3];
-is-deeply take-while($s, * < 0), [].Seq, "No leading negatives with `* < 0`";
+id take-while($s, * < 0), [].Seq, "No leading negatives with `* < 0`";
 
 $s := [6, 7, 8, 93, 51, 0, 4, -3, 64];
-is-deeply take-while($s, {$_}), $s[^$s.first(*.not, :k)].Seq, "Random list with identity predicate, i.e., until first falseful";
+id take-while($s, {$_}), $s[^$s.first(*.not, :k)].Seq, "Random list with identity predicate, i.e., until first falseful";
 
 $s := [1, 0, -1, 2];
-is-deeply take-while($s, &{True}), $s.Seq, "Random list with all-pass predicate";
+id take-while($s, &{True}), $s.Seq, "Random list with all-pass predicate";
 
 $s := [1, 0, -1, 2];
-is-deeply take-while($s, &{False}), [].Seq, "Random list with no-pass predicate";
+id take-while($s, &{False}), [].Seq, "Random list with no-pass predicate";
 
 $s := "neither AM I!";
-is-deeply take-while($s, /<.lower>/), "neither", "Mixed case string with /<lower>/ predicate";
+id take-while($s, /<.lower>/), "neither", "Mixed case string with /<lower>/ predicate";
 
 $s := (-4, 22, 3, 5, 19, 23, NaN, 91, 7, 5, 51);  # NaN (first nonprime) will be pulled as a side effect of &take-while
 my \it = $s.iterator;
@@ -34,7 +36,7 @@ it.pull-one;
 my \newit = take-while(it, &is-prime);
 it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), $s.skip(2).head(*-5),  "Iterator (values)";
+id Seq.new(newit), $s.skip(2).head(*-5),  "Iterator (values)";
 nok it.pull-one =:= IterationEnd, "Iterator (original, not exhausted yet)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 is it.pull-one, 7, "Iterator (original still yielding, 1)";

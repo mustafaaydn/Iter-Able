@@ -1,41 +1,43 @@
 use Test;
 use Iter::Able::Map-When;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 15;
 
 my $s;
 $s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
-is-deeply map-when($s, * > 0, * div 2), $s.map({$_ > 0 ?? $_ div 2 !! $_}), "Random list with * > 0, * div 2";
+id map-when($s, * > 0, * div 2), $s.map({$_ > 0 ?? $_ div 2 !! $_}), "Random list with * > 0, * div 2";
 
 $s := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
-is-deeply map-when($s, / '5' $ /, * div 2), $s.map({$_ ~~ / '5' $/ ?? $_ div 2 !! $_}), "Random list with a regex, * div 2";
+id map-when($s, / '5' $ /, * div 2), $s.map({$_ ~~ / '5' $/ ?? $_ div 2 !! $_}), "Random list with a regex, * div 2";
 
 $s := [];
-is-deeply map-when($s, {;}, {;}), [].Seq,  "Empty-list (unimportant predicate and transformer)";
+id map-when($s, {;}, {;}), [].Seq,  "Empty-list (unimportant predicate and transformer)";
 
 $s := [4, 5];
 dies-ok { $s.&map-when }, "Argumentless map-when should die";
 
 $s := [0, 0, 0, 0];
-is-deeply map-when($s, * == 0, * + 1), [1, 1, 1, 1].Seq, "All zeros with * == 0, * + 1";
+id map-when($s, * == 0, * + 1), [1, 1, 1, 1].Seq, "All zeros with * == 0, * + 1";
 
 $s := [0, -1, -2, -3];
-is-deeply map-when($s,  * > 0, -*), $s.Seq, "No matching entries";
+id map-when($s,  * > 0, -*), $s.Seq, "No matching entries";
 
 $s := [6, 7, 0, -2, "", 5];
-is-deeply map-when($s, *.so, *.so), $s.map({$_ ?? $_.so !! $_}), "Random list with only truthfuls are mapped";
+id map-when($s, *.so, *.so), $s.map({$_ ?? $_.so !! $_}), "Random list with only truthfuls are mapped";
 
 $s := (1, 0, -1, 2);
-is-deeply map-when($s, &{ True }, * * 2), $s.map(* * 2), "Random list with all-pass predicate";
+id map-when($s, &{ True }, * * 2), $s.map(* * 2), "Random list with all-pass predicate";
 
 $s := [1, 0, -1, 2];
-is-deeply map-when($s, &{ False }, *.is-prime), $s.Seq, "Random list with no-pass predicate";
+id map-when($s, &{ False }, *.is-prime), $s.Seq, "Random list with no-pass predicate";
 
 $s := "mixed feelings";
-is-deeply map-when($s, {$_ eq "e"}, &uc), "mixEd fEElings", "String with mixed case; normal callable & 'e' uppercased";
+id map-when($s, {$_ eq "e"}, &uc), "mixEd fEElings", "String with mixed case; normal callable & 'e' uppercased";
 
 $s := "mixed feelings";
-is-deeply map-when($s, /:i <[aeiou]>/, &uc), "mIxEd fEElIngs", "String with mixed case; regex & vowels uppercased";
+id map-when($s, /:i <[aeiou]>/, &uc), "mIxEd fEElIngs", "String with mixed case; regex & vowels uppercased";
 
 $s := (3, 3, 3, 4, 4, 4, 4, 5, 3);
 my \it = $s.iterator;
@@ -43,7 +45,7 @@ it.pull-one for ^3;
 my \newit = map-when(it, * %% 2, * ** 3);
 it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [64, 64, 64, 5, 3].Seq, "Iterator (values)";
+id Seq.new(newit), [64, 64, 64, 5, 3].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

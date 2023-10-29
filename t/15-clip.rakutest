@@ -1,33 +1,35 @@
 use Test;
 use Iter::Able::Clip;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 13;
 
 my $s;
 $s := [2, 2, 3, -4/9, 5];
-is-deeply clip($s, from-below => 2), [2, 2, 3, 2, 5].Seq, "Random list with :2from-below";
+id clip($s, from-below => 2), [2, 2, 3, 2, 5].Seq, "Random list with :2from-below";
 
 $s := (2, 2, 3, -4, 5e3);
-is-deeply clip($s, :2from-above), [2, 2, 2, -4, 2].Seq, "Random list with :2from-above";
+id clip($s, :2from-above), [2, 2, 2, -4, 2].Seq, "Random list with :2from-above";
 
 $s := (2, 2, 3, -4, 5);
-is-deeply clip($s, :2from-below, :4from-above), [2, 2, 3, 2, 4].Seq, "Random list with :2from-below and :4from-above";
+id clip($s, :2from-below, :4from-above), [2, 2, 3, 2, 4].Seq, "Random list with :2from-below and :4from-above";
 
 $s := [];
-is-deeply clip($s, :0from-below), [].Seq,  "Empty list";
+id clip($s, :0from-below), [].Seq,  "Empty list";
 
 my $t = ();
-is-deeply clip($t, :3from-above), ().Seq,  "Empty itemized list";
+id clip($t, :3from-above), ().Seq,  "Empty itemized list";
 
 $s := [0, 0, 0, 0];
-is-deeply clip($s, :3from-above), $s.Seq, "All zeros with :3from-above";
+id clip($s, :3from-above), $s.Seq, "All zeros with :3from-above";
 
 $s := (0, -1, -2, -3);
-is-deeply clip($s, from-below => pi), pi xx $s, "No nonpositives with from-below => pi";
+id clip($s, from-below => pi), pi xx $s, "No nonpositives with from-below => pi";
 
 # my \it = [12, 3, 4e4, -4, 0].iterator;
 # it.pull-one for ^2;
-# is-deeply it.&clip(from-below => 100), [4e4, 100, 100].Seq, "Iterator";
+# id it.&clip(from-below => 100), [4e4, 100, 100].Seq, "Iterator";
 
 $s := (0, -2, -7, 5, 13, -22);
 my \it = $s.iterator;
@@ -35,7 +37,7 @@ it.pull-one for ^2;
 my \newit = clip(it, :0from-below, :10from-above);
 it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [5, 10, 0].Seq, "Iterator (values)";
+id Seq.new(newit), [5, 10, 0].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

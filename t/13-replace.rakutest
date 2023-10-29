@@ -1,29 +1,31 @@
 use Test;
 use Iter::Able::Replace;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 14;
 
 my $s;
 $s := [2, 2, 3, -4, 5];
-is-deeply replace($s, 2 => -2), [-2, -2, 3, -4, 5].Seq, "Random list with 1 pair";
+id replace($s, 2 => -2), [-2, -2, 3, -4, 5].Seq, "Random list with 1 pair";
 
 $s := (2, 2, 3, -4, 5);
-is-deeply $s.&replace((3, -4, 5) X=> 2), (2 xx $s), "Random list with 3 pairs";
+id $s.&replace((3, -4, 5) X=> 2), (2 xx $s), "Random list with 3 pairs";
 
 $s := (2, 2, 3, -4, 5);
-is-deeply replace($s), $s, "Random list no pairs";
+id replace($s), $s, "Random list no pairs";
 
 $s := [2, 2, 3, -4, 5];
-is-deeply replace($s, 'f' => 'r', 0 => "-3"), $s.Seq, "Random list uneffective pairs";
+id replace($s, 'f' => 'r', 0 => "-3"), $s.Seq, "Random list uneffective pairs";
 
 $s := [];
-is-deeply replace($s), $s, "Empty-list with no pair";
+id replace($s), $s, "Empty-list with no pair";
 
 $s := [];
-is-deeply replace($s, 5 => -2), [].Seq,  "Empty-list with a pair";
+id replace($s, 5 => -2), [].Seq,  "Empty-list with a pair";
 
 $s := [0, 0, 0, 0];
-is-deeply replace($s, 0 => "zero"), ("zero" xx $s), "All zeros, all replaced";
+id replace($s, 0 => "zero"), ("zero" xx $s), "All zeros, all replaced";
 
 $s := (0, -2, -7, 5, 13, 22);
 my \it = $s.iterator;
@@ -31,7 +33,7 @@ it.pull-one for ^2;
 my \newit = replace(it, 5 => 554, 0 => -9);
 it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [554, 13, 22].Seq, "Iterator (values)";
+id Seq.new(newit), [554, 13, 22].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

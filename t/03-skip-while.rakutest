@@ -1,32 +1,34 @@
 use Test;
 use Iter::Able::Skip-While;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 12;
 
 my $r;
 $r := [2, 2, 3, 4, 5, -5, 25, 5, -5, 5, 5, -5, 3];
-is-deeply skip-while($r, * > 0), [-5, 25, 5, -5, 5, 5, -5, 3].Seq, "Random list with `* > 0`";
+id skip-while($r, * > 0), [-5, 25, 5, -5, 5, 5, -5, 3].Seq, "Random list with `* > 0`";
 
 $r := [];
-is-deeply skip-while($r, * > 0), [].Seq, "Empty list with `* > 0`";
+id skip-while($r, * > 0), [].Seq, "Empty list with `* > 0`";
 
 $r := [0, 0, 0, 0];
-is-deeply skip-while($r, * < 0), $r.Seq, "All zeros with `* < 0`";
+id skip-while($r, * < 0), $r.Seq, "All zeros with `* < 0`";
 
 $r := [-1, -2, 0, -3];
-is-deeply skip-while($r, * < 0), [0, -3].Seq, "Separated negatives with `* < 0`";
+id skip-while($r, * < 0), [0, -3].Seq, "Separated negatives with `* < 0`";
 
 $r := [6, 7, 8, 93, 51, 0, 4, -3, 64];
-is-deeply skip-while($r, {$_}), $r[$r.first(*.not, :k)..*].Seq, "Random list with identity predicate, i.e., from first falseful on";
+id skip-while($r, {$_}), $r[$r.first(*.not, :k)..*].Seq, "Random list with identity predicate, i.e., from first falseful on";
 
 $r := [1, 0, -1, 2];
-is-deeply skip-while($r, &{False}), $r.Seq, "Random list with no-pass predicate, i.e., no skips";
+id skip-while($r, &{False}), $r.Seq, "Random list with no-pass predicate, i.e., no skips";
 
 $r := [1, 0, -1, 2];
-is-deeply skip-while($r, &{True}), [].Seq, "Random list with all-pass predicate, i.e., skip all";
+id skip-while($r, &{True}), [].Seq, "Random list with all-pass predicate, i.e., skip all";
 
 $r := "neither AM I!";
-is-deeply skip-while($r, /<.lower>/), " AM I!", "Mixed case string with /<.lower>/ predicate";
+id skip-while($r, /<.lower>/), " AM I!", "Mixed case string with /<.lower>/ predicate";
 
 $r := (3, 3, 3, 4, 4, 4, 4, 5, 3);
 my \it = $r.iterator;
@@ -34,7 +36,7 @@ it.pull-one;
 my \newit = skip-while(it, * %% 2);
 it.pull-one for ^2;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), $r.tail(2), "Iterator (values)";
+id Seq.new(newit), $r.tail(2), "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

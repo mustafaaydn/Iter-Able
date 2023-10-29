@@ -14,7 +14,7 @@
 }
 unit module Clip;
 
-our proto clip(\it, Numeric:D :$from-below, Numeric:D :$from-above) is export {
+our proto clip(\it, Numeric :$from-below, Numeric :$from-above) is export {
     die "Must supply at least lower or upper limit"
         if ($from-below, $from-above).none.defined;
 

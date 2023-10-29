@@ -105,7 +105,7 @@ Yields from this iterable first; when exhausted, from the next one in the chain,
     (4, 7, 6, 0, 8, 9).Seq
 #+end_src
 
-**** clip =(\it, Numeric:D :$from-below, Numeric:D :$from-above)=
+**** clip =(\it, Numeric :$from-below, Numeric :$from-above)=
 Limits the values from below and/or above.
 #+begin_src raku
     # No negatives

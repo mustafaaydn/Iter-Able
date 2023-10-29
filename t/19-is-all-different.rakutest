@@ -1,93 +1,95 @@
 use Test;
 use Iter::Able::Is-All-Different;
 
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 31;
 
 my $s;
 $s := [1, 1, 2, 3, 4];
-is-deeply is-all-different($s), False, "First two elements same, list";
+id is-all-different($s), False, "First two elements same, list";
 
 $s := (2, 3, -4, 5, 2);
-is-deeply $s.&is-all-different, False, "First and last elements same, list";
+id $s.&is-all-different, False, "First and last elements same, list";
 
 $s := [];
-is-deeply is-all-different($s,), True,  "Empty list";
+id is-all-different($s,), True,  "Empty list";
 
 my $t = ();
-is-deeply $t.&is-all-different(), True,  "Empty itemized list";
+id $t.&is-all-different(), True,  "Empty itemized list";
 
 $s := [0, 0, 0, 0];
-is-deeply is-all-different($s), False, "All zeros";
+id is-all-different($s), False, "All zeros";
 
 $s := 0,;
-is-deeply is-all-different($s), True, "One element list";
+id is-all-different($s), True, "One element list";
 
 $s := [6, 7];
-is-deeply is-all-different($s), True, "Two element list";
+id is-all-different($s), True, "Two element list";
 
 $s := [6, 7, 8, 9, 6, 10];
-is-deeply is-all-different($s), False, "Short list with duplicates";
+id is-all-different($s), False, "Short list with duplicates";
 
 $s := ^72;
-is-deeply is-all-different($s), True, "More than 2 element iterable (a Range)";
+id is-all-different($s), True, "More than 2 element iterable (a Range)";
 
 $s := [1, 1, |(2..100_000)];
-is-deeply is-all-different($s), False, "Long list to see shortcircuiting";
+id is-all-different($s), False, "Long list to see shortcircuiting";
 
 $s := ["yes", "and", "for"];
-is-deeply is-all-different($s, :as(&chars)), False, "Using :\&as to turn the table";
+id is-all-different($s, :as(&chars)), False, "Using :\&as to turn the table";
 
 $s := [$(3), $(3), $(3)];
-is-deeply is-all-different($s, :with(&[=:=])), True, "Using :\&with with =:=";
+id is-all-different($s, :with(&[=:=])), True, "Using :\&with with =:=";
 
 $s := [7, -7.000000000000000000001, 6.999999999999999999999];
-is-deeply is-all-different($s, as => &abs, with => &[=~=]), False, "Using :\&as and :\&with";
+id is-all-different($s, as => &abs, with => &[=~=]), False, "Using :\&as and :\&with";
 
 $s := "";
-is-deeply is-all-different($s), True, "Empty string";
+id is-all-different($s), True, "Empty string";
 
 $s := "z";
-is-deeply is-all-different($s), True, "Length-1 string";
+id is-all-different($s), True, "Length-1 string";
 
 $s := "Real String";
-is-deeply is-all-different($s), True, "String with all different characters";
+id is-all-different($s), True, "String with all different characters";
 
 $s := "aa";
-is-deeply is-all-different($s), False, "All-the-same string, length 2";
+id is-all-different($s), False, "All-the-same string, length 2";
 
 $s := "az";
-is-deeply is-all-different($s), True, "All-different string, length 2";
+id is-all-different($s), True, "All-different string, length 2";
 
 $s := "a" x 84;
-is-deeply is-all-different($s), False, "All-the-same string, length > 2";
+id is-all-different($s), False, "All-the-same string, length > 2";
 
 $s := "aaAaA";
-is-deeply $s.&is-all-different, False, "Same character different cases multiple times";
-is-deeply $s.&is-all-different(:as(&fc)), False, "Same character different cases but :as(\&fc); still not all different";
+id $s.&is-all-different, False, "Same character different cases multiple times";
+id $s.&is-all-different(:as(&fc)), False, "Same character different cases but :as(\&fc); still not all different";
 
 my \it = [4, 4, 4, 5, 6, 7].iterator;
 it.pull-one for ^2;
-is-deeply is-all-different(it), True, "Iterator (all different)";
+id is-all-different(it), True, "Iterator (all different)";
 ok it.pull-one =:= IterationEnd, "Iterator (exhausted)";
 
 my \it2 = [12, 3, 4, pi, e, pi].iterator;
 it2.pull-one for ^3;
-is-deeply is-all-different(it2), False, "Iterator (not all different)";
+id is-all-different(it2), False, "Iterator (not all different)";
 ok it2.pull-one =:= IterationEnd, "Iterator (exhausted; would not be, but the differer element is the last one)";
 
 my \it-as = [e, e, 2, 93, 72].iterator;
 it-as.pull-one for ^2;
-is-deeply is-all-different(it-as, :as{.is-prime}), False, "Iterator (as)";
+id is-all-different(it-as, :as{.is-prime}), False, "Iterator (as)";
 ok it-as.pull-one =:= IterationEnd, "Iterator (not exhausted because of short-circuiting)";
 
 my \it-with = [12, 3, 4, (my $a = 5), (my $b = 5)].iterator;
 it-with.pull-one for ^3;
-is-deeply is-all-different(it-with, :with(&[=:=])), True, "Iterator (with)";
+id is-all-different(it-with, :with(&[=:=])), True, "Iterator (with)";
 ok it-with.pull-one =:= IterationEnd, "Iterator (exhausted)";
 
 my \it-withas = [12, 3, 4, -5, 5.001].iterator;
 it-withas.pull-one for ^3;
-is-deeply is-all-different(it-withas, :as{.abs}, :with(&[=~=])), True, "Iterator (with and as)";
+id is-all-different(it-withas, :as{.abs}, :with(&[=~=])), True, "Iterator (with and as)";
 ok it-withas.pull-one =:= IterationEnd, "Iterator (exhausted)";
 
 done-testing;
