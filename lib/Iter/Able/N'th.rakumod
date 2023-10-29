@@ -33,7 +33,7 @@
 }
 unit module Nth;
 
-our proto n'th(\ist, Int $n) is export {
+our proto n'th(\ist, Int:D $n) is export {
     die "Cannot perform negative indexing on lazy input but received n = $n"
         if $n < 0 && ist.is-lazy;
 
@@ -45,17 +45,17 @@ our proto n'th(\ist, Int $n) is export {
     {*}
 }
 
-multi n'th(Iterable \it, $n) {
+multi n'th(Iterable:D \it, $n) {
     $n < 0
         ?? it.tail(-$n).head
         !! it.skip($n).head
 }
 
-multi n'th(Iterator \it, $n) {
+multi n'th(Iterator:D \it, $n) {
     n'th Seq.new(it), $n
 }
 
-multi n'th(Str \st, $n) {
+multi n'th(Str:D \st, $n --> Str:D) {
     my $length = st.chars;
     die "n = $n is out of bounds for size {st.chars}"
         unless $n ~~ -$length .. $length.pred;

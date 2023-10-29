@@ -47,14 +47,14 @@ my class Annotate does Iterator {
 
 our proto annotate(\ist, &mapper = {$_}) is export {*}
 
-multi annotate(Iterable \it, &mapper = {$_}) {
+multi annotate(Iterable \it, &mapper = {$_} --> Seq:D) {
     Seq.new: Annotate.new: it.iterator, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
 }
 
-multi annotate(Iterator \it, &mapper = {$_}) {
+multi annotate(Iterator \it, &mapper = {$_} --> Annotate:D) {
     Annotate.new: it, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
 }
 
-multi annotate(Str \st, &mapper = {$_}) {
+multi annotate(Str \st, &mapper = {$_} --> Seq:D) {
     Seq.new: Annotate.new: st.comb.iterator, (&mapper ~~ Regex ?? (* ~~ &mapper) !! &mapper)
 }

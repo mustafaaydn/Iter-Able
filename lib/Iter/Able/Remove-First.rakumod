@@ -70,17 +70,16 @@ our proto remove-first(\ist, &pred?) is export {
         }
     }
     {*}
-
 }
 
-multi remove-first(Iterable \it, &pred) {
+multi remove-first(Iterable:D \it, &pred --> Seq:D) {
     Seq.new: RemoveFirst.new: it.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
-multi remove-first(Iterator \it, &pred) {
+multi remove-first(Iterator:D \it, &pred --> RemoveFirst:D) {
     RemoveFirst.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
-multi remove-first(Str \st, &pred) {
+multi remove-first(Str:D \st, &pred --> Str:D) {
     join "", Seq.new: RemoveFirst.new: st.comb.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }

@@ -27,13 +27,13 @@ unit module Flatten;
 
 our proto flatten(\it, UInt :levels(:$level)) is export {*}
 
-multi flatten(Iterable \it, :levels(:$level)) {
+multi flatten(Iterable:D \it, :levels(:$level)) {
     return (gather it.deepmap(&take)) without $level;
     my \rv = &postcircumfix:<[; ]>(it, (* for ^$level.succ));
     it ~~ Array ?? rv.Array !! rv
 }
 
-multi flatten(Iterator \it, :levels(:$level)) {
+multi flatten(Iterator:D \it, :levels(:$level)) {
     return (gather Seq.new(it).deepmap(&take)) without $level;
     &postcircumfix:<[; ]>(Seq.new(it), (* for ^$level.succ));
 }

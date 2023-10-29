@@ -105,7 +105,7 @@ Yields from this iterable first; when exhausted, from the next one in the chain,
     (4, 7, 6, 0, 8, 9)
 #+end_src
 
-**** clip =(\it, Numeric :$from-below, Numeric :$from-above)=
+**** clip =(\it, Numeric:D :$from-below, Numeric:D :$from-above)=
 Limits the values from below and/or above.
 #+begin_src raku
     # No negatives
@@ -131,7 +131,7 @@ Repeats the stream indefinitely. Returns a Seq for strings.
     ("r", "e", "a", "l", "r", "e", "a", "l", "r")
 #+end_src
 
-**** enumerate =(\ist, Numeric :$start = 0)=
+**** enumerate =(\ist, Numeric:D :$start = 0)=
 Generates (index, element) lists, with the starting index specifiable.
 #+begin_src raku
     # Default starts from 0
@@ -359,7 +359,7 @@ Maps only the elements that satisfy the predicate, if any.
     (r1 => 7.13, r2 => 6.89, r3 => 7, r4 => 7)
 #+end_src
 
-**** n'th =(\ist, Int $n)=
+**** n'th =(\ist, Int:D $n)=
 Yields the n'th value of the input. Almost the same as =.[n]= but also works for iterators and strings. Negative indexes are also allowed so long as the input isn't lazy (i.e., possibly infinite). Returns a single value, or dies if the index is out-of-bounds (if it's a List-like, i.e., the bounds are easily measurable).
 #+begin_src raku
     # Works as usual for nonnegative `n` on Arrays

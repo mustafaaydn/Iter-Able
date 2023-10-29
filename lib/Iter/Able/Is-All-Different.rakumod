@@ -35,11 +35,11 @@ use nqp;
 
 our proto is-all-different(\ist, :&as = {$_}, :&with = &[===] --> Bool:D) is export {*}
 
-multi is-all-different(Iterable \it, :&as = {$_}, :&with = &[===]) {
+multi is-all-different(Iterable:D \it, :&as = {$_}, :&with = &[===] --> Bool:D) {
     samewith it.iterator, :&as, :&with
 }
 
-multi is-all-different(Iterator \it, :&as = {$_}, :&with = &[===]) {
+multi is-all-different(Iterator:D \it, :&as = {$_}, :&with = &[===] --> Bool:D) {
     nqp::if(
         nqp::eqaddr(&with, &[===]),
         # Default &with
@@ -88,6 +88,6 @@ multi is-all-different(Iterator \it, :&as = {$_}, :&with = &[===]) {
     True
 }
 
-multi is-all-different(Str \st, :&as = {$_}, :&with = &[===]) {
+multi is-all-different(Str:D \st, :&as = {$_}, :&with = &[===] --> Bool:D) {
     samewith st.comb.iterator, :&as, :&with
 }

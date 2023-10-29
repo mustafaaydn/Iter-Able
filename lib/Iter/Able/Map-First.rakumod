@@ -62,14 +62,14 @@ my class MapFirst does Iterator {
 
 our proto map-first(\ist, &pred, &mapper) is export {*}
 
-multi map-first(Iterable \it, &pred, &mapper) {
+multi map-first(Iterable:D \it, &pred, &mapper --> Seq:D) {
     Seq.new: MapFirst.new: it.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }
 
-multi map-first(Iterator \it, &pred, &mapper) {
+multi map-first(Iterator:D \it, &pred, &mapper --> MapFirst:D) {
     MapFirst.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }
 
-multi map-first(Str \st, &pred, &mapper) {
+multi map-first(Str:D \st, &pred, &mapper --> Str:D) {
     join "", Seq.new: MapFirst.new: st.comb.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }

@@ -35,15 +35,15 @@ our proto insert-at(\ist, *@pairs) is export {
     {*}
 }
 
-multi insert-at(Iterable \it, *@pairs) {
+multi insert-at(Iterable:D \it, *@pairs --> Seq:D) {
     my %m is Map = @pairs;
     it.kv.map(-> $idx, \val { %m{$idx}:exists ?? (%m{$idx}, val).Slip !! val })
 }
 
-multi insert-at(Iterator \it, *@pairs) {
+multi insert-at(Iterator:D \it, *@pairs --> Iterator:D) {
     samewith Seq.new(it), @pairs andthen .iterator but role { method Seq { Seq.new(self) } }
 }
 
-multi insert-at(Str \st, *@pairs) {
+multi insert-at(Str:D \st, *@pairs --> Seq:D) {
     join "", samewith st.comb, @pairs
 }

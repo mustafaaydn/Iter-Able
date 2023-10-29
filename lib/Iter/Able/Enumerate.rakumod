@@ -41,8 +41,14 @@ my class Enumerate does Iterator {
     method Seq       { Seq.new(self)  }
 }
 
-our proto enumerate(\ist, Numeric :$start = 0) is export {*}
+our proto enumerate(\ist, Numeric:D :$start = 0) is export {*}
 
-multi enumerate(Iterable \it, :$start = 0) { Seq.new: Enumerate.new: it.iterator, $start}
-multi enumerate(Iterator \it, :$start = 0) { Enumerate.new: it, $start}
-multi enumerate(Str \st,      :$start = 0) { Seq.new: Enumerate.new: st.comb.iterator, $start}
+multi enumerate(Iterable:D \it, :$start = 0 --> Seq:D) {
+    Seq.new: Enumerate.new: it.iterator, $start
+}
+multi enumerate(Iterator:D \it, :$start = 0 --> Enumerate:D) {
+    Enumerate.new: it, $start
+}
+multi enumerate(Str:D \st, :$start = 0 --> Seq:D) {
+    Seq.new: Enumerate.new: st.comb.iterator, $start
+}

@@ -53,6 +53,12 @@ my class Cycle does Iterator {
 
 our proto cycle(\ist) is export {*}
 
-multi cycle(Iterable \it) { Seq.new: Cycle.new: it.iterator }
-multi cycle(Iterator \it) { Cycle.new: it }
-multi cycle(Str \st)      { Seq.new: Cycle.new: st.comb.iterator }
+multi cycle(Iterable:D \it --> Seq:D) {
+    Seq.new: Cycle.new: it.iterator
+}
+multi cycle(Iterator:D \it --> Cycle:D) {
+    Cycle.new: it
+}
+multi cycle(Str:D \st --> Seq:D) {
+    Seq.new: Cycle.new: st.comb.iterator
+}

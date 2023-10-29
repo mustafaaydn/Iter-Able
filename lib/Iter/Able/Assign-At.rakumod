@@ -123,14 +123,14 @@ our proto assign-at(\ist, *@pairs) is export {
     {*}
 }
 
-multi assign-at(Iterable \it, *@pairs) {
+multi assign-at(Iterable:D \it, *@pairs --> Seq:D) {
     Seq.new: AssignAt.new: it.iterator, @pairs
 }
 
-multi assign-at(Iterator \it, *@pairs) {
+multi assign-at(Iterator:D \it, *@pairs --> AssignAt:D) {
     AssignAt.new: it, @pairs
 }
 
-multi assign-at(Str \st, *@pairs) {
+multi assign-at(Str:D \st, *@pairs --> Str:D) {
     join "", Seq.new: AssignAt-String.new: st.comb.iterator, @pairs
 }

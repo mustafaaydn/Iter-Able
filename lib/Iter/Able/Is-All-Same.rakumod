@@ -35,11 +35,11 @@ use nqp;
 
 our proto is-all-same(\ist, :&as = {$_}, :&with = &[===] --> Bool:D) is export {*}
 
-multi is-all-same(Iterable \it, :&as = {$_}, :&with = &[===]) {
+multi is-all-same(Iterable:D \it, :&as = {$_}, :&with = &[===] --> Bool:D) {
     samewith it.iterator, :&as, :&with
 }
 
-multi is-all-same(Iterator \it, :&as = {$_}, :&with = &[===]) {
+multi is-all-same(Iterator:D \it, :&as = {$_}, :&with = &[===] --> Bool:D) {
     nqp::if(
         nqp::eqaddr((my \first = it.pull-one), IterationEnd),
         # if we could sweep till the end, all must have been the same
@@ -63,6 +63,6 @@ multi is-all-same(Iterator \it, :&as = {$_}, :&with = &[===]) {
     )
 }
 
-multi is-all-same(Str \st, :&as = {$_}, :&with = &[===]) {
+multi is-all-same(Str:D \st, :&as = {$_}, :&with = &[===] --> Bool:D) {
     samewith st.comb.iterator, :&as, :&with
 }

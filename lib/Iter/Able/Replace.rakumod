@@ -30,12 +30,12 @@ our proto replace(\it, *@pairs) is export {
     {*}
 }
 
-multi replace(Iterable \it, *@pairs) {
+multi replace(Iterable:D \it, *@pairs --> Seq:D) {
     my %map is Map = @pairs;
     it.map: { %map{$_}:exists ?? %map{$_} !! $_ }
 }
 
-multi replace(Iterator \it, *@pairs) {
+multi replace(Iterator:D \it, *@pairs --> Iterator:D) {
     my %map is Map = @pairs;
     Seq.new(it).map({ %map{$_}:exists ?? %map{$_} !! $_ }).iterator but role { method Seq { Seq.new(self) } }
 }

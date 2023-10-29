@@ -53,14 +53,14 @@ my class MapIndexed does Iterator {
 
 our proto map-indexed(\ist, &mapper = {@_.List}, Numeric :$start = 0) is export {*}
 
-multi map-indexed(Iterable \it, &mapper = {@_.List}, :$start = 0) {
+multi map-indexed(Iterable:D \it, &mapper = {@_.List}, :$start = 0 --> Seq:D) {
     Seq.new: MapIndexed.new: it.iterator, &mapper, $start
 }
 
-multi map-indexed(Iterator \it, &mapper = {@_.List}, :$start = 0) {
+multi map-indexed(Iterator:D \it, &mapper = {@_.List}, :$start = 0 --> MapIndexed:D) {
     MapIndexed.new: it, &mapper, $start
 }
 
-multi map-indexed(Str \st, &mapper = {@_.List}, :$start = 0) {
+multi map-indexed(Str:D \st, &mapper = {@_.List}, :$start = 0 --> Seq:D) {
     Seq.new: MapIndexed.new: st.comb.iterator, &mapper, $start
 }

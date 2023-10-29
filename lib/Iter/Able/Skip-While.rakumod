@@ -64,14 +64,14 @@ my class SkipWhile does Iterator {
 
 our proto skip-while(\ist, &pred) is export {*}
 
-multi skip-while(Iterable \it, &pred) {
+multi skip-while(Iterable:D \it, &pred --> Seq:D) {
     Seq.new: SkipWhile.new: it.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
-multi skip-while(Iterator \it, &pred) {
+multi skip-while(Iterator:D \it, &pred --> SkipWhile:D) {
     SkipWhile.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
-multi skip-while(Str \st, &pred) {
+multi skip-while(Str:D \st, &pred --> Str:D) {
     join "", Seq.new: SkipWhile.new: st.comb.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }

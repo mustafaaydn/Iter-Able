@@ -14,7 +14,7 @@
 }
 unit module Clip;
 
-our proto clip(\it, Numeric :$from-below, Numeric :$from-above) is export {
+our proto clip(\it, Numeric:D :$from-below, Numeric:D :$from-above) is export {
     die "Must supply at least lower or upper limit"
         if ($from-below, $from-above).none.defined;
 
@@ -24,10 +24,10 @@ our proto clip(\it, Numeric :$from-below, Numeric :$from-above) is export {
     {*}
 }
 
-multi clip(Iterable \it, :$from-below, :$from-above) {
+multi clip(Iterable:D \it, :$from-below, :$from-above --> Seq:D) {
     it.map({ max(min($_, $from-above), $from-below) })
 }
 
-multi clip(Iterator \it, :$from-below, :$from-above) {
+multi clip(Iterator:D \it, :$from-below, :$from-above --> Iterator:D) {
     Seq.new(it).map({ max(min($_, $from-above), $from-below) }).iterator but role { method Seq { Seq.new(self) } }
 }

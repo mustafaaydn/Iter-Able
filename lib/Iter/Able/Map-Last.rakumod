@@ -20,18 +20,18 @@ unit module Map-Last;
 
 use Iter::Able::Map-First;
 
-# implemented in terms of `map-first`
+# Implemented in terms of `map-first`
 our proto map-last(\ist, &pred, &mapper) is export {*}
 
-multi map-last(Iterable \it, &pred, &mapper) {
+multi map-last(Iterable:D \it, &pred, &mapper --> Seq:D) {
     reverse map-first it.reverse, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }
 
-multi map-last(Iterator \it, &pred, &mapper) {
+multi map-last(Iterator:D \it, &pred, &mapper --> Iterator:D) {
     it.push-all(my @tmp);
     (reverse Seq.new: map-first @tmp.reverse.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper).iterator but role { method Seq { Seq.new(self) } }
 }
 
-multi map-last(Str \st, &pred, &mapper) {
+multi map-last(Str:D \st, &pred, &mapper --> Str:D) {
     join "", reverse map-first st.comb.reverse, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper
 }

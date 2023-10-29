@@ -55,14 +55,14 @@ my class TakeWhile does Iterator {
 
 our proto take-while(\ist, &pred) is export {*}
 
-multi take-while(Iterable \it, &pred) {
+multi take-while(Iterable:D \it, &pred --> Seq:D) {
     Seq.new: TakeWhile.new: it.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
-multi take-while(Iterator \it, &pred) {
+multi take-while(Iterator:D \it, &pred --> TakeWhile:D) {
     TakeWhile.new: it, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }
 
-multi take-while(Str \st, &pred) {
+multi take-while(Str:D \st, &pred --> Str:D) {
     join "", Seq.new: TakeWhile.new: st.comb.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred)
 }

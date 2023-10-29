@@ -92,14 +92,14 @@ my class GroupConseq does Iterator {
 
 our proto group-conseq(\ist, :&as = {$_}, :&with = &[===]) is export {*}
 
-multi group-conseq(Iterable \it, :&as = {$_}, :&with = &[===]) {
+multi group-conseq(Iterable:D \it, :&as = {$_}, :&with = &[===] --> Seq:D) {
     Seq.new: GroupConseq.new: it.iterator, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
 }
 
-multi group-conseq(Iterator \it, :&as = {$_}, :&with = &[===]) {
+multi group-conseq(Iterator:D \it, :&as = {$_}, :&with = &[===] --> GroupConseq:D) {
     GroupConseq.new: it, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
 }
 
-multi group-conseq(Str \st, :&as = {$_}, :&with = &[===]) {
+multi group-conseq(Str:D \st, :&as = {$_}, :&with = &[===] --> Seq:D) {
     Seq.new: GroupConseq.new: st.comb.iterator, (&as ~~ Regex ?? (* ~~ &as).so !! &as), &with
 }
