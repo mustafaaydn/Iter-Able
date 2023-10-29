@@ -57,7 +57,8 @@ my class RemoveFirst does Iterator {
         )
     }
 
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy   { $!iter.is-lazy }
+    method Seq       { Seq.new(self)  }
 }
 
 our proto remove-first(\ist, &pred?) is export {

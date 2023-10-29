@@ -56,7 +56,8 @@ my class MapFirst does Iterator {
         )
     }
 
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy   { $!iter.is-lazy }
+    method Seq       { Seq.new(self)  }
 }
 
 our proto map-first(\ist, &pred, &mapper) is export {*}

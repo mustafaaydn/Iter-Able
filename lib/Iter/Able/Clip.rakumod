@@ -29,5 +29,5 @@ multi clip(Iterable \it, :$from-below, :$from-above) {
 }
 
 multi clip(Iterator \it, :$from-below, :$from-above) {
-    Seq.new(it).map({ max(min($_, $from-above), $from-below) }).iterator
+    Seq.new(it).map({ max(min($_, $from-above), $from-below) }).iterator but role { method Seq { Seq.new(self) } }
 }

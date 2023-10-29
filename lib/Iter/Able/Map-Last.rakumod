@@ -29,7 +29,7 @@ multi map-last(Iterable \it, &pred, &mapper) {
 
 multi map-last(Iterator \it, &pred, &mapper) {
     it.push-all(my @tmp);
-    (reverse Seq.new: map-first @tmp.reverse.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper).iterator
+    (reverse Seq.new: map-first @tmp.reverse.iterator, (&pred ~~ Regex ?? (* ~~ &pred).so !! &pred), &mapper).iterator but role { method Seq { Seq.new(self) } }
 }
 
 multi map-last(Str \st, &pred, &mapper) {

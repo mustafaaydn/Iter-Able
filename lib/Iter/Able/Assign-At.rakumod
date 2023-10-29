@@ -106,7 +106,8 @@ my class AssignAt-String does Iterator {
         )
     }
 
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy   { $!iter.is-lazy }
+    method Seq       { Seq.new(self)  }
 }
 
 

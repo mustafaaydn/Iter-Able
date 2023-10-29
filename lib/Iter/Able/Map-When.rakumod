@@ -28,7 +28,7 @@ multi map-when(Iterable \it, &pred, &mapper) {
 
 multi map-when(Iterator \it, &pred, &mapper) {
     my &_pred = &pred ~~ Regex ?? (* ~~ &pred).so !! &pred;
-    Seq.new(it).map({ _pred($_) ?? mapper($_) !! $_ }).iterator
+    Seq.new(it).map({ _pred($_) ?? mapper($_) !! $_ }).iterator but role { method Seq { Seq.new(self) } }
 }
 
 multi map-when(Str \st, &pred, &mapper) {

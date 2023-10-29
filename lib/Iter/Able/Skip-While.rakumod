@@ -58,7 +58,8 @@ my class SkipWhile does Iterator {
             ),
         )
     }
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy   { $!iter.is-lazy }
+    method Seq       { Seq.new(self)  }
 }
 
 our proto skip-while(\ist, &pred) is export {*}

@@ -47,7 +47,8 @@ my class Cycle does Iterator {
         )
     }
 
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy   { $!iter.is-lazy }
+    method Seq       { Seq.new(self)  }
 }
 
 our proto cycle(\ist) is export {*}

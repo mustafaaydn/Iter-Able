@@ -41,7 +41,8 @@ my class Annotate does Iterator {
         )
     }
 
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy   { $!iter.is-lazy }
+    method Seq       { Seq.new(self)  }
 }
 
 our proto annotate(\ist, &mapper = {$_}) is export {*}

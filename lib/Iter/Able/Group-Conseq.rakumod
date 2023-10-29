@@ -86,7 +86,8 @@ my class GroupConseq does Iterator {
             ),
         );
     }
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy   { $!iter.is-lazy }
+    method Seq       { Seq.new(self)  }
 }
 
 our proto group-conseq(\ist, :&as = {$_}, :&with = &[===]) is export {*}

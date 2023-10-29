@@ -25,8 +25,8 @@ for dir("lib/Iter/Able", test => /:i '.rakumod' $$/) -> $module {
     report "\tFunction \"$fun-name\"\n\tSignature $signature";
 
     my \it = $module.lines.iterator;
-    my Str $explanation = (it.&take-while(*.starts-with("#|")) andthen Seq.new($_).map(*.subst(/^'#|' ' '*/)).join(" ").subst("  ", " ", :g));
-    my Str $examples    = (it.&take-while(not *.starts-with("unit module")) andthen Seq.new($_).head(*-1).join("\n"));
+    my Str $explanation = it.&take-while(*.starts-with("#|")).Seq.map(*.subst(/^'#|' ' '*/)).join(" ").subst("  ", " ", :g);
+    my Str $examples    = it.&take-while(not *.starts-with("unit module")).Seq.head(*-1).join("\n");
     @docs.push: sprintf($template, $fun-name, $signature, $explanation, $examples);
 }
 

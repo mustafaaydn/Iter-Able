@@ -49,7 +49,8 @@ my class TakeWhile does Iterator {
             )
         )
     }
-    method is-lazy() { $!iter.is-lazy }
+    method is-lazy   { $!iter.is-lazy }
+    method Seq       { Seq.new(self)  }
 }
 
 our proto take-while(\ist, &pred) is export {*}

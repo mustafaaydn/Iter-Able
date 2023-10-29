@@ -37,7 +37,7 @@ multi replace(Iterable \it, *@pairs) {
 
 multi replace(Iterator \it, *@pairs) {
     my %map is Map = @pairs;
-    Seq.new(it).map({ %map{$_}:exists ?? %map{$_} !! $_ }).iterator
+    Seq.new(it).map({ %map{$_}:exists ?? %map{$_} !! $_ }).iterator but role { method Seq { Seq.new(self) } }
 }
 
 multi replace(Str \st, |) {

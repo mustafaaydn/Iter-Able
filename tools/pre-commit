@@ -1,0 +1,11 @@
+#!/home/mayd/rakudo/install/bin/raku
+
+say "pre-commit actions";
+
+say "\trunning \"embed-documentation.raku\"...";
+run "raku", "tools/embed-documentation.raku", "-v";
+
+say "\tstaging README.org...";
+run "git", "add", "README.org";
+
+say "precommit done";
