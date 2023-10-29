@@ -29,8 +29,9 @@ $s := (0, -2, -7, 5, 13, 22);
 my \it = $s.iterator;
 it.pull-one for ^2;
 my \newit = replace(it, 5 => 554, 0 => -9);
+it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [-7, 554, 13, 22].Seq, "Iterator (values)";
+is-deeply Seq.new(newit), [554, 13, 22].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

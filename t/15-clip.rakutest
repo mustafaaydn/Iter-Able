@@ -29,12 +29,13 @@ is-deeply clip($s, from-below => pi), pi xx $s, "No nonpositives with from-below
 # it.pull-one for ^2;
 # is-deeply it.&clip(from-below => 100), [4e4, 100, 100].Seq, "Iterator";
 
-$s := (0, -2, -7, 5, 13, 22);
+$s := (0, -2, -7, 5, 13, -22);
 my \it = $s.iterator;
 it.pull-one for ^2;
 my \newit = clip(it, :0from-below, :10from-above);
+it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [0, 5, 10, 10].Seq, "Iterator (values)";
+is-deeply Seq.new(newit), [5, 10, 0].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

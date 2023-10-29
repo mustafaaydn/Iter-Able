@@ -39,8 +39,9 @@ $s := (2, 3, 100, 200, 89, 525, 71, 3, 2);
 my \it = $s.iterator;
 it.pull-one for ^2;
 my \newit = remove-first(it, *.is-prime);
+it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [100, 200, 525, 71, 3, 2].Seq, "Iterator (values)";
+is-deeply Seq.new(newit), [200, 525, 71, 3, 2].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 

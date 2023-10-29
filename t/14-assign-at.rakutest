@@ -53,8 +53,9 @@ $s := (0, -2, -7, 5, 13, 22);
 my \it = $s.iterator;
 it.pull-one for ^2;
 my \newit = assign-at(it, 1 => 300, 8 => 900);
+it.pull-one;  # should affect `newit`s behaviour
 does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
-is-deeply Seq.new(newit), [-7, 300, 13, 22].Seq, "Iterator (values)";
+is-deeply Seq.new(newit), [5, 300, 22].Seq, "Iterator (values)";
 ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
 ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
