@@ -1,5 +1,6 @@
 .precomp
 playground.raku
+tools/pre-*
 *~
 \#*\#
 .\#*
