@@ -3,7 +3,7 @@ use Iter::Able::Remove-First;
 
 my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
 
-plan 13;
+plan 15;
 
 my $s;
 $s := [2, 2, 3, -4, 5];
@@ -33,9 +33,9 @@ id remove-first($s, &{ False }), $s.Seq, "Random list with no-pass predicate";
 $s := "Real String";
 id "fi rst whitespace is gone".&remove-first(/ \s /), "first whitespace is gone", "String, and a regex as the predicate";
 
-# my \it = [12, 3, 4, 15, 0, 7].iterator;
-# it.pull-one for ^2;
-# id remove-first(it, &is-prime), (4, 15, 0).Seq, "Iterator";
+$s := "";
+id $s.&remove-first, "", "Empty string, no predicate";
+id $s.&remove-first({True}), "", "Empty string, with predicate";
 
 $s := (2, 3, 100, 200, 89, 525, 71, 3, 2);
 my \it = $s.iterator;

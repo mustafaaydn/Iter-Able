@@ -26,7 +26,7 @@ id group-conseq($s, as => &{False}), [Bool::False => $s.List].Seq, "with `\{Fals
 
 $s := "neither AM I!";
 id group-conseq($s, as => /<.lower>/), [Bool::True => ('n', 'e', 'i', 't', 'h', 'e', 'r'),
-                                               Bool::False => (' ', 'A', 'M', ' ', 'I', '!')].Seq, "String with `/<lower>/`";
+                                        Bool::False => (' ', 'A', 'M', ' ', 'I', '!')].Seq, "String with `/<lower>/`";
 
 $s := (3, 3, 3, 4, 4, 4, 4, 5, 3);
 my \it = $s.iterator;

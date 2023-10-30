@@ -62,11 +62,12 @@ my class RemoveFirst does Iterator {
 }
 
 our proto remove-first(\ist, &pred?) is export {
+    # When no predicate is supplied, remove 0th
     without &pred {
         given ist {
-            when Iterable { return ist.skip }
-            when Str      { return ist.substr(1) }
-            when Iterator { ist.skip-one; return ist }
+            when Iterable:D { return ist.skip(1) }
+            when Str:D      { return ist ?? ist.substr(1) !! "" }
+            when Iterator:D { ist.skip-one; return ist }
         }
     }
     {*}
