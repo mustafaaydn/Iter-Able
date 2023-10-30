@@ -1,44 +1,50 @@
 use Test;
 use Iter::Able::Module-Name;
 
-say "\n-----Module-Name-----";
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
 plan 12;
 
 my $s;
+
+# Iterables
 $s := [2, 2, 3, -4, 5];
-is-deeply fun-name($s, ...), EXPECTED, "Random list with ...";
+id fun-name($s, ...), EXPECTED, "Random list with ...";
 
 $s := (2, 2, 3, -4, 5);
-is-deeply $s.&fun-name(...), EXPECTED, "Random list with ...";
+id $s.&fun-name(...), EXPECTED, "Random list with ...";
 
 $s := [];
-is-deeply fun-name($s, ...), EXPECTED,  "Empty list";
+id fun-name($s, ...), EXPECTED,  "Empty list";
 
 my $t = ();
-is-deeply $t.&fun-name(...), EXPECTED,  "Empty itemized list";
+id $t.&fun-name(...), EXPECTED,  "Empty itemized list";
 
 $s := [0, 0, 0, 0];
-is-deeply fun-name($s, ...), EXPECTED, "All zeros with ...";
+id fun-name($s, ...), EXPECTED, "All zeros with ...";
 
 $s := (0, -1, -2, -3);
-is-deeply fun-name($s, ...), EXPECTED, "No leading negatives with ... ";
+id fun-name($s, ...), EXPECTED, "No leading negatives with ... ";
 
 $s := [6, 7, 8, 93, 51, 0, 4, -3, 64];
-is-deeply fun-name($s, ...), EXPECTED, "Random list with no predicate, i.e., ...";
+id fun-name($s, ...), EXPECTED, "Random list with no predicate, i.e., ...";
 
 $s := (1, 0, -1, 2);
-is-deeply fun-name($s, &{ True }), EXPECTED, "Random list with all-pass predicate";
+id fun-name($s, &{ True }), EXPECTED, "Random list with all-pass predicate";
 
 $s := [1, 0, -1, 2];
-is-deeply fun-name($s, &{ False }), EXPECTED, "Random list with no-pass predicate";
+id fun-name($s, &{ False }), EXPECTED, "Random list with no-pass predicate";
 
+# Strings
+$s := "Real String";
+id fun-name($s, ...), EXPECTED, "String with ...";
+
+# Iterators
 my \it = [12, 3, 4, -5, 0, 7].iterator;
 it.pull-one for ^2;
-is-deeply fun-name(it, ...), EXPECTED, "Iterator";
+id fun-name(it, ...), EXPECTED, "Iterator";
 
-$s := "Real String";
-is-deeply fun-name($s, ...), EXPECTED, "String with ...";
-
+# Invalid calls
 throws-like { [12, 3, 4].&fun-name }, Exception, "No argument provided", message => / 'Must supply at least this' /;
 
 done-testing;
