@@ -1,0 +1,67 @@
+use Test;
+use Iter::Able::Remove-At;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 22;
+
+my $s;
+$s := [0, 1, 2, 3];
+id remove-at($s, 1), (0, 2, 3).Seq, "Random list with 1 position";
+
+$s := (2, 2, 3, -4, 5);
+id remove-at($s, 4), (2, 2, 3, -4).Seq, "Random list with 2 positions";
+
+$s := [];
+id remove-at($s, 0), [].Seq,  "Empty list";
+
+my $t = ();
+id remove-at($t, 1), ().Seq,  "Empty itemized list";
+
+$s := [0, 0, 0, 0];
+id remove-at($s, ^$s), ().Seq, "All positions";
+
+$s := [6, 7, 8, 93, 51, 0, 4, -3, 64];
+id remove-at($s, $s.Int), $s.Seq, "Random list with out-of-bounds index";
+
+$s := [4, 5, 6];
+id $s.&remove-at([1, 2]), [4].Seq, "Two positions passed as a single Array";
+
+$s := [1, 2, 3];
+id remove-at($s, -1, 0), (2,).Seq, "Negative index removement on an iterable";
+
+$s := [1, 2, 3];
+id remove-at($s, -133, 0), (2, 3).Seq, "Negative index removement on an iterable (out of bounds)";
+
+$s := "Real";
+id remove-at($s, 0), "eal", "String with 1 position";
+
+$s := "mode";
+id remove-at($s, 0, 2), "oe", "String with 2 positions";
+
+$s := "Real";
+id remove-at($s, 0, 2, 12), "el", "String with 3 positions, but 1 out of bounds";
+
+$s := "yes";
+id remove-at($s, -1, 0), "e", "Negative index removement on a string";
+
+$s := "yes";
+id remove-at($s, -182, 0), "es", "Negative index removement on a string (out of bounds)";
+
+$s := (0, -2, -7, 5, 13, 22);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = remove-at(it, 1, 8);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+id Seq.new(newit), [5, 22].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
+
+# Invalid calls
+throws-like { [].&remove-at }, Exception, "No position", message => /:i 'Must pass at least one position' /;
+throws-like { [].&remove-at(^Inf X=> 1) }, Exception, "Possibly nonfinite number of positions", message => /:i 'lazy' /;
+throws-like { "".&remove-at(*) }, Exception, "Noninteger \"position\" (1)", message => /:i 'should be all integers' /;
+throws-like { "".&remove-at("yes" => 4) }, Exception, "Noninteger \"position\"", message => /:i 'should be all integers' /;
+
+done-testing;
