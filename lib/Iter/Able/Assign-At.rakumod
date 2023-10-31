@@ -70,7 +70,7 @@ my class AssignAt does Iterator {
     method is-lazy() { $!iter.is-lazy }
 }
 
-
+#| Strings has the special removal behaviour, so
 my class AssignAt-String does Iterator {
     has Mu $!iter;    #= Passed iterator
     has $!pairs;      #= Passed index => new_value pairs
@@ -123,11 +123,10 @@ our proto assign-at(\ist, *@pairs) is export {
     die "Transformators should all be pairs, seen `{@pairs[$_].raku}` which is of type {@pairs[$_].^name}"
         with @pairs.first(* !~~ Pair, :k);
     die "Keys should be all integers, seen `{@pairs[$_].key.raku}`"
-        with @pairs.first({ .key.Int ~~ Failure }, :k);
+        with @pairs.first({ .WHAT !=== Int }, :k);
 
     with @pairs.first(*.key.Int < 0, :k) {
         my ($thing-to-map, $length);
-        my %lookup = @pairs;
         given ist {
             when Iterable {
                 $length = ist.elems;
@@ -146,7 +145,7 @@ our proto assign-at(\ist, *@pairs) is export {
                 die "Expected Iterable/Iterator/Str, got {ist.^name}";
             }
         }
-        %lookup = %(.key < 0 ?? .key + $length !! .key => .value for %lookup);
+        my %lookup = %(.key < 0 ?? .key + $length !! .key => .value for @pairs);
         my \rv = $thing-to-map.map({ %lookup{$++} // $_ });
         return ist ~~ Str ?? rv.join !! rv
     }
