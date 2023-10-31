@@ -69,6 +69,10 @@ Performs index-based replacement given index => new-value pairs.
     >>> [5, 55, 555].&assign-at(3 => 5555)
     (5, 55, 555)
 
+    # Negative indexes are fine as well
+    >>> assign-at [4, 44, 444], -2 => -44
+    (4, -44, 444).Seq
+
     # Strings are possible too
     >>> "past".&assign-at(0 => "q")
     "qast"
@@ -388,6 +392,22 @@ Yields the n'th value of the input. Almost the same as =.[n]= but also works for
     >>> my \it = [4, 5, 6].iterator;
     >>> print it.&n'th(0), " " for ^3
     4 5 6
+#+end_src
+
+**** remove-at =(\ist, *@positions)=
+Short explanation of the function.
+#+begin_src raku
+    #
+    >>> [1, 2, 3, 0, 4, 5].&remove-at
+    (1, 2, 3).Seq
+
+    #
+    >>> (4, 7, 12, -3, 58, 0, 102).&remove-at(* >= 0)
+    (4, 7, 12).Seq
+
+    #
+    >>> "until first whitespace".&remove-at(/ \S /)
+    "until"
 #+end_src
 
 **** remove-first =(\ist, &pred?)=

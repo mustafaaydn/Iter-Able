@@ -12,6 +12,10 @@
     >>> [5, 55, 555].&assign-at(3 => 5555)
     (5, 55, 555)
 
+    # Negative indexes are fine as well
+    >>> assign-at [4, 44, 444], -2 => -44
+    (4, -44, 444).Seq
+
     # Strings are possible too
     >>> "past".&assign-at(0 => "q")
     "qast"
@@ -33,7 +37,7 @@ my class AssignAt does Iterator {
     has $!pairs;      #= Passed index => new_value pairs
 
     has str $!index;  #= State: current index
-    
+
     method !SET-SELF($iter, @pairs) {
         $!iter := $iter;
         $!pairs := nqp::hash;
@@ -72,7 +76,7 @@ my class AssignAt-String does Iterator {
     has $!pairs;      #= Passed index => new_value pairs
 
     has str $!index;  #= State: current index
-    
+
     method !SET-SELF($iter, @pairs) {
         $!iter := $iter;
         $!pairs := nqp::hash;
@@ -118,8 +122,35 @@ our proto assign-at(\ist, *@pairs) is export {
         if @pairs.is-lazy;
     die "Transformators should all be pairs, seen `{@pairs[$_].raku}` which is of type {@pairs[$_].^name}"
         with @pairs.first(* !~~ Pair, :k);
-    die "Keys should be all nonnegative integers, seen `{@pairs[$_].key.raku}`"
-        with @pairs.first({ .key !~~ /^<[0..9]>+$/ }, :k);
+    die "Keys should be all integers, seen `{@pairs[$_].key.raku}`"
+        with @pairs.first({ .key.Int ~~ Failure }, :k);
+
+    with @pairs.first(*.key.Int < 0, :k) {
+        my ($thing-to-map, $length);
+        my %lookup = @pairs;
+        given ist {
+            when Iterable {
+                $length = ist.elems;
+                $thing-to-map := ist;
+            }
+            when Iterator {
+                ist.push-all(my @vals);
+                $length = @vals.elems;
+                $thing-to-map := @vals;
+            }
+            when Str {
+                $length = ist.chars;
+                $thing-to-map := ist.comb.cache;
+            }
+            default {
+                die "Expected Iterable/Iterator/Str, got {ist.^name}";
+            }
+        }
+        %lookup = %(.key < 0 ?? .key + $length !! .key => .value for %lookup);
+        my \rv = $thing-to-map.map({ %lookup{$++} // $_ });
+        return ist ~~ Str ?? rv.join !! rv
+    }
+
     {*}
 }
 
