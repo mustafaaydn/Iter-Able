@@ -123,7 +123,7 @@ our proto assign-at(\ist, *@pairs) is export {
     die "Transformators should all be pairs, seen `{@pairs[$_].raku}` which is of type {@pairs[$_].^name}"
         with @pairs.first(* !~~ Pair, :k);
     die "Keys should be all integers, seen `{@pairs[$_].key.raku}`"
-        with @pairs.first({ .WHAT !=== Int }, :k);
+        with @pairs.first({ .key.WHAT !=== Int }, :k);
 
     with @pairs.first(*.key.Int < 0, :k) {
         my ($thing-to-map, $length);
