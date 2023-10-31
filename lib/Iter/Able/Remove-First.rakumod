@@ -1,4 +1,4 @@
-#| Remove the first element satisfying the predicate, if any. Without any
+#| Removes the first element satisfying the predicate, if any. Without any
 #| predicate, the very first element is skipped.
 #`{
     # Without an argument, equivalent to `.skip`

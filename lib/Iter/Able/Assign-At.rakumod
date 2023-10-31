@@ -2,15 +2,15 @@
 #`{
     # Replaces what's at index 1
     >>> [0, 1, 2, 3].&assign-at(1 => -9)
-    (0, -9, 2, 3)
+    (0, -9, 2, 3).Seq
 
     # Multiple index-value pairs are possible
     >>> [4, 3, 2, 1].&assign-at(0 => -4, 2 => -1)
-    (-4, 3, -1, 1)
+    (-4, 3, -1, 1).Seq
 
     # Out-of-bounds indexes are silently ignored
     >>> [5, 55, 555].&assign-at(3 => 5555)
-    (5, 55, 555)
+    (5, 55, 555).Seq
 
     # Negative indexes are fine as well
     >>> assign-at [4, 44, 444], -2 => -44

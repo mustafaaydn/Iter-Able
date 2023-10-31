@@ -1,32 +1,28 @@
-#| Performs index-based replacement given index => new-value pairs.
+#| Performs index-based removal given integer indexes.
 #`{
-    # Replaces what's at index 1
-    >>> [0, 1, 2, 3].&remove-at(1 => -9)
-    (0, -9, 2, 3)
+    # Value at 1st index is gone
+    >>> [0, 1, 2, 3].&remove-at(1)
+    (0, 2, 3).Seq
 
-    # Multiple index-value pairs are possible
-    >>> [4, 3, 2, 1].&remove-at(0 => -4, 2 => -1)
-    (-4, 3, -1, 1)
+    # Multiple index positions are possible
+    >>> [4, 3, 8, 1].&remove-at(0, 2)
+    (3, 1).Seq
 
     # Out-of-bounds indexes are silently ignored
-    >>> [5, 55, 555].&remove-at(3 => 5555)
-    (5, 55, 555)
+    >>> [5, 55, 555].&remove-at(32)
+    (5, 55, 555).Seq
 
-    # Negative indexes are fine as well
-    >>> remove-at [4, 44, 444], -2 => -44
-    (4, -44, 444).Seq
+    # Negative indexes are fine
+    >>> remove-at [4, 44, 444], -2
+    (4, 444).Seq
 
     # Strings are possible too
-    >>> "past".&remove-at(0 => "q")
-    "qast"
+    >>> "past".&remove-at(0)
+    "ast"
 
-    # Empty string as the replacer removes
-    >>> "until".&remove-at(1 => "")
-    "util"
-
-    # Can expand a string
-    >>> "play".&remove-at(0 => "de")
-    "delay"
+    # Negative positions on strings
+    >>> "play".&remove-at(0, -1)
+    "la"
 }
 unit module Remove-At;
 
