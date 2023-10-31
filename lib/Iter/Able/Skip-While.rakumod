@@ -2,7 +2,7 @@
 #| starts taking values indefinitely.
 #`{
     # Skip the falsefuls in front
-    >>> [0, "", 7, Any, 4, -5].&skip-while(&not).raku
+    >>> [0, "", 7, Any, 4, -5].&skip-while(&not)
     (7, Any, 4, -5).Seq
 
     # Generalized trim-leading
@@ -11,7 +11,7 @@
 
     # Skip unwanted characters
     >>> my Set() $unwanteds = <. , ;>;
-    >>> ",,.;Trial and error. Important.".&skip-while(* ∈ $unwanteds).raku
+    >>> ",,.;Trial and error. Important.".&skip-while(* ∈ $unwanteds)
     "Trial and error. Important."
 }
 unit module Skip-While;

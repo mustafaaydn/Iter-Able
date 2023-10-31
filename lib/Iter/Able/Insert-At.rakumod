@@ -14,11 +14,11 @@
     (5, 7).Seq
 
     # Strings are possible too
-    >>> "aise".&insert-at(1 => "r").raku
+    >>> "aise".&insert-at(1 => "r")
     "arise"
 
     # Can expand strings even more
-    >>> insert-at "sing", 1 => "tr" andthen .raku
+    >>> insert-at "sing", 1 => "tr"
     "string"
 }
 unit module Insert-At;

@@ -17,11 +17,11 @@
     "qast"
 
     # Empty string as the replacer removes
-    >>> "until".&assign-at(1 => "").raku
+    >>> "until".&assign-at(1 => "")
     "util"
 
     # Can expand a string
-    >>> "play".&assign-at(0 => "de").raku
+    >>> "play".&assign-at(0 => "de")
     "delay"
 }
 unit module Assign-At;

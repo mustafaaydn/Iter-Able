@@ -14,7 +14,7 @@
     7
 
     # Strings are indexable as well
-    >>> "regard".&n'th(5).raku
+    >>> "regard".&n'th(5)
     "d"
 
     # Strings from the other side

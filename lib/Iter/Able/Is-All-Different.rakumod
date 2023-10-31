@@ -68,7 +68,6 @@ multi is-all-different(Iterator:D \it, :&as = {$_}, :&with = &[===] --> Bool:D) 
                     (my int $i = -1),
                     (my int $e = nqp::elems($wseen)),
                     (my \t-wnekst = &as(wnekst)),
-                    (say .raku, " ", .WHAT given t-wnekst),
                     nqp::until(
                         nqp::iseq_i(++$i, $e) || &with(t-wnekst, nqp::atpos($wseen, $i)),
                         nqp::null

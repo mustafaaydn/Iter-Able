@@ -9,7 +9,7 @@
     (3, 4, 7, -1).Seq
 
     # Last lowercase to uppercase
-    >>> "here we are!".&map-last(/ <.lower> /, &uc).raku
+    >>> "here we are!".&map-last(/ <.lower> /, &uc)
     "here we arE!"
 
     # If no one matches, everyone is yielded as is

@@ -14,7 +14,7 @@
     (10, 20, 30).Seq
 
     # String invocants as well as regex predicates are accepted as well
-    >>> "fi rst whitespace is gone".&remove-first(/ \s /).raku
+    >>> "fi rst whitespace is gone".&remove-first(/ \s /)
     "first whitespace is gone"
 }
 unit module Remove-First;

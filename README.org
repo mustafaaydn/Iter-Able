@@ -74,11 +74,11 @@ Performs index-based replacement given index => new-value pairs.
     "qast"
 
     # Empty string as the replacer removes
-    >>> "until".&assign-at(1 => "").raku
+    >>> "until".&assign-at(1 => "")
     "util"
 
     # Can expand a string
-    >>> "play".&assign-at(0 => "de").raku
+    >>> "play".&assign-at(0 => "de")
     "delay"
 #+end_src
 
@@ -214,11 +214,11 @@ Inserts values at the given positions. Cannot insert past the end even if finite
     (5, 7).Seq
 
     # Strings are possible too
-    >>> "aise".&insert-at(1 => "r").raku
+    >>> "aise".&insert-at(1 => "r")
     "arise"
 
     # Can expand strings even more
-    >>> insert-at "sing", 1 => "tr" andthen .raku
+    >>> insert-at "sing", 1 => "tr"
     "string"
 #+end_src
 
@@ -292,7 +292,7 @@ Maps only the first item that satisfies the predicate, if any.
     (0, 5, 9, 11).Seq
 
     # First uppercase to lowercase
-    >>> "here WE are".&map-first(/ <.upper> /, &lc).raku
+    >>> "here WE are".&map-first(/ <.upper> /, &lc)
     "here wE are"
 
     # If no one matches, everyone is yielded as is
@@ -332,7 +332,7 @@ Maps only the last item that satisfies the predicate, if any.
     (3, 4, 7, -1).Seq
 
     # Last lowercase to uppercase
-    >>> "here we are!".&map-last(/ <.lower> /, &uc).raku
+    >>> "here we are!".&map-last(/ <.lower> /, &uc)
     "here we arE!"
 
     # If no one matches, everyone is yielded as is
@@ -352,7 +352,7 @@ Maps only the elements that satisfy the predicate, if any.
     (2, -7, 3, 0).Seq
 
     # Make vowels upper case
-    >>> "mixed feelings".&map-when(/:i <[aeiou]>/, &uc).raku
+    >>> "mixed feelings".&map-when(/:i <[aeiou]>/, &uc)
     "mIxEd fEElIngs"
 
     # Normalize "anomalies"
@@ -372,7 +372,7 @@ Yields the n'th value of the input. Almost the same as =.[n]= but also works for
     7
 
     # Strings are indexable as well
-    >>> "regard".&n'th(5).raku
+    >>> "regard".&n'th(5)
     "d"
 
     # Strings from the other side
@@ -406,7 +406,7 @@ Remove the first element satisfying the predicate, if any. Without any predicate
     (10, 20, 30).Seq
 
     # String invocants as well as regex predicates are accepted as well
-    >>> "fi rst whitespace is gone".&remove-first(/ \s /).raku
+    >>> "fi rst whitespace is gone".&remove-first(/ \s /)
     "first whitespace is gone"
 #+end_src
 
@@ -435,7 +435,7 @@ Translates values through the given pairs. All occurences are replaced. Only Num
 Skips values from the iterable as long as =&pred= holds; once not, starts taking values indefinitely.
 #+begin_src raku
     # Skip the falsefuls in front
-    >>> [0, "", 7, Any, 4, -5].&skip-while(&not).raku
+    >>> [0, "", 7, Any, 4, -5].&skip-while(&not)
     (7, Any, 4, -5).Seq
 
     # Generalized trim-leading
@@ -444,7 +444,7 @@ Skips values from the iterable as long as =&pred= holds; once not, starts taking
 
     # Skip unwanted characters
     >>> my Set() $unwanteds = <. , ;>;
-    >>> ",,.;Trial and error. Important.".&skip-while(* ∈ $unwanteds).raku
+    >>> ",,.;Trial and error. Important.".&skip-while(* ∈ $unwanteds)
     "Trial and error. Important."
 #+end_src
 
@@ -456,7 +456,7 @@ Takes values from the iterable as long as =&pred= holds; once not, stop. As it n
     (4, 7, 12).Seq
 
     # Until first whitespace
-    >>> "until first whitespace".&take-while(/ \S /).raku
+    >>> "until first whitespace".&take-while(/ \S /)
     "until"
 
     # Go till an "anomaly" occurs

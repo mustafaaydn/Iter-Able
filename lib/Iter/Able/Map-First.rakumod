@@ -9,7 +9,7 @@
     (0, 5, 9, 11).Seq
 
     # First uppercase to lowercase
-    >>> "here WE are".&map-first(/ <.upper> /, &lc).raku
+    >>> "here WE are".&map-first(/ <.upper> /, &lc)
     "here wE are"
 
     # If no one matches, everyone is yielded as is

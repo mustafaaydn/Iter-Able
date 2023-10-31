@@ -9,7 +9,7 @@
     (2, -7, 3, 0).Seq
 
     # Make vowels upper case
-    >>> "mixed feelings".&map-when(/:i <[aeiou]>/, &uc).raku
+    >>> "mixed feelings".&map-when(/:i <[aeiou]>/, &uc)
     "mIxEd fEElIngs"
 
     # Normalize "anomalies"

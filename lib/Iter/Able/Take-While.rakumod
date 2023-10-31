@@ -8,7 +8,7 @@
     (4, 7, 12).Seq
 
     # Until first whitespace
-    >>> "until first whitespace".&take-while(/ \S /).raku
+    >>> "until first whitespace".&take-while(/ \S /)
     "until"
 
     # Go till an "anomaly" occurs
