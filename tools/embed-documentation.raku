@@ -17,7 +17,7 @@ my Str $template = q:to/END/;
 END
 
 my Str @docs;
-for dir("lib/Iter/Able", test => /:i '.rakumod' $$/) -> $module {
+for dir("lib/Iter/Able", test => /^^ <-[.#]>+ '.rakumod' $$/) -> $module {
     report "Processing $module...";
 
     my Str $fun-name  = $module.basename.split(".")[0].lc;
