@@ -2,19 +2,15 @@
 #`{
     #
     >>> [1, 2, 3, 0, 4, 5].&fun-name
-    (1, 2, 3)
+    (1, 2, 3).Seq
 
     #
     >>> (4, 7, 12, -3, 58, 0, 102).&fun-name(* >= 0)
-    (4, 7, 12)
+    (4, 7, 12).Seq
 
     #
-    >>> "until first whitespace".&fun-name(/ \S /).raku
+    >>> "until first whitespace".&fun-name(/ \S /)
     "until"
-
-    #
-    >>> (r1 => 7.13, r2 => 6.89, r3 => 7.90, r4 => 6.81).&fun-name((*.value - 7).abs <= 0.2)
-    (r1 => 7.13, r2 => 6.89)
 }
 unit module Module-Name;
 
