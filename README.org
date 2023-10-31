@@ -410,6 +410,26 @@ Remove the first element satisfying the predicate, if any. Without any predicate
     "first whitespace is gone"
 #+end_src
 
+**** remove-last =(\ist, &pred?)=
+Remove the last element satisfying the predicate, if any. Without any predicate, the last element is thrown.
+#+begin_src raku
+    # Without an argument, it's like *.head(*-1)
+    >>> [1, 2, 3, 0, 4, 5].&remove-last
+    (1, 2, 3, 0, 4).Seq
+
+    # Remove the last zero (and only that zero)
+    >>> (4, 0, 5, 2, 0, 0).&remove-last(* == 0)
+    (4, 0, 5, 2, 0).Seq
+
+    # If nothing to remove, yield back as is
+    >>> remove-last * %% 2, [1, 3, 5, 7]
+    (1, 3, 5, 7).Seq
+
+    # String invocants as well as regex predicates are accepted as well
+    >>> "This is important. Right? Yes!".&remove-last(/ <punct> /)
+    "This is important. Right? Yes"
+#+end_src
+
 **** replace =(\it, *@pairs)=
 Translates values through the given pairs. All occurences are replaced. Only Numerics and Strings within an iterable/iterator are replaced; for others, see =map-when=. For replacing strings, see the built-in =trans=.
 #+begin_src raku

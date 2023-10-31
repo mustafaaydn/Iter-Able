@@ -20,7 +20,7 @@ unit module Map-Last;
 
 use Iter::Able::Map-First;
 
-# Implemented in terms of `map-first`
+# Implemented in terms of `&map-first`
 our proto map-last(\ist, &pred, &mapper) is export {*}
 
 multi map-last(Iterable:D \it, &pred, &mapper --> Seq:D) {
