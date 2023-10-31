@@ -20,7 +20,7 @@
     >>> "past".&assign-at(0 => "q")
     "qast"
 
-    # Empty string as the replacer removes
+    # Empty string acts as a remover for string inputs
     >>> "until".&assign-at(1 => "")
     "util"
 
