@@ -1,0 +1,50 @@
+use Test;
+use Iter::Able::Remove-Last;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 15;
+
+my $s;
+$s := [2, 2, 3, -4, 5];
+id remove-last($s, * !%% 2), [2, 2, 3, -4].Seq, "Random list with a normal predicate";
+
+$s := (5, 2, 5);
+id $s.&remove-last(* == 5), (5, 2).Seq, "Random list with a normal predicate (2)";
+
+$s := [];
+id remove-last($s, {$_}), ().Seq,  "Empty list";
+
+my $t = ();
+id $t.&remove-last({$_}), ().Seq,  "Empty itemized list";
+
+$s := [0, 0, 0, 0];
+id remove-last($s, * == 0), [0, 0, 0].Seq, "All zeros with * == 0 predicate";
+
+$s := [6, 7, 8];
+id remove-last($s), $s.head(*-1), "Random list with no predicate";
+
+$s := (1, 0, -1, 2);
+id remove-last($s, &{ True }), $s.head(*-1), "Random list with all-pass predicate; same as if no predicate";
+
+$s := [1, 0, -1, 2];
+id remove-last($s, &{ False }), $s.Seq, "Random list with no-pass predicate";
+
+$s := "This is important. Right? Yes!";
+id $s.&remove-last(/ <punct> /), "This is important. Right? Yes", "String, and a regex as the predicate";
+
+$s := "";
+id $s.&remove-last, "", "Empty string, no predicate";
+id $s.&remove-last({True}), "", "Empty string, with predicate";
+
+$s := (2, 3, 100, 200, 89, 525, 71, 3, 2, 8);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = remove-last(it, *.is-prime);
+it.pull-one;  # should not affect `newit`s behaviour because `&remove-last` caches
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+id Seq.new(newit), [100, 200, 89, 525, 71, 3, 8].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
+
+done-testing;
