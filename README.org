@@ -15,7 +15,8 @@ use Iter::Able *;
 Provides iterable manipulation functions. Raku already has superb support for such tasks,
 e.g., =map=, =grep=, =rotor=, =categorize= etc. One can build more specific functions using them
 (implementation- and/or semantic-wise); this module aims to do that for variety of functions
-for reuse. In addition to iterables (and iterators), functions also accept inputs too when appropriate. Inspirations include [[https://github.com/magnars/dash.el][dash.el]] of ELisp, [[https://rubydoc.info/stdlib/core/Enumerable][Enumerable]] of Ruby, [[https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html][std::iter::Iterator]] of Rust, [[https://docs.python.org/3/library/itertools.html][itertools]] and [[https://more-itertools.readthedocs.io/en/stable/][more_itertools]] of Python.
+for reuse. In addition to iterables (and iterators), functions also accept string inputs too
+when appropriate. Inspirations include [[https://github.com/magnars/dash.el][dash.el]] of ELisp, [[https://rubydoc.info/stdlib/core/Enumerable][Enumerable]] of Ruby, [[https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html][std::iter::Iterator]] of Rust, [[https://docs.python.org/3/library/itertools.html][itertools]] and [[https://more-itertools.readthedocs.io/en/stable/][more_itertools]] of Python.
 
 *** use'age
 + /No/ functions imported: =use Iter::Able;=
@@ -481,6 +482,30 @@ Translates values through the given pairs. All occurences are replaced. Only Num
     # Unfound LHS values of pairs are silently ignored
     >>> [2, 4, 6, 7].&replace(8 => -8)
     (2, 4, 6, 7).Seq
+#+end_src
+
+**** select-at =(\ist, *@positions)=
+Selects values at the given indexes. Acts as a generalized version of the built-in =slice=; supports negative,
+#+begin_src raku
+    # 3rd and 1st (order is retained)
+    >>> [0, -1, -2, -3].&select-at(3, 1)
+    (-3, -1).Seq
+
+    # Negative indexes are supported
+    >>> select-at (4, 7, 12, -3), (-3, -2, 0)
+    (7, 12, 4).Seq
+
+    # An index can be requested multiple times
+    >>> [5, 44, 555].&select-at(1, -2, 1, 1)
+    (44, 44, 44, 44).Seq
+
+    # Out of bounds indexes are silently ignored
+    >>> [0, 1].&select-at(500, 1)
+    (1,).Seq
+
+    # Strings are accepted too
+    >>> "string".&select-at(1..3)
+    "tri"
 #+end_src
 
 **** skip-while =(\ist, &pred)=
