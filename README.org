@@ -485,7 +485,7 @@ Translates values through the given pairs. All occurences are replaced. Only Num
 #+end_src
 
 **** select-at =(\ist, *@positions)=
-Selects values at the given indexes. Acts as a generalized version of the built-in =slice=; supports negative,
+Selects values at the given indexes. Acts as a generalized version of the built-in =slice=; supports negative, duplicated, mixed-order indexes.
 #+begin_src raku
     # 3rd and 1st (order is retained)
     >>> [0, -1, -2, -3].&select-at(3, 1)
