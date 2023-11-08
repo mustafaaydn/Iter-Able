@@ -129,6 +129,8 @@ our proto assign-at(\ist, *@pairs) is export {
         my ($thing-to-map, $length);
         given ist {
             when Iterable {
+                die "Cannot assign at negative indexes on a possibly lazy iterable"
+                    if ist.is-lazy;
                 $length = ist.elems;
                 $thing-to-map := ist;
             }

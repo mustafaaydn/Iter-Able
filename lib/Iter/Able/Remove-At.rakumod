@@ -79,6 +79,8 @@ our proto remove-at(\ist, *@positions) is export {
         my ($thing-to-map, $length);
         given ist {
             when Iterable {
+                die "Cannot remove at negative indexes on a possibly lazy iterable"
+                    if ist.is-lazy;
                 $length = ist.elems;
                 $thing-to-map := ist;
             }

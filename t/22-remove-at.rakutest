@@ -3,7 +3,7 @@ use Iter::Able::Remove-At;
 
 my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
 
-plan 22;
+plan 23;
 
 my $s;
 $s := [0, 1, 2, 3];
@@ -63,5 +63,6 @@ throws-like { [].&remove-at }, Exception, "No position", message => /:i 'Must pa
 throws-like { [].&remove-at(^Inf X=> 1) }, Exception, "Possibly nonfinite number of positions", message => /:i 'lazy' /;
 throws-like { "".&remove-at(*) }, Exception, "Noninteger \"position\" (1)", message => /:i 'should be all integers' /;
 throws-like { "".&remove-at("yes" => 4) }, Exception, "Noninteger \"position\"", message => /:i 'should be all integers' /;
+throws-like { [1].lazy.&remove-at(-1) }, Exception, "Negative index on a lazy array", message => /:i 'negative indexes on a possibly lazy iterable' /;
 
 done-testing;
