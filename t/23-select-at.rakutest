@@ -1,0 +1,61 @@
+use Test;
+use Iter::Able::Select-At;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 24;
+
+my $s;
+
+# Iterables
+$s := [2, 2, 3, -4, 5];
+id select-at($s, 1), $s[1].Seq, "List with single index";
+
+$s := (2, 2, 3, -4, 5);
+id $s.&select-at(-1), $s[*-1].Seq, "List with single index, negative";
+
+$s := [2, 2, 3, -4, 5];
+id select-at($s, 1, 2), $s[1, 2].Seq, "List with multiple indexers";
+
+$s := (2, 2, 3, -4, 5);
+id $s.&select-at(-1, -2), $s[*-1, *-2].Seq, "List with multiple indexers, negative";
+id $s.&select-at(500, -4912), ().Seq, "List with out of bounds indexes";
+
+$s := [];
+id select-at($s, 2), ().Seq,  "Empty list";
+
+my $t = ();
+id $t.&select-at(-5), ().Seq,  "Empty itemized list";
+
+$s := [0, -1, -2, -3].Seq;
+id select-at($s, 3, 1), (-3, -1).Seq, "Order is retained";
+
+$s := (0, -1, -2, -3);
+id select-at($s, (1, 0, 0, 1)), $s[1, 0, 0, 1].Seq, "Repeated indexes";
+
+# Strings
+$s := "Real String";
+id select-at($s, 1), $s.substr(1, 1), "String with single index";
+id select-at($s, -2), $s.substr(*-2, *-1), "String with single index, negative";
+id select-at($s, 1, 3), $s.comb.slice(1, 3).join, "String with multiple indexes";
+id select-at($s, 2, -3), $s.comb.slice(2, $s.chars-3).join, "String with multiple indexes, negative";
+id select-at($s, 200, 0, -4, -4123), $s.comb.[0, *-4].join, "String with out of bounds indexes";
+
+# Iterators
+$s := (0, 0, 2, 3, 4);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = select-at(it, 1, 2);
+ok it.pull-one =:= IterationEnd;  # should not affect `newit`s behaviour; exhausted
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+id Seq.new(newit), [3, 4].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
+
+# Invalid calls
+throws-like { [12, 3, 4].&select-at }, Exception, message => / 'Must pass at least one' /;
+throws-like { [12, 3, 4].&select-at([1].lazy) }, Exception, message => / 'Cannot perform selections with a lazy' /;
+throws-like { [12, 3, 4].&select-at(1, "2", 3) }, Exception, message => / 'Indexes should be all integers, seen "2" which is of type Str' /;
+throws-like { Any.&select-at(1) }, Exception, message => / 'Expected Iterable/Iterator/Str, got Any'/;
+throws-like { [1].lazy.&select-at(-1) }, Exception, "Negative index on a lazy array", message => /:i 'negative indexes on a possibly lazy iterable' /;
+done-testing;
