@@ -12,8 +12,8 @@ id flatten($s), $s.Seq, "Random list with 0 level";
 $s := ((1, 2), (3, 4, 5), 6);
 id flatten($s), (1, 2, 3, 4, 5, 6).Seq, "Random list with 0, 1 level";
 
-$s := [[[2, 4],], [[5, 6], [7, 77, 777]]];
-id flatten($s), [2, 4, 5, 6, 7, 77, 777].Seq, "Random list with 2 levels";
+$s := [[[2, 4],], [[5, 6], [7, 77, 777]]].Seq;
+id flatten($s), [2, 4, 5, 6, 7, 77, 777].Seq, "Seq with 2 levels";
 
 $s := [["a", ("b", "c")], [("d",), "e", "f", ["g", ("h", "i")]]];
 id $s.&flatten, "abcdefghi".comb, "Ragged list";

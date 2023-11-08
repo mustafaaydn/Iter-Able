@@ -33,7 +33,7 @@ id is-all-same($s), True,  "Empty list";
 my $t = ();
 id $t.&is-all-same, True,  "Empty itemized list";
 
-$s := [1, |(0 xx 100_000)];
+$s := [1, |(0 xx 100_000)].Seq;
 id is-all-same($s), False, "Long list to see shortcircuiting";
 
 $s := "";

@@ -15,8 +15,8 @@ id annotate($s), [].Seq,  "Empty-list";
 $s := [4, 5, 9, 0];
 id annotate($s, &sqrt), [(4, 4.sqrt), (5, 5.sqrt), (9, 9.sqrt), (0, 0.sqrt)].Seq, "Random list with \&sqrt";
 
-$s := ("piano", "drum", "violin");
-id $s.&annotate(&chars), (("piano", 5), ("drum", 4), ("violin", 6)).Seq, "Strings with \&chars";
+$s := ("piano", "drum", "violin").Seq;
+id $s.&annotate(&chars), (("piano", 5), ("drum", 4), ("violin", 6)).Seq, "Seq of Strings with \&chars";
 
 $s := ["this and that", "yes and no", "real"];
 id $s.&annotate(/ .? <before ' and'>/),

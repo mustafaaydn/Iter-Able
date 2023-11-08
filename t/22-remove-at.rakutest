@@ -24,7 +24,7 @@ id remove-at($s, ^$s), ().Seq, "All positions";
 $s := [6, 7, 8, 93, 51, 0, 4, -3, 64];
 id remove-at($s, $s.Int), $s.Seq, "Random list with out-of-bounds index";
 
-$s := [4, 5, 6];
+$s := [4, 5, 6].Seq;
 id $s.&remove-at([1, 2]), [4].Seq, "Two positions passed as a single Array";
 
 $s := [1, 2, 3];

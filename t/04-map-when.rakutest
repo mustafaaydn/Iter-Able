@@ -18,7 +18,7 @@ id map-when($s, {;}, {;}), [].Seq,  "Empty-list (unimportant predicate and trans
 $s := [4, 5];
 dies-ok { $s.&map-when }, "Argumentless map-when should die";
 
-$s := [0, 0, 0, 0];
+$s := [0, 0, 0, 0].Seq;
 id map-when($s, * == 0, * + 1), [1, 1, 1, 1].Seq, "All zeros with * == 0, * + 1";
 
 $s := [0, -1, -2, -3];

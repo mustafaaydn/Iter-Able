@@ -15,8 +15,8 @@ id insert-at($s, 2 => 4, 3 => 9), [1, 2, 4, 0, 9, 16].Seq, "Random list with 2 p
 $s := [5, 7];
 id $s.&insert-at(2 => 9), $s.Seq, "Random list with out-of-bounds index";
 
-$s := [0 => 0, 2 => 2];
-id $s.&insert-at(1 => 1 => 1), [0 => 0, 1 => 1, 2 => 2].Seq, "Random list with pairs in it";
+$s := [0 => 0, 2 => 2].Seq;
+id $s.&insert-at(1 => 1 => 1), [0 => 0, 1 => 1, 2 => 2].Seq, "Seq with pairs in it";
 
 $s := "xyw".comb;
 id $s.&insert-at(2 => "z"), "xyzw".comb, "String insertion to a Seq";

@@ -15,8 +15,8 @@ id map-last($s, {;}, {;}), [].Seq,  "Empty-list";
 $s := [57, 91, -13];
 id $s.&map-last(*.is-prime, { 0 }), $s.Seq, "Random list with no match";
 
-$s := [5, 6, 7];
-id $s.&map-last({ True }, { 0 }), (5, 6, 0).Seq, "Random list with all-pass filter";
+$s := [5, 6, 7].Seq;
+id $s.&map-last({ True }, { 0 }), (5, 6, 0).Seq, "Seq with all-pass filter";
 
 $s := [5, 6, 7];
 id $s.&map-last({ False }, { 0 }), $s.Seq, "Random list with no-pass filter";

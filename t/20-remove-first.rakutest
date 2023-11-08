@@ -27,8 +27,8 @@ id remove-first($s), $s.skip, "Random list with no predicate";
 $s := (1, 0, -1, 2);
 id remove-first($s, &{ True }), $s.skip, "Random list with all-pass predicate; same as if no predicate";
 
-$s := [1, 0, -1, 2];
-id remove-first($s, &{ False }), $s.Seq, "Random list with no-pass predicate";
+$s := [1, 0, -1, 2].Seq;
+id remove-first($s, &{ False }), $s.Seq, "Seq with no-pass predicate";
 
 $s := "fi rst whitespace is gone";
 id $s.&remove-first(/ \s /), "first whitespace is gone", "String, and a regex as the predicate";

@@ -25,7 +25,7 @@ id chain($s, [4, 5, 6]), [4, 5, 6].Seq, "Empty-string is chained fine, 1";
 id chain([4, 5, 6], $s), [4, 5, 6].Seq, "Empty-string is chained fine, 2";
 id chain([1, 2, 3], $s, [4, 5, 6]), [1, 2, 3, 4, 5, 6].Seq, "Empty-string is chained fine, 3";
 
-$s := ([4, 7], [6], [0, 8, 9]);
+$s := ([4, 7], [6], [0, 8, 9]).Seq;
 id chain(|$s), (4, 7, 6, 0, 8, 9).Seq, "One-level flattening byproduct, 1";
 
 $s := [[4, 7], [6], [0, 8, 9]];

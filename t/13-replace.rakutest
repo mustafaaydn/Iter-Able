@@ -9,8 +9,8 @@ my $s;
 $s := [2, 2, 3, -4, 5];
 id replace($s, 2 => -2), [-2, -2, 3, -4, 5].Seq, "Random list with 1 pair";
 
-$s := (2, 2, 3, -4, 5);
-id $s.&replace((3, -4, 5) X=> 2), (2 xx $s), "Random list with 3 pairs";
+$s := (2, 2, 3, -4, 5).Seq;
+id $s.&replace((3, -4, 5) X=> 2), (2 xx 5), "Seq with 3 pairs";
 
 $s := (2, 2, 3, -4, 5);
 id replace($s), $s, "Random list no pairs";

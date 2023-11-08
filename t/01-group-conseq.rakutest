@@ -18,7 +18,7 @@ id group-conseq($s, as => * == 0), [Bool::True => (0, 0, 0, 0)].Seq, "with `* ==
 $s := [-1, -2, 0, 8, -3];
 id group-conseq($s, as => * < 0), [Bool::True => (-1, -2), Bool::False => (0, 8), Bool::True => (-3,)].Seq, "with `* < 0`";
 
-$s := (1, 1, 2, 2, 1, 1, 2, 2);
+$s := (1, 1, 2, 2, 1, 1, 2, 2).Seq;
 id group-conseq($s),  [1 => (1, 1), 2 => (2, 2), 1 => (1, 1), 2 => (2, 2)].Seq, "with `*`";
 
 $s := [1, 0, -1, 2];

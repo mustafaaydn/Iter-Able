@@ -24,12 +24,8 @@ id clip($t, :3from-above), ().Seq,  "Empty itemized list";
 $s := [0, 0, 0, 0];
 id clip($s, :3from-above), $s.Seq, "All zeros with :3from-above";
 
-$s := (0, -1, -2, -3);
-id clip($s, from-below => pi), pi xx $s, "No nonpositives with from-below => pi";
-
-# my \it = [12, 3, 4e4, -4, 0].iterator;
-# it.pull-one for ^2;
-# id it.&clip(from-below => 100), [4e4, 100, 100].Seq, "Iterator";
+$s := (0, -1, -2, -3).Seq;
+id clip($s, from-below => pi), pi xx 4, "No nonpositives with from-below => pi";
 
 $s := (0, -2, -7, 5, 13, -22);
 my \it = $s.iterator;

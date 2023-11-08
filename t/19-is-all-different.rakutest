@@ -42,7 +42,7 @@ id is-all-different($s, :as(&chars)), False, "Using :\&as to turn the table";
 $s := [$(3), $(3), $(3)];
 id is-all-different($s, :with(&[=:=])), True, "Using :\&with with =:=";
 
-$s := [7, -7.000000000000000000001, 6.999999999999999999999];
+$s := [7, -7.000000000000000000001, 6.999999999999999999999].Seq;
 id is-all-different($s, as => &abs, with => &[=~=]), False, "Using :\&as and :\&with";
 
 $s := "";

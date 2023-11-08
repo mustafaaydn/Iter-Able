@@ -21,8 +21,8 @@ id $t.&remove-last({$_}), ().Seq,  "Empty itemized list";
 $s := [0, 0, 0, 0];
 id remove-last($s, * == 0), [0, 0, 0].Seq, "All zeros with * == 0 predicate";
 
-$s := [6, 7, 8];
-id remove-last($s), $s.head(*-1), "Random list with no predicate";
+$s := [6, 7, 8].Seq;
+id remove-last($s), [6, 7].Seq, "Seq with no predicate";
 
 $s := (1, 0, -1, 2);
 id remove-last($s, &{ True }), $s.head(*-1), "Random list with all-pass predicate; same as if no predicate";

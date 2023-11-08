@@ -24,8 +24,8 @@ id skip-while($r, {$_}), $r[$r.first(*.not, :k)..*].Seq, "Random list with ident
 $r := [1, 0, -1, 2];
 id skip-while($r, &{False}), $r.Seq, "Random list with no-pass predicate, i.e., no skips";
 
-$r := [1, 0, -1, 2];
-id skip-while($r, &{True}), [].Seq, "Random list with all-pass predicate, i.e., skip all";
+$r := [1, 0, -1, 2].Seq;
+id skip-while($r, &{True}), [].Seq, "Seq with all-pass predicate, i.e., skip all";
 
 $r := "neither AM I!";
 id skip-while($r, /<.lower>/), " AM I!", "Mixed case string with /<.lower>/ predicate";

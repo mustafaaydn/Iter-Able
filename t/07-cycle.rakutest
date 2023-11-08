@@ -12,8 +12,8 @@ id cycle($s).head(5), [2, 3, 2, 3, 2].Seq, "Random list with 2.5 repeats";
 $s := [];
 id cycle($s), [].Seq,  "Empty-list";
 
-$s := [3, 4, 5];
-id cycle($s).head(2), [3, 4].Seq, "Random list with 0.66 repeats";
+$s := [3, 4, 5].Seq;
+id cycle($s).head(2), [3, 4].Seq, "Seq with 0.66 repeats";
 
 $s := [5];
 id cycle($s).head(7), (|$s xx 7).Seq, "One element list with 7 repeats";

@@ -12,8 +12,8 @@ id n'th($s, 1), 2, "Random list with positive n = 1";
 $s := 2 xx 100_000;
 id n'th($s, 50_000), 2, "Random list with positive n = 50_000";
 
-$s := (2, 2, 3, -4, 5);
-id $s.&n'th(-2), -4, "Random list with negative n = -2";
+$s := (2, 2, 3, -4, 5).Seq;
+id $s.&n'th(-2), -4, "Seq with negative n = -2";
 
 $s := ^∞;
 id $s.&n'th(5), 5, "Infinite input with positive n = 5";

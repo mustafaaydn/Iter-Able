@@ -18,7 +18,7 @@ id $s.&map-indexed, ((0, 4), (1, 7), (2, 12), (3, -3)).Seq, "Random list with de
 $s := [];
 id map-indexed($s), [].Seq,  "Empty-list";
 
-$s := [0, 0, 0, 0];
+$s := [0, 0, 0, 0].Seq;
 id map-indexed($s, * R/ *, start => 1), $s>>.Rat.Seq, "All zeros with index / item, starting at 1";
 
 $s := "train";
