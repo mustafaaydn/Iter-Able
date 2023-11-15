@@ -35,8 +35,13 @@ our proto select-at(\ist, *@positions) is export {
         when Iterable {
             die "Cannot query negative indexes on a possibly lazy iterable"
                 if @positions.first(*.Int < 0, :k).defined && ist.is-lazy ;
-            my $length = ist.elems;
-            ist.[@positions.map({ $_ < 0 ?? $_ + $length !! $_ }).grep({ $_ ~~ -$length ..^ $length })].Seq
+
+            ist.is-lazy
+                ?? ist.[@positions].Seq
+                !! do {
+                       my $length = ist.elems;
+                       ist.[@positions.map({ $_ < 0 ?? $_ + $length !! $_ }).grep({ $_ ~~ -$length ..^ $length })].Seq
+                }
         }
         when Iterator {
             ist.push-all(my @vals);

@@ -3,7 +3,7 @@ use Iter::Able::Select-At;
 
 my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
 
-plan 24;
+plan 26;
 
 my $s;
 
@@ -32,6 +32,11 @@ id select-at($s, 3, 1), (-3, -1).Seq, "Order is retained";
 
 $s := (0, -1, -2, -3);
 id select-at($s, (1, 0, 0, 1)), $s[1, 0, 0, 1].Seq, "Repeated indexes";
+
+$s := [12, 3, 4].lazy;
+id $s.&select-at(1, 500, 1), (3, Nil, 3).Seq, "Explicitly .lazy input; out of bounds ==> Nils";
+$s := [12, 3, 4].eager;
+id $s.&select-at(1, 500, 1), [3, 3].Seq, "Explicitly .eager input; out of bounds !==> Nils";
 
 # Strings
 $s := "Real String";

@@ -3,7 +3,7 @@ use Iter::Able::Remove-At;
 
 my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
 
-plan 23;
+plan 25;
 
 my $s;
 $s := [0, 1, 2, 3];
@@ -32,6 +32,11 @@ id remove-at($s, -1, 0), (2,).Seq, "Negative index removement on an iterable";
 
 $s := [1, 2, 3];
 id remove-at($s, -133, 0), (2, 3).Seq, "Negative index removement on an iterable (out of bounds)";
+
+$s := (1, 0, -1, 2).lazy;
+my \out = $s.&remove-at(1);
+ok out.is-lazy;
+id out.eager, (1, -1, 2), "Explicitly .lazy input";
 
 $s := "Real";
 id remove-at($s, 0), "eal", "String with 1 position";

@@ -81,7 +81,7 @@ our proto remove-at(\ist, *@positions) is export {
             when Iterable {
                 die "Cannot remove at negative indexes on a possibly lazy iterable"
                     if ist.is-lazy;
-                $length = ist.elems;
+                $length = ist.elems // 0;
                 $thing-to-map := ist;
             }
             when Iterator {
@@ -106,7 +106,7 @@ our proto remove-at(\ist, *@positions) is export {
 }
 
 multi remove-at(Iterable:D \it, *@positions --> Seq:D) {
-    Seq.new: RemoveAt.new: it.iterator, @positions
+    Seq.new: RemoveAt.new: it.iterator, @positions;
 }
 
 multi remove-at(Iterator:D \it, *@positions --> RemoveAt:D) {

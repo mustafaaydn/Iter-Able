@@ -114,7 +114,6 @@ my class AssignAt-String does Iterator {
     method Seq     { Seq.new(self)  }
 }
 
-
 our proto assign-at(\ist, *@pairs) is export {
     die "Must pass at least one pair to assign at"
         unless @pairs;
@@ -131,7 +130,7 @@ our proto assign-at(\ist, *@pairs) is export {
             when Iterable {
                 die "Cannot assign at negative indexes on a possibly lazy iterable"
                     if ist.is-lazy;
-                $length = ist.elems;
+                $length = ist.elems // 0;
                 $thing-to-map := ist;
             }
             when Iterator {
