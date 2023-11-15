@@ -22,7 +22,7 @@ $s := [6, 7, 8, 93, 51, 0, 4, -3, 64];
 id take-while($s, {$_}), $s[^$s.first(*.not, :k)].Seq, "Random list with identity predicate, i.e., until first falseful";
 
 $s := [1, 0, -1, 2].Seq;
-id take-while($s, &{True}), $s.Seq, "Seq with all-pass predicate";
+id take-while($s, &{True}), [1, 0, -1, 2].Seq, "Seq with all-pass predicate";
 
 $s := [1, 0, -1, 2];
 id take-while($s, &{False}), [].Seq, "Random list with no-pass predicate";

@@ -19,7 +19,7 @@ $s := [];
 id map-indexed($s), [].Seq,  "Empty-list";
 
 $s := [0, 0, 0, 0].Seq;
-id map-indexed($s, * R/ *, start => 1), $s>>.Rat.Seq, "All zeros with index / item, starting at 1";
+id map-indexed($s, * R/ *, start => 1), [0, 0, 0, 0]>>.Rat.Seq, "All zeros with index / item, starting at 1";
 
 $s := "train";
 id $s.&map-indexed(* Rx *, start => 1), ("t", "rr", "aaa", "iiii", "nnnnn").Seq, "String with repetition";
