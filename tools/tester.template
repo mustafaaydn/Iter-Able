@@ -29,8 +29,10 @@ id fun-name($s, ...), EXPECTED, "Seq with ... ";
 $s := [6, 7, 8, 93, 51, 0, 4, -3, 64].Seq;
 id fun-name($s, ...), EXPECTED, "Seq with no predicate, i.e., ...";
 
-$s := (1, 0, -1, 2);
-id fun-name($s, &{ True }), EXPECTED, "Random list with all-pass predicate";
+$s := (1, 0, -1, 2).lazy;
+my \out = $s.&fun-name(...);
+ok out.is-lazy, "lazy input gives lazy output";
+id out.eager, EXPECTED, "Explicitly .lazy input";
 
 $s := [1, 0, -1, 2];
 id fun-name($s, &{ False }), EXPECTED, "Random list with no-pass predicate";
@@ -40,9 +42,15 @@ $s := "Real String";
 id fun-name($s, ...), EXPECTED, "String with ...";
 
 # Iterators
-my \it = [12, 3, 4, -5, 0, 7].iterator;
+$s := (0, 0, 2, -5, 4, 12, 0, 3);
+my \it = $s.iterator;
 it.pull-one for ^2;
-id fun-name(it, ...), EXPECTED, "Iterator";
+my \newit = fun-name(it);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+id Seq.new(newit), [...].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
 
 # Invalid calls
 throws-like { [12, 3, 4].&fun-name }, Exception, "No argument provided", message => / 'Must supply at least this' /;
