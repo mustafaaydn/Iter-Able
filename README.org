@@ -365,6 +365,48 @@ Maps only the elements that satisfy the predicate, if any.
     (r1 => 7.13, r2 => 6.89, r3 => 7, r4 => 7).Seq
 #+end_src
 
+**** min-max =(\ist, &comparator = &[cmp], :$k, :$v, :$kv, :$p --> List:D)=
+Computes the minimal and maximal values. By default =&cmp= is used for comparing the values but a custom comparator (of arity 1 or 2) can be passed. In case of ties, the first minimal/maximal value is returned. Empty input (after grepping out type objects, if any) results in Failure. Optional flags can control what is returned: =:k=: return the indexes =:v=: return the values themselves =:kv=: return the indexes interspersed with values =:p=: return the indexes and values as pairs When a flag is supplied, _all_ indexes/values are returned even if tied.
+#+begin_src raku
+    # Get minimum and maximum values in one pass
+    >>> [24, 11, 75, -6].&min-max
+    (-6, 75)
+
+    # Custom comparator
+    >>> ["brb", "hi", "no"].&min-max(*.chars)
+    ("hi", "brb")
+
+    # Type objects are ignored
+    >>> [-9, Date, HyperSeq, PseudoStash, 125].&min-max
+    (-9, 125)
+
+    # Argmin/max
+    >>> [12, 3, 75].&min-max(:k)
+    ((1,), (2,))
+
+    # :v will collect even the tied ones
+    >>> [-12, +12, 5].&min-max(*.abs)
+    (5, -12)
+    >>> [-12, +12, 5].&min-max(*.abs, :v)
+    (5, (-12, 12))
+
+    # min/maxpairs together
+    >>> min-max [600, 4, -32], :p
+    ((2 => -32,), (0 => 600,))
+
+    # Strings are possible too
+    >>> min-max "Nomenclature", -*.ord
+    ("u", "N")
+
+    # If the input is empty, result is a Failure
+    >>> min-max []
+    Argument to &min-max is empty (or full of undefined values)
+
+    # Since type objects are ignored, result can fail with them too
+    >>> min-max [Cool, IntStr, Raku]
+    Argument to &min-max is empty (or full of undefined values)
+#+end_src
+
 **** n'th =(\ist, Int:D $n)=
 Yields the n'th value of the input. Almost the same as =.[n]= but also works for iterators and strings. Negative indexes are also allowed so long as the input isn't lazy (i.e., possibly infinite). Returns a single value, or dies if the index is out-of-bounds (if it's a List-like, i.e., the bounds are easily measurable).
 #+begin_src raku

@@ -1,0 +1,129 @@
+use Test;
+use Iter::Able::Min-Max;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 54;
+
+my $s;
+
+# Iterables
+$s := [2, 2, 3, -4, 5];
+id min-max($s), ($s.min, $s.max), "Random list";
+$s := (2, 2, 3, -4, Any);
+id $s.&min-max(), ($s.min, $s.max), "Random list with non-concrete item(s) in it";
+
+$s := [2, 2, 3, -4, 5];
+id min-max($s, -*), ($s.max, $s.min), "Random list, custom comparator of arity 1";
+$s := (2, 2, 3, -4, Any);
+id $s.&min-max(-*), ($s.max, $s.min), "Random list with non-concrete item(s) in it, custom comparator of arity 1";
+
+$s := [2, 2, 3, -4, 5];
+id min-max($s, -*), ($s.max, $s.min), "Random list, custom comparator of arity 2";
+$s := (2, 2, 3, -4, Any);
+id $s.&min-max(-*), ($s.max, $s.min), "Random list with non-concrete item(s) in it, custom comparator of arity 2";
+
+$s := [2, 2, 3, 4, 5];
+id min-max($s, :k), ((0, 1), (4,)), "Random list, :k";
+$s := (2, 2, 3, -4, Any);
+id $s.&min-max(:k), ((3,), (2,)), "Random list with non-concrete item(s) in it, :k";
+
+$s := [2, 2, 3, -4, 5];
+id min-max($s, :v), ((-4,), (5,)), "Random list, :v";
+$s := (2, 2, 3, -4, Any);
+id $s.&min-max(:v), ((-4,), (3,)), "Random list with non-concrete item(s) in it, :v";
+
+$s := [2, 2, 3, -4, 5];
+id min-max($s, :kv), ((3, -4), (4, 5)), "Random list, :kv";
+$s := (2, 2, 3, 4, Any);
+id $s.&min-max(:kv), ((0, 2, 1, 2), (3, 4)), "Random list with non-concrete item(s) in it, :kv";
+
+$s := [2, 2, 3, -4, 5];
+id min-max($s, :p), ((3 => -4,), (4 => 5,)), "Random list, :p";
+$s := (2, 2, 3, 4, Any);
+id $s.&min-max(:p), ((0 => 2, 1 => 2), (3 => 4,)), "Random list with non-concrete item(s) in it, :p";
+
+
+$s := [2, 2, 3, 44, 5];
+id min-max($s, *.chars, :k), ((0, 1, 2, 4), (3,)), "Random list, custom comparator, :k, multiple values";
+$s := [2, 2, Signature, 3, 44, Cool, 55];
+id min-max($s, *.chars, :k), ((0, 1, 3), (4, 6)), "Random list with non-concrete item(s) in it, custom comparator, :k, multiple values";
+
+$s := [2, 2, 3, 44, 5];
+id min-max($s, *.chars, :v), ($s[0, 1, 2, 4], $s[[3]]), "Random list, custom comparator, :v, multiple values";
+$s := [2, 2, Signature, 3, 44, Cool, 55];
+id min-max($s, *.chars, :v), ($s[0, 1, 3], $s[4, 6]), "Random list with non-concrete item(s) in it, custom comparator, :v, multiple values";
+
+$s := [2, 2, 3, 44, 5];
+id min-max($s, *.chars, :kv), ((0, 2, 1, 2, 2, 3, 4, 5), (3, 44)), "Random list, custom comparator, :kv, multiple values";
+$s := [2, 2, Signature, 3, 44, Cool, 55];
+id min-max($s, *.chars, :kv), ((0, 2, 1, 2, 3, 3), (4, 44, 6, 55)), "Random list with non-concrete item(s) in it, custom comparator, :kv, multiple values";
+
+$s := [2, 2, 3, 44, 5];
+id min-max($s, *.chars, :p), ((0 => 2, 1 => 2, 2 => 3, 4 => 5), (3 => 44,)), "Random list, custom comparator, :p, multiple values";
+$s := [2, 2, Signature, 3, 44, Cool, 55];
+id min-max($s, *.chars, :p), ((0 => 2, 1 => 2, 3 => 3), (4 => 44, 6 => 55)), "Random list with non-concrete item(s) in it, custom comparator, :p, multiple values";
+
+$s := [];
+fails-like { min-max($s) }, Exception, "Empty list", message => / 'Argument to &min-max is empty (or full of undefined values)' /;
+for :k, :v, :kv, :p {
+    fails-like { min-max($s, |$_) }, Exception, "Empty list with adverb :$_.key()", message => / 'Argument to &min-max is empty (or full of undefined values)' /;
+}
+
+my $t = ();
+fails-like { $t.&min-max() }, Exception, "Empty itemized list", message => / 'Argument to &min-max is empty (or full of undefined values)' /;
+for :k, :v, :kv, :p {
+    fails-like { min-max($t, |$_) }, Exception, "Empty itemized list with adverb :$_.key()", message => / 'Argument to &min-max is empty (or full of undefined values)' /;
+}
+
+$s := (2,);
+id min-max($s), (2, 2), "1-length list, i.e., min and max are the same, which is the first and only element";
+
+$s := [0, 0, 0, 0];
+id min-max($s), (0, 0), "All elements are the same, concrete";
+
+$s := [Date, Allomorph, Any, Seq];
+fails-like { min-max($s) }, Exception, message => / 'Argument to &min-max is empty (or full of undefined values)' /;
+
+$s := (0, -1, -2, -3).Seq;
+id min-max($s), (-3, 0), "Seq input";
+
+$s := (1, 0, -1, 2).lazy;
+id $s.&min-max, (-1, 2), "Explicitly .lazy input";
+
+# Strings
+$s := "Z";
+id min-max($s), ("Z", "Z"), "String of length 1";
+
+$s := "za";
+id min-max($s), ("a", "z"), "String of length 2";
+
+$s := "yes";
+id min-max($s), ("e", "y"), "String of length 3";
+
+$s := "yees";
+id min-max($s, :k), ((1, 2), (0,)), "String with :k";
+id min-max($s, :v), (("e", "e"), ("y",)), "String with :v";
+id min-max($s, :kv), ((1, "e", 2, "e"), (0, "y")), "String with :kv";
+id min-max($s, :p), ((1 => "e", 2 => "e"), (0 => "y",)), "String with :p";
+
+$s := "";
+fails-like { min-max($s) }, Exception, message => / 'Argument to &min-max is empty (or full of undefined values)' /;
+
+# Iterators
+$s := (0, -12782, 2, -5, 4, 12, 0, 3);
+my \it = $s.iterator;
+it.pull-one for ^2;
+id min-max(it), (-5, 12), "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+fails-like { min-max(it) }, Exception, "Iterator (re-subjected)", message => / 'Argument to &min-max is empty (or full of undefined values)' /;
+
+# Invalid calls
+throws-like { Date.&min-max }, Exception, "Wrong invocant type", message => / 'Expected Iterable/Str/Iterator, got Date' /;
+throws-like { [12, 3].&min-max(:zz) }, Exception, "Unknown option", message => / 'Unexpected named argument \'zz\' passed' /;
+throws-like { [12, 3].&min-max(:k, :no) }, Exception, "Unknown option along with a known one", message => / 'Unexpected named argument \'no\' passed' /;
+throws-like { [12, 3].&min-max(:k, :v) }, Exception, "Too many options", message => / 'Must supply zero or exactly one named argument out of `k`, `v`, `kv` and `p`' /;
+throws-like { [12, 3].&min-max(-> *@ {}) }, Exception, "Wrong arity comparator", message => / 'Custom comparator should have arity 1 or 2, got arity 0' /;
+throws-like { [12, 3].&min-max({ ($^a cmp $^b) cmp $^e }) }, Exception, "Wrong arity comparator", message => / 'Custom comparator should have arity 1 or 2, got arity 3' /;
+
+done-testing;
