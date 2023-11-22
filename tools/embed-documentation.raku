@@ -5,7 +5,7 @@ use Iter::Able;  # for signatures
 use Iter::Able::Map-Last;
 use Iter::Able::Take-While;
 
-my Bool $verbose = so @*ARGS[0] eq "-v" | "--verbose";
+my Bool $verbose = so (@*ARGS[0] // "") eq "-v" | "--verbose";
 sub report(Str $msg) { put $msg if $verbose }
 
 my Str $template = q:to/END/;

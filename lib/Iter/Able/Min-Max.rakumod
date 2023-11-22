@@ -4,12 +4,10 @@
 #| value is returned. Empty input (after grepping out type objects, if any)
 #| results in Failure.
 #|
-#| Optional flags can control what is returned:
-#| =:k=:  return the indexes
-#| =:v=:  return the values themselves
-#| =:kv=: return the indexes interspersed with values
-#| =:p=:  return the indexes and values as pairs
-#| When a flag is supplied, _all_ indexes/values are returned even if tied.
+#| Optional flags can control what is returned: =:k= for indexes,
+#| =:v= for values, =:kv= for both interspersed and =:p= for indexes and
+#| values as pairs. When a flag is supplied, /all/ indexes/values are
+#| returned even if tied.
 #`{
     # Get minimum and maximum values in one pass
     >>> [24, 11, 75, -6].&min-max
