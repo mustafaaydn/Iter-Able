@@ -1,0 +1,22 @@
+use Test;
+use Iter::Able::Remove-Prefix;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 13;
+
+id "".&remove-prefix("yes"), "", "empty string input, arg1";
+id "".&remove-prefix("yes", :i), "", "empty string input, arg1, :i";
+id "yes".&remove-prefix(""), "yes", "empty string input, arg2";
+id "yes".&remove-prefix("", :i), "yes", "empty string input, arg2, :i";
+id "".&remove-prefix(""), "", "empty string input, arg1 and arg2";
+id "".&remove-prefix("", :i), "", "empty string input, arg1 and arg2, :i";
+id "https://thing.org".&remove-prefix("https://"), "thing.org", "successfull trimage";
+id "hi, what's up?".&remove-prefix("hi, w"), "hat's up?", "successfull trimage, space in it";
+id remove-prefix("Somewhere here", "where"), "Somewhere here", "unsuccessfull trimage";
+id remove-prefix("\nthis goes?", "this "), "\nthis goes?", "unsuccessfull trimage, string begins with a newline";
+id remove-prefix("\nthis goes?", "This ", :i), "\nthis goes?", "unsuccessfull trimage, string begins with a newline, case insensitive (to fire regex)";
+id "***Info:hi".&remove-prefix("***info:", :i), "hi", "case-sensitive, successful";
+id "**Info:hi".&remove-prefix("***info:", :i), "**Info:hi", "case-sensitive, unsuccessful";
+
+done-testing;

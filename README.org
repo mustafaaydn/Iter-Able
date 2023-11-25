@@ -531,6 +531,46 @@ Remove the last element satisfying the predicate, if any. Without any predicate,
     "This is important. Right? Yes"
 #+end_src
 
+**** remove-prefix =(\st, Str:D $prefix, Bool :$i?)=
+Trims the given prefix from the string, if it exists. The optional flag =:i= performs it case insensitively.
+#+begin_src raku
+    # Strip off from the beginning
+    >>> "https://thing.org".&remove-prefix("https://")
+    "thing.org"
+
+    # If not strictly at the beginning, no change
+    >>> remove-prefix "Somewhere here", "where"
+    "Somewhere here"
+
+    # Case insensitive
+    >>> "***Info:hi".&remove-prefix("***info:", :i)
+    "hi"
+
+    # Newline at the beginning is considered important
+    >>> "\nThis stays".&remove-prefix("this", :i)
+    "\nThis stays"
+#+end_src
+
+**** remove-suffix =(\st, Str:D $suffix, Bool :$i?)=
+Trims the given suffix from the string, if it exists. The optional flag =:i= performs it case insensitively.
+#+begin_src raku
+    # Strip off from the end
+    >>> "hi there!".&remove-suffix("!")
+    "hi there"
+
+    # If not strictly at the end, no change
+    >>> remove-suffix "Zugzwang", "zwan"
+    "Zugzwang"
+
+    # Case insensitive
+    >>> "Republic".&remove-suffix("Public", :i)
+    "Re"
+
+    # Newline at the end is considered important
+    >>> "This stays\n".&remove-suffix("ys")
+    "This stays\n"
+#+end_src
+
 **** replace =(\it, *@pairs)=
 Translates values through the given pairs. All occurences are replaced. Only Numerics and Strings within an iterable/iterator are replaced; for others, see =map-when=. For replacing strings, see the built-in =trans=.
 #+begin_src raku

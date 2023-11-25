@@ -1,0 +1,22 @@
+use Test;
+use Iter::Able::Remove-Suffix;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 13;
+
+id "".&remove-suffix("yes"), "", "empty string input, arg1";
+id "".&remove-suffix("yes", :i), "", "empty string input, arg1, :i";
+id "yes".&remove-suffix(""), "yes", "empty string input, arg2";
+id "yes".&remove-suffix("", :i), "yes", "empty string input, arg2, :i";
+id "".&remove-suffix(""), "", "empty string input, arg1 and arg2";
+id "".&remove-suffix("", :i), "", "empty string input, arg1 and arg2, :i";
+id "https://thing.org".&remove-suffix(".org"), "https://thing", "successfull trimage";
+id "hi, what's up?".&remove-suffix("'s up?"), "hi, what", "successfull trimage, space in it";
+id remove-suffix("Somewhere here", "where"), "Somewhere here", "unsuccessfull trimage";
+id remove-suffix("this goes?\n", "?"), "this goes?\n", "unsuccessfull trimage, string ends with a newline";
+id remove-suffix("this goes?\n", "s?", :i), "this goes?\n", "unsuccessfull trimage, string ends with a newline, case insensitive (to fire regex)";
+id "Preparation".&remove-suffix("aTiOn", :i), "Prepar", "case-sensitive, successful";
+id "Intermezzo".&remove-suffix("meZZ", :i), "Intermezzo", "case-sensitive, unsuccessful";
+
+done-testing;

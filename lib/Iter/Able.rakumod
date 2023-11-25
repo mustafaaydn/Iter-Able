@@ -46,6 +46,8 @@ use Iter::Able::Remove-At;
 use Iter::Able::Select-At;
 use Iter::Able::Min-Max;
 use Iter::Able::Fill-Undef;
+use Iter::Able::Remove-Prefix;
+use Iter::Able::Remove-Suffix;
 
 # Subscribe all the subs to the package as well in case one wants to refer
 # to them with their semi-FQNs, e.g., `Iter::Able::take-while(...)`, e.g., to
