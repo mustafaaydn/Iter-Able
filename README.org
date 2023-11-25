@@ -153,6 +153,32 @@ Generates (index, element) lists, with the starting index specifiable.
     ((3.83, "c"), (4.83, "g"), (5.83, "p"), (6.83, "a")).Seq
 #+end_src
 
+**** fill-undef =(\it, \how)=
+Fill undefined values from a hash, list or a scalar. Undefined values correspond to type objects, e.g., Int, Any, DateTime.
+#+begin_src raku
+    # Fill from an associative
+    >>> [1, Any, -4, 3, Int].&fill-undef(%(Any => -1, Int => 0))
+    (1, -1, -4, 3, 0).Seq
+
+    # If the filler is a list (or any iterable really), filling will happen positionally
+    >>> [2, Any, 3, Any].&fill-undef([5, 77])
+    (2, 5, 3, 77).Seq
+
+    # Filler could be a scalar; then all undefined values will be substituted to that
+    >>> (64, Nil, 32, PseudoStash).&fill-undef(0)
+    (64, 0, 32, 0).Seq
+
+    # If the filler associative lacks or has extra element(s), they are ignored in both sides
+    >>> fill-undef [4, Str, 44, Any], %(Str => "", Num => 0e0)
+    (4, "", 44, Any).Seq
+
+    # If the filler list lacks or has extra element(s), they are ignored in both sides
+    >>> fill-undef [4, Str, 44, Any], ("",)
+    (4, "", 44, Any).Seq
+    >>> fill-undef [4, Str, 44, Any], ("", 0, True)
+    (4, "", 44, 0).Seq
+#+end_src
+
 **** flatten =(\it, UInt :levels(:$level))=
 Makes a "one dimensional" iterable. Unlike the built-in =flat=, this does not respect itemized iterables. The number of levels to flatten can be controlled with the =:$level= parameter; currently leveled flattening reifies the iterable.
 #+begin_src raku

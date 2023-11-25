@@ -1,0 +1,30 @@
+use Test;
+use Iter::Able::Fill-Undef;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 13;
+
+# Iterables
+id [].&fill-undef(3), ().Seq, "Empty list";
+id $().&fill-undef(3), ().Seq, "Empty itemized list";
+id [1, Any, -4, 3, Int].&fill-undef(%(Any => -1, Int => 0)), (1, -1, -4, 3, 0).Seq, "Hash filler";
+id [2, Any, 3, Any].&fill-undef([5, 77]), (2, 5, 3, 77).Seq, "List (iterable) filler";
+id [2, Any, 3, Any].&fill-undef([5, 77].Seq), (2, 5, 3, 77).Seq, "Seq (iterable) filler";
+id (64, Nil, 32, PseudoStash).&fill-undef(0), (64, 0, 32, 0).Seq, "Scalar filler";
+id fill-undef([4, Str, 44, Any], %(Str => "", Num => 0e0)), (4, "", 44, Any).Seq, "Hash filler but not 1-1";
+id fill-undef([4, Str, 44, Any].Seq, ("",)), (4, "", 44, Any).Seq, "List filler but too few";
+id fill-undef([4, Str, 44, Any], ("", 0, True)), (4, "", 44, 0).Seq, "List filler but too much";
+
+# Iterators
+my $s := (0, 0, 2, 4, Any, 16, Nil, 0, Stash);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = fill-undef(it, -1);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+id Seq.new(newit), [4, -1, 16, -1, 0, -1].Seq, "Iterator (values); scalar filler";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
+
+done-testing;
