@@ -203,6 +203,19 @@ Makes a "one dimensional" iterable. Unlike the built-in =flat=, this does not re
     ["a", "b", ("c", "d"), [["e"],]]
 #+end_src
 
+**** for-each =(\ist, &function --> Nil)=
+Apply the given function to each element for the side effects. Returns =Nil= to signal return values are ignored.
+#+begin_src raku
+    # Change the value of an attribute of a group of objects
+    >>> @paddles.&for-each({ .dir.x++ })
+
+    # Print the primes
+    >>> for-each (4, 7, 12, -3), { .put if .is-prime }
+
+    # Works for strings too should you want
+    >>> "a lot of characters".&for-each: { .ord.put }
+#+end_src
+
 **** group-conseq =(\ist, :&as = {$_}, :&with = &[===])=
 Packs consecutive "same" elements together and yields "key ⇒ group" pairs where groups are Lists (values are not copied). Sameness can be controlled with a transformer (=as=) and/or an equality checker (=with=). Returns a Seq for strings.
 #+begin_src raku

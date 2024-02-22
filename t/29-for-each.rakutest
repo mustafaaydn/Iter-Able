@@ -1,0 +1,50 @@
+use Test;
+use Iter::Able::For-Each;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 14;
+
+my $s;
+
+# Iterables
+$s := [2, 2, 3, -4, 5];
+id for-each($s, { $_++ }), Nil, "Random array with incrementive side effects";
+id $s, [3, 3, 4, -3, 6], "(Checking the side effects)";
+
+$s := (2, 2, 3, -4, 5);
+dies-ok { $s.&for-each({ --$_ }) }, "List with decrementive side effects fails as immutable";
+
+$s := [];
+id for-each($s, &say), Nil,  "Empty list";
+
+my $t = ();
+id $t.&for-each(&note), Nil,  "Empty itemized list";
+
+my Str $side-str;
+$s := (0, -1, -2, -3).Seq;
+id for-each($s, {$side-str ~= $_}), Nil, "Seq with gluing a nonlocal";
+id $side-str, "0-1-2-3", "(Checking the side effects)";
+
+class Paddle { has $.x is rw is required; };
+my @paddles = (^5).map({ Paddle.new: x => $_ });
+id @paddles.&for-each({ .x++ }), Nil, "Alter the value of an attribute of a group of objects";
+id @paddles.map(*.x).list, (1, 2, 3, 4, 5), "(Checking the side effects)";
+
+# Strings
+my Int $side-int = 0;
+$s := "a lot of characters";
+id $s.&for-each({ $side-int += .ord }), Nil, "String with its ordinals summed to nonlocal";
+id $side-int, $s.comb.map(&ord).sum, "(Checking the side effects)";
+
+# Iterators
+$s := (0, 0, 2, -5, 4, 12, 0, 3);
+my \it = $s.iterator;
+it.pull-one for ^2;
+id for-each(it, {;}), Nil, "Exhausting an iterator with an empty block";
+ok it.pull-one =:= IterationEnd, "(Checking the side effects)";
+
+# Invalid calls
+dies-ok { [12, 3, 4].&for-each }, "No function provided, dies";
+
+done-testing;
