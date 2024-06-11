@@ -2,10 +2,10 @@
 #| Returns =Nil= to signal return values are ignored.
 #`{
     # Change the value of an attribute of a group of objects
-    >>> @paddles.&for-each({ .dir.x++ })
+    >>> @paddles.&for-each({ .x++ })
 
     # Print the primes
-    >>> for-each (4, 7, 12, -3), { .put if .is-prime }
+    >>> (4, 7, 12, -3).&for-each: { .put if .is-prime }
 
     # Works for strings too should you want
     >>> "a lot of characters".&for-each: { .ord.put }
