@@ -3,7 +3,7 @@ use Iter::Able::Insert-At;
 
 my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
 
-plan 18;
+plan 20;
 
 my $s;
 $s := [2, 3];
@@ -15,8 +15,14 @@ id insert-at($s, 2 => 4, 3 => 9), [1, 2, 4, 0, 9, 16].Seq, "Random list with 2 p
 $s := [5, 7];
 id $s.&insert-at(2 => 9), $s.Seq, "Random list with out-of-bounds index";
 
+$s := ["e", "g"];
+id $s.&insert-at(0 => "d", 2 => "f"), ("d", "e", "g").Seq, "pairs == iterable in length; at least one of them is ignored";
+
 $s := [0 => 0, 2 => 2].Seq;
 id $s.&insert-at(1 => 1 => 1), [0 => 0, 1 => 1, 2 => 2].Seq, "Seq with pairs in it";
+
+$s := [3];
+id $s.&insert-at(1 => 8), $s.Seq, "Past the end is not in effect";
 
 $s := "xyw".comb;
 id $s.&insert-at(2 => "z"), "xyzw".comb, "String insertion to a Seq";
@@ -26,7 +32,7 @@ id insert-at($s, 0 => 0), [].Seq,  "Empty list";
 
 my $t = ();
 id insert-at($t, 3 => 2), [].Seq,  "Empty itemized list";
- 
+
 $s := "aise";
 id insert-at($s, 1 => "r"), "arise", "String with 1 pair";
 
