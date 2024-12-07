@@ -6,9 +6,14 @@
     >>> [1, 2, 3, 0, 4, 5].&split-at(* == 0)
     ((1, 2, 3), (4, 5)).Seq
 
-    # For strings, it's almost the same except :skip-empty is implied
+    # For strings, it follows the built-in Str.split with :skip-empty
+    # but you can pass a callable (as well as a regex)
     >>> "AsomeAthingA".&split-at(/:i <[aeiou]>/)
     ("s", "m", "th", "ng").Seq
+
+    >>> my Set $spots .= new: "qxw ".comb
+    >>> "q|qw<here> xx 12".&split-at(* (elem) $spots)
+    ("|", "<here>", "12").Seq
 }
 unit module Split-At;
 
