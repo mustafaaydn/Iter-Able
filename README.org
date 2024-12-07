@@ -646,6 +646,18 @@ Skips values from the iterable as long as =&pred= holds; once not, starts taking
     "Trial and error. Important."
 #+end_src
 
+**** split-at =(\it, &pred)=
+Split the iterable whenever the predicate holds. Doesn't include the separators themselves in the output (even if at the edges, i.e., `:skip-empty` behaviour of Str.split is exposed).
+#+begin_src raku
+    # Split when hit 0 (0s disappear in the output)
+    >>> [1, 2, 3, 0, 4, 5].&split-at(* == 0)
+    ((1, 2, 3), (4, 5)).Seq
+
+    # For strings, it's almost the same except :skip-empty is implied
+    >>> "AsomeAthingA".&split-at(/:i <[aeiou]>/)
+    ("s", "m", "th", "ng").Seq
+#+end_src
+
 **** take-while =(\ist, &pred)=
 Takes values from the iterable as long as =&pred= holds; once not, stop. As it needs to look at the next value to decide when to stop, it consumes one extra value as a side effect. That will be only visible in /iterator/ inputs, though.
 #+begin_src raku

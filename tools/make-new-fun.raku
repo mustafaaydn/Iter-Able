@@ -24,10 +24,20 @@ if $new-mod-path.e {
 $new-mod-path.spurt: "tools/module.template".IO.slurp.&translate;
 
 # Test file
-my Str $test-no = 
-    ((my $d = dir("t").cache).first(/ ^ $fun-name $ /)
-        andthen .Str.comb(/\d+/).head                     # already exists
-        orelse $d.sort.tail.Str.comb(/\d+/).head.succ);   # anew
+my Str @test-files = dir("t", test => *.ends-with(".rakutest"))>>.Str.sort;
+my $test-no = do with @test-files.first(*.contains($fun-name)) {
+    # already exists
+    .comb(/\d+/).head.Int;
+}
+orwith {
+    # new function; fill the first missing spot if any, otherwise last number + 1
+    my Int @test-nos = @test-files.map(*.comb(/\d+/).head.Int);
+    my ($first, $last) = @test-nos[0, *-1];
+    my @diff = (($first .. $last) (-) @test-nos).keys.sort;
+    @diff[0] // $last + 1
+}
+$test-no = "0$test-no" if $test-no < 10;
+
 my IO::Path $new-test-path = "t/{$test-no}-{$fun-name}.rakutest".IO;
 $new-test-path.spurt: "tools/tester.template".IO.slurp.&translate;
 
@@ -37,9 +47,8 @@ say "\nWrote\n$new-mod-path\n$new-test-path";
 my IO::Path $top-level-mod = "lib/Iter/Able.rakumod".IO;
 my Str @lines   = $top-level-mod.lines(:!chomp);
 my Int $idx     = @lines.first(/^ 'use Iter::Able::' /, :end, :k).succ;
-my Str $new-use = "use Iter::Able::$module-name;\n\n"; 
+my Str $new-use = "use Iter::Able::$module-name;\n\n";
 @lines.splice($idx, 1, $new-use);
 $top-level-mod.spurt: @lines.join;
 
 say "\nAdded `{$new-use.trim-trailing}` to $top-level-mod";
-
