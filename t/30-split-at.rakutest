@@ -1,0 +1,61 @@
+use Test;
+use Iter::Able::Split-At;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g.eager, "eqv", e.eager, $desc) !! is-deeply(g, e, $desc) };
+
+plan 17;
+
+my $s;
+
+# Iterables
+$s := [2, 2, 3, -4, 5];
+id split-at($s, * == 3), [(2, 2), (-4, 5)].Seq, "Splitting at the middle, once";
+
+$s := (2, 2, 3, -4, 3, 5);
+id $s.&split-at(* == 3), ((2, 2), (-4,), (5,)).Seq, "Splitting at the middles, twice";
+
+$s := (2, 2, 3, 3, -4, 5);
+id $s.&split-at(* == 3), ((2, 2), (-4, 5)).Seq, "Splitting at the middles, twice, consecutive";
+
+$s := [2, 3, -4, 5];
+id split-at($s, * == 2), [(3, -4, 5),].Seq, "Splitting at the beginning, once";
+
+$s := (2, 2, 3);
+id $s.&split-at(* == 2), ((3,),).Seq, "Splitting at the beginning, twice";
+
+$s := [];
+id split-at($s, * > 2), ().Seq,  "Empty list";
+
+my $t = ();
+id $t.&split-at(* > 0), ().Seq,  "Empty itemized list";
+
+$s := [0, 0, 0, 0];
+id split-at($s, * == 0), ().Seq, "All zeros with splitter 0";
+
+$s := (0, -1, 2, -3).Seq;
+id split-at($s, * >= 0), ((-1,), (-3,)).Seq, "Nonconstant splitter";
+
+$s := (1, 0, -1, 2).lazy;
+my \out = $s.&split-at(* == 0);
+ok out.is-lazy, "lazy input gives lazy output";
+id out.eager, ((1,), (-1, 2)), "Explicitly .lazy input";
+
+$s := [1, 0, -1, 2];
+id split-at($s, &{ False }), [$s.List,].Seq, "Random list with no-pass predicate";
+
+# Strings
+$s := "AsomeAthingA";
+id split-at($s, /:i <[aeiou]>/), ("s", "m", "th", "ng").Seq, "String gives Seq";
+
+# Iterators
+$s := (0, 0, 2, -5, 4, 12, -17, 0, 3);
+my \it = $s.iterator;
+it.pull-one for ^2;
+my \newit = split-at(it, *.abs.is-prime);
+it.pull-one;  # should affect `newit`s behaviour
+does-ok newit, Iterator, "Iterator (returned an Iterator, not a Seq)";
+id Seq.new(newit), [(4, 12,), (0,)].Seq, "Iterator (values)";
+ok it.pull-one =:= IterationEnd, "Iterator (original, exhausted)";
+ok newit.pull-one =:= IterationEnd, "Iterator (new, exhausted)";
+
+done-testing;
