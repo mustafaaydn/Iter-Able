@@ -691,6 +691,22 @@ Takes values from the iterable as long as =&pred= holds; once not, stop. As it n
     >>> (r1 => 7.13, r2 => 6.89, r3 => 7.90, r4 => 6.81).&take-while((*.value - 7).abs <= 0.2)
     (r1 => 7.13, r2 => 6.89).Seq
 #+end_src
+
+**** unfold =(\ist, &pred = {$_})=
+Short explanation of the function.
+#+begin_src raku
+    #
+    >>> [1, 2, 3, 0, 4, 5].&unfold
+    (1, 2, 3).Seq
+
+    #
+    >>> unfold (4, 7, 12, -3), * >= 0
+    (4, 7, 12).Seq
+
+    #
+    >>> "until first whitespace".&unfold(/ \S /)
+    "until"
+#+end_src
 # END-DOC
 
 # ** Contribution

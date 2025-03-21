@@ -29,7 +29,7 @@ my $test-no = do with @test-files.first(*.contains($fun-name)) {
     # already exists
     .comb(/\d+/).head.Int;
 }
-orwith {
+else {
     # new function; fill the first missing spot if any, otherwise last number + 1
     my Int @test-nos = @test-files.map(*.comb(/\d+/).head.Int);
     my ($first, $last) = @test-nos[0, *-1];
