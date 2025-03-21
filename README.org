@@ -659,6 +659,30 @@ Skips values from the iterable as long as =&pred= holds; once not, starts taking
     "Trial and error. Important."
 #+end_src
 
+**** some =(\ist, &pred = {$_} --> Bool:D)=
+Check if some of the elements (any, at least one) satisfy the given predicate. It has a short-circuiting behaviour, i.e., if a satisfactory element is found, traversal immediately stops. `any` would be a better name but it's taken.
+#+begin_src raku
+    # Any positive elements?
+    >>> [-4, 0, 5, 2, -8].&some(* > 0)
+    True
+
+    # Any primes?
+    >>> some &is-prime, [1, -1, 0]
+    False
+
+    # Default predicate is truthfulness
+    >>> some (Any, 0, [], "")
+    False
+
+    # Stops once it finds a matching element
+    >>> some (4, |(5 xx *)), * == 4
+    True
+
+    # Strings are also accepted as inputs
+    >>> "thereisnospacehere".&some(/ \s /)
+    False
+#+end_src
+
 **** split-at =(\it, &pred)=
 Split the iterable whenever the predicate holds. Doesn't include the separators themselves in the output (even if at the edges, i.e., `:skip-empty` behaviour of Str.split is exposed).
 #+begin_src raku
@@ -690,22 +714,6 @@ Takes values from the iterable as long as =&pred= holds; once not, stop. As it n
     # Go till an "anomaly" occurs
     >>> (r1 => 7.13, r2 => 6.89, r3 => 7.90, r4 => 6.81).&take-while((*.value - 7).abs <= 0.2)
     (r1 => 7.13, r2 => 6.89).Seq
-#+end_src
-
-**** unfold =(\ist, &pred = {$_})=
-Short explanation of the function.
-#+begin_src raku
-    #
-    >>> [1, 2, 3, 0, 4, 5].&unfold
-    (1, 2, 3).Seq
-
-    #
-    >>> unfold (4, 7, 12, -3), * >= 0
-    (4, 7, 12).Seq
-
-    #
-    >>> "until first whitespace".&unfold(/ \S /)
-    "until"
 #+end_src
 # END-DOC
 
