@@ -678,6 +678,10 @@ Check if some of the elements (any, at least one) satisfy the given predicate. I
     >>> some (4, |(5 xx *)), * == 4
     True
 
+    # Empty input yields False regardless of the predicate
+    >>> some []
+    False
+
     # Strings are also accepted as inputs
     >>> "thereisnospacehere".&some(/ \s /)
     False
