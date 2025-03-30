@@ -166,6 +166,34 @@ Generates (index, element) lists, with the starting index specifiable.
     ((3.83, "c"), (4.83, "g"), (5.83, "p"), (6.83, "a")).Seq
 #+end_src
 
+**** every =(\ist, &pred = {$_} --> Bool:D)=
+Check if every element (all of them) satisfies the given predicate. It has a short-circuiting behaviour, i.e., if a non-satisfactory element is found, traversal immediately stops. `all` would be a better name but it's taken.
+#+begin_src raku
+    # All positive elements?
+    >>> [-4, 0, 5, 2, -8].&every(* > 0)
+    False
+
+    # Everyone is prime?
+    >>> every &is-prime, [191, 211, 911]
+    True
+
+    # Default predicate is truthfulness
+    >>> every (-5, +5, [3, 4])
+    True
+
+    # Stops once it finds a failing element
+    >>> every (4, |(5 xx *)), * == 4
+    False
+
+    # Empty input yields True vacuously, regardless of the predicate
+    >>> every []
+    True
+
+    # Strings are also accepted as inputs
+    >>> "thereisnospacehere".&every(/ \S /)
+    True
+#+end_src
+
 **** fill-undef =(\it, \how)=
 Fill undefined values from a hash, list or a scalar. Undefined values correspond to type objects, e.g., Int, Any, DateTime.
 #+begin_src raku

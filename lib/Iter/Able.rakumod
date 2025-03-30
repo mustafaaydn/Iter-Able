@@ -51,6 +51,7 @@ use Iter::Able::Remove-Suffix;
 use Iter::Able::For-Each;
 use Iter::Able::Split-At;
 use Iter::Able::Some;
+use Iter::Able::Every;
 
 # Subscribe all the subs to the package as well in case one wants to refer
 # to them with their semi-FQNs, e.g., `Iter::Able::take-while(...)`, e.g., to
