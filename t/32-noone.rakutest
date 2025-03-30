@@ -1,0 +1,62 @@
+use Test;
+use Iter::Able::Noone;
+
+my &id = -> \g, \e, Str $desc? { g | e ~~ Seq:D ?? cmp-ok(g, "eqv", e, $desc) !! is-deeply(g, e, $desc) };
+
+plan 19;
+
+my $s;
+
+# Iterables
+$s := [2, 2, 3, -4, 5];
+id noone($s), False, "List with no predicate (doesn't hold)";
+id noone($s, * < -8), True, "List with a predicate that holds";
+id noone($s, *.is-prime), False, "List with a predicate that doesn't hold";
+
+$s := (2, 2, 3, -4, 5);
+id $s.&noone(* == 0), True, "List with a predicate that holds (2)";
+id $s.&noone({ $_ ** 2 > 7 } ), False, "List with a predicate that doesn't hold (2)";
+
+$s := [];
+id noone($s), True,  "Empty list is vacuously True";
+
+my $t = ();
+id $t.&noone, True,  "Empty itemized list is True too";
+
+$s := [0, 0, 0, 0];
+id noone($s), True, "List with no predicate (holds)";
+
+$s := (Any, 0e0, [], "");
+id noone($s), True, "List with no predicate (holds) (2)";
+
+$s := [6, 7, 8, 93, 51, 0, 4, -3, 64].Seq;
+id noone($s), False, "Seq with no predicate";
+
+$s := [6, 7, 8, 93, 51, 0.1, 4, -3, 64].Seq;
+id noone($s, * %% 18), True, "Seq with a predicate that holds";
+
+$s := [6, 7, 8, 93, 51, 0, 4, -3, 64].Seq;
+id noone($s, * %% 17), False, "Seq with a predicate that doesn't hold";
+
+$s := (1, 0, -1, 2).lazy;
+id $s.&noone(), False, "Explicitly .lazy input";
+
+$s := [1, 0, -1, 2];
+id noone($s, &{ True }), False, "Random list with all-pass predicate";
+id noone($s, &{ False }), True, "Random list with no-pass predicate";
+
+$s := (4, |(5 xx *));
+id noone($s, * == 5), False, "Short-circuits";
+
+# Strings
+$s := "thereisnospacehere";
+id $s.&noone(/ \s /), True, "String with a (regex) predicate that holds";
+id $s.&noone(/ 's' /), False, "String with a (regex) predicate that doesn't hold";
+
+# Iterators
+$s := (0, 0, 2, -5, 4, 12, 3);
+my \it = $s.iterator;
+it.pull-one for ^2;
+id noone(it, * == 0), True, "Iterator";
+
+done-testing;

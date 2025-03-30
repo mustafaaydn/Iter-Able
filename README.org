@@ -517,6 +517,34 @@ Yields the n'th value of the input. Almost the same as =.[n]= but also works for
     4 5 6
 #+end_src
 
+**** noone =(\ist, &pred = {$_} --> Bool:D)=
+Check if none of the elements (noone, not any) satisfies the given predicate. It has a short-circuiting behaviour, i.e., if a satisfactory element is found, traversal immediately stops. `none` would be a better name but it's taken.
+#+begin_src raku
+    # No positive elements?
+    >>> [-4, 0, 5, 2, -8].&noone(* > 0)
+    False
+
+    # No-one is prime?
+    >>> noone &is-prime, [9, 99, 999]
+    True
+
+    # Default predicate is truthfulness
+    >>> noone ([], "", Empty)
+    True
+
+    # Stops once it finds a failing element
+    >>> noone (4, |(5 xx *)), * == 5
+    False
+
+    # Empty input yields True vacuously, regardless of the predicate
+    >>> noone []
+    True
+
+    # Strings are also accepted as inputs
+    >>> "thereisnospacehere".&noone(/ \s /)
+    True
+#+end_src
+
 **** remove-at =(\ist, *@positions)=
 Performs index-based removal given integer indexes.
 #+begin_src raku
